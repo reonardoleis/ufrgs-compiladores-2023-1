@@ -20,6 +20,8 @@ char* get_key(hash_t* hash);
 hash_t* hash_table[HASH_SIZE];
 
 
+void initMe() {}
+
 int hash(char *key) {
     int i;
     int sum = 0;

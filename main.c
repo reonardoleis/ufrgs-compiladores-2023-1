@@ -2,31 +2,74 @@
 #include <stdlib.h>
 #include "hash.h"
 
-int main() {
-    hash_t* element1 = (hash_t*) calloc(1, sizeof(hash_t));
-    hash_t* element2 = (hash_t*) calloc(1, sizeof(hash_t));
-    hash_t* element3 = (hash_t*) calloc(1, sizeof(hash_t));
 
-    element1->identifier = "a";
-    element1->literal = "int";
+int isRunning();
+int getLineNumber();
+void initMe();
 
-    element2->identifier = "b";
-    element2->literal = "int";
+int yylex();
+extern char* yytext;
+extern FILE* yyin;
 
-    element3->identifier = "a";
-    element3->literal = "real";
+int getLineNumber() {
+    return 0;
+}
 
-    hash_insert(element1);
-    hash_insert(element2);
-    hash_insert(element3);
+int isRunning() {
+    return feof(yyin) == 0;
+}
 
-    hash_t* found = (hash_t*) calloc(1, sizeof(hash_t));
-    found = hash_find("intb");
-    if (found != NULL) {
-        fprintf(stderr, "Found %s %s", found->literal, found->identifier);
+int main(int argc, char** argv) {
+    
+    if (argc < 3) {
+        fprintf(stderr, "usage: ./a.out input.txt output.txt\n");
+        return 0;
     }
- 
-    yylex();
+
+    char* input_file_name = argv[1];
+    char* output_file_name = argv[2];
+
+    if (!(yyin = fopen(input_file_name, "r"))) {
+        fprintf(stderr, "could not open input file\n");
+        return 0;
+    }
+
+    int token = 0;
+
+    fprintf(stderr, "Is running? %d\n", isRunning());
+    while (isRunning()) {
+        token = yylex();
+    
+        if (!isRunning()) {
+            return 0;
+        }
+
+        switch (token) {
+            case KW_CHAR:       { fprintf(stderr, "KW_CHAR\n"); break; }
+            case KW_INT:        { fprintf(stderr, "KW_INT\n"); break;  }
+            case KW_REAL:       { fprintf(stderr, "KW_REAL\n"); break;  }
+            case KW_BOOL:       { fprintf(stderr, "KW_BOOL\n"); break;  }
+            case KW_IF:         { fprintf(stderr, "KW_IF %s\n", yytext); break;  }
+            case KW_THEN:       { fprintf(stderr, "KW_THEN\n"); break;  }
+            case KW_ELSE:       { fprintf(stderr, "KW_ELSE\n"); break;  }
+            case KW_LOOP:       { fprintf(stderr, "KW_LOOP\n"); break;  }
+            case KW_INPUT:      { fprintf(stderr, "KW_INPUT\n"); break;  }
+            case KW_OUTPUT:     { fprintf(stderr, "KW_OUTPUT\n"); break;  }
+            case KW_RETURN:     { fprintf(stderr, "KW_RETURN\n"); break;  }
+            case OPERATOR_LE:   { fprintf(stderr, "OPERATOR_LE\n"); break;  }
+            case OPERATOR_GE:   { fprintf(stderr, "OPERATOR_GE\n"); break;  }
+            case OPERATOR_EQ:   { fprintf(stderr, "OPERATOR_EQ\n"); break;  }
+            case OPERATOR_DIF:  { fprintf(stderr, "OPERATOR_DIF\n"); break;  }
+            case LIT_INT:       { fprintf(stderr, "LIT_INT\n"); break;  }
+            case LIT_CHAR:      { fprintf(stderr, "LIT_CHAR\n"); break;  }
+            case LIT_REAL:      { fprintf(stderr, "LIT_REAL\n"); break;  }
+            case LIT_STRING:    { fprintf(stderr, "LIT_STRING\n"); break;  }
+            case TK_IDENTIFIER: { fprintf(stderr, "TK_IDENTIFIER\n"); break;  }
+            case TOKEN_ERROR:   { fprintf(stderr, "TOKEN_ERROR\n"); break;  }
+            default:            { fprintf(stderr, "OP %d\n", token);     break;}     
+        }
+    }
+
     return 0;
 }
 

@@ -1,14 +1,28 @@
 %{
 
 #include "tokens.h"
+#include "definitions.h"
 
 %}
 
+%s MULTI_LINE_COMMENT
+
 %%
 
-"char"        { return LIT_CHAR; }
-"int"         { return LIT_INT; }
-"real"        { return LIT_REAL; }
+
+<MULTI_LINE_COMMENT>"\/\/\/"            { BEGIN(0); }
+<MULTI_LINE_COMMENT>[^\n]*              { }
+<MULTI_LINE_COMMENT>\n                   { }
+
+(\\\\\\)            { BEGIN(MULTI_LINE_COMMENT); }
+
+(\\\\)[^\\](.)*(\n)      { return SINGLE_LINE_COMMENT; }
+
+
+
+"char"        { return KW_CHAR; }
+"int"         { return KW_INT; }
+"real"        { return KW_REAL; }
 "bool"        { return KW_BOOL; }
 "if"          { return KW_IF; }
 "then"        { return KW_THEN; }
@@ -17,13 +31,26 @@
 "input"       { return KW_INPUT; }
 "output"      { return KW_OUTPUT; }
 "return"     { return KW_RETURN; }
-"<="          { fprintf(stderr, "OPERATOR_LE FOUND"); return OPERATOR_LE; }
+
+"<="          { return OPERATOR_LE; }
 ">="          { return OPERATOR_GE; }
 "=="          { return OPERATOR_EQ; }
 "!="          { return OPERATOR_DIF; }
-[a-zA-z._]* { fprintf(stderr, "TK_IDENTIFIER FOUND"); return TK_IDENTIFIER; }
 
+[0-9]+        { return LIT_INT; }
+(\'(.)\')     { return LIT_CHAR; }
+([0-9]+)(\.)([0-9]+)        { return LIT_REAL; }
+(\"[^\"]*\")                  { return LIT_STRING; }
+
+[a-zA-z._]* { return TK_IDENTIFIER; }
 [",;()\[\]{}=+\-*/%><&|~] { return yytext[0]; }
+
+.             { fprintf(stderr, "LEXICAL ERROR: %s\n", yytext); return TOKEN_ERROR; }
+
+
+
+
+
 
 %%
 
