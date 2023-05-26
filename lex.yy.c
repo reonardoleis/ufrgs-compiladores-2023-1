@@ -964,7 +964,7 @@ case 24:
 /* rule 24 can match eol */
 YY_RULE_SETUP
 #line 43 "scanner.l"
-{ fprintf(stderr, "LIT_STRING %s", yytext); return LIT_STRING; }
+{ return LIT_STRING; }
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
@@ -979,7 +979,7 @@ YY_RULE_SETUP
 case 27:
 YY_RULE_SETUP
 #line 48 "scanner.l"
-{ fprintf(stderr, "LEXICAL ERROR: %s\n", yytext); return TOKEN_ERROR; }
+{ }
 	YY_BREAK
 case 28:
 YY_RULE_SETUP

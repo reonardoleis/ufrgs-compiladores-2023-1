@@ -21,7 +21,7 @@
 
 
 "char"        { return KW_CHAR; }
-"int"         { return KW_INT; }
+"int"      { return KW_INT; }
 "real"        { return KW_REAL; }
 "bool"        { return KW_BOOL; }
 "if"          { return KW_IF; }
@@ -38,14 +38,14 @@
 "!="          { return OPERATOR_DIF; }
 
 [0-9]+        { return LIT_INT; }
-(\'(.)\')     { return LIT_CHAR; }
-([0-9]+)(\.)([0-9]+)        { return LIT_REAL; }
+\'.\'    { return LIT_CHAR; }
+[0-9]+\.([0-9]+)       { return LIT_REAL; }
 (\"[^\"]*\")                  { return LIT_STRING; }
 
 [a-zA-z._]* { return TK_IDENTIFIER; }
 [",;()\[\]{}=+\-*/%><&|~] { return yytext[0]; }
 
-.             { fprintf(stderr, "LEXICAL ERROR: %s\n", yytext); return TOKEN_ERROR; }
+.             { }
 
 
 

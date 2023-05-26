@@ -58,6 +58,8 @@ hash_t* hash_find(char *key) {
         if (strcmp(key, item_key)) {
             return item;
         }
+
+        item = item->next;
     }
 
     return NULL;
@@ -74,6 +76,9 @@ void hash_insert(hash_t* item) {
     if (exists) {
         hash_t* current_item = hash_table[pos];
         while (current_item->next != NULL) {
+            if (strcmp(get_key(current_item), key)) {
+                return;
+            }
             current_item = current_item->next;
         }
         current_item->next = (hash_t*) calloc(1, sizeof(hash_t));

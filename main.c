@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "hash.h"
-
+#include "tokens.h"
 
 int isRunning();
 int getLineNumber();
@@ -10,13 +10,14 @@ void initMe();
 int yylex();
 extern char* yytext;
 extern FILE* yyin;
+int token = 0;
 
 int getLineNumber() {
     return 0;
 }
 
 int isRunning() {
-    return feof(yyin) == 0;
+    return token != 0;
 }
 
 int main(int argc, char** argv) {
@@ -34,12 +35,9 @@ int main(int argc, char** argv) {
         return 0;
     }
 
-    int token = 0;
 
-    fprintf(stderr, "Is running? %d\n", isRunning());
+    token = yylex();
     while (isRunning()) {
-        token = yylex();
-    
         if (!isRunning()) {
             return 0;
         }
@@ -68,6 +66,8 @@ int main(int argc, char** argv) {
             case TOKEN_ERROR:   { fprintf(stderr, "TOKEN_ERROR\n"); break;  }
             default:            { fprintf(stderr, "OP %d\n", token);     break;}     
         }
+
+        token = yylex();
     }
 
     return 0;
