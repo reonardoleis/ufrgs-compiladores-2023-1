@@ -12,30 +12,33 @@ typedef struct hash_t {
     struct hash_t* next;
 } hash_t;
 
-int hash(char* literal, char* identifier);
-hash_t* hash_find(char* literal, char* identifier);
+int hash(char *key);
+hash_t* hash_find(char *key);
 void hash_insert(hash_t* hash);
+char* get_key(hash_t* hash);
 
 hash_t* hash_table[HASH_SIZE];
 
 
-int hash(char* literal, char* identifier) {
+int hash(char *key) {
     int i;
     int sum = 0;
-    for (i = 0; i < strlen(literal); i++) {
-        sum += (i+1) * (literal[i]);
+    for (i = 0; i < strlen(key); i++) {
+        sum += (i+1) * (key[i]);
     }
-
-    for (i = 0; i < strlen(identifier); i++) {
-        sum += (i+1) * (identifier[i]);
-    }
-
 
     return sum % HASH_SIZE;
 }
 
-hash_t* hash_find(char* literal, char* identifier) {
-    int pos = hash(literal, identifier);
+char* get_key(hash_t* hash) {
+    char* key = hash->identifier;
+    key = strcat(key, hash->literal);
+
+    return key;
+}
+
+hash_t* hash_find(char *key) {
+    int pos = hash(key);
     //fprintf(stderr, "Fetching from at %d\n", pos);
 
     hash_t* item = hash_table[pos];
@@ -47,26 +50,25 @@ hash_t* hash_find(char* literal, char* identifier) {
         return item;
     }
 
-    while(1) {
-        if (item->next == NULL) {
+    item = item->next;
+    while(item != NULL) {
+        char* item_key = get_key(item);
+        if (strcmp(key, item_key)) {
             return item;
         }
-
-        item = item->next;
     }
 
     return NULL;
 }
 
-int hash_exists(char* literal, char* identifier) {
-    return hash_find(literal, identifier) != NULL;
-}
-
 void hash_insert(hash_t* item) {
-    int pos = hash(item->literal, item->identifier);
-    //fprintf(stderr, "Inserting at from %d\n", pos);
+    char* key = (char*) calloc(1, sizeof(item->literal) + sizeof(item->identifier));
+    strcpy(key, item->literal);
+    key = strcat(key, item->identifier);
+    int pos = hash(key);
+
     
-    int exists = hash_exists(item->literal, item->identifier);
+    int exists = hash_table[pos] != NULL;
     if (exists) {
         hash_t* current_item = hash_table[pos];
         while (current_item->next != NULL) {
