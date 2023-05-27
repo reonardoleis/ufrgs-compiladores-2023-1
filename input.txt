@@ -1,13 +1,15 @@
-char int real bool
-if then     else
-loop
-input   output
+char int
 
 
-return      <= >= ==    
-!= some_identifier another.identifier lastIdentifier
 
-5 2.5 'a'
-"some string"
 
-, ; ( ) [ ] { } = + - * / % < > & | ~
+"some string" 'c' 5.5
+
+523
+
+/// multi line
+comments "are" extremely fun 1234
+2.5 3.5
+44334555 \\\
+
+int a real b

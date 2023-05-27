@@ -846,7 +846,7 @@ case 3:
 /* rule 3 can match eol */
 YY_RULE_SETUP
 #line 16 "scanner.l"
-{ /* ignore */ }
+{ if(yytext[0] == '\n') { increment_line_number(); } }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
@@ -970,7 +970,7 @@ case 27:
 /* rule 27 can match eol */
 YY_RULE_SETUP
 #line 49 "scanner.l"
-{ /* ignore */ }
+{ if(yytext[0] == '\n') { increment_line_number(); } }
 	YY_BREAK
 case 28:
 YY_RULE_SETUP

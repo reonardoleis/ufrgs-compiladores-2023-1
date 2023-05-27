@@ -12,8 +12,8 @@
 
 
 <MULTI_LINE_COMMENT>"\/\/\/"            { BEGIN(0); }
-<MULTI_LINE_COMMENT>[^\n]*              { /* ignore */ }
-<MULTI_LINE_COMMENT>\n                   { /* ignore */ }
+<MULTI_LINE_COMMENT>.*              { /* ignore */ }
+<MULTI_LINE_COMMENT>\n                   { if(yytext[0] == '\n') { increment_line_number(); } }
 
 (\\\\\\)            { BEGIN(MULTI_LINE_COMMENT); }
 
@@ -46,7 +46,7 @@
 [a-zA-Z._]+ { hash_insert(yytext, TK_IDENTIFIER); return TK_IDENTIFIER; }
 [,;()\[\]{}=+\-*/%<>&|~] { return yytext[0]; }
 
-[\n\t ]       { /* ignore */ }
+[\n\t ]       { if(yytext[0] == '\n') { increment_line_number(); } }
 
 .             { return TOKEN_ERROR; }
 

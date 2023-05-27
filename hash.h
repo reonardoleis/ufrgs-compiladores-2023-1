@@ -20,7 +20,7 @@ char* get_key(hash_t* hash);
 hash_t* hash_table[HASH_SIZE];
 
 
-void initMe() {}
+void initMe(void) {}
 
 int hash(char *text) {
     int i;

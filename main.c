@@ -6,19 +6,11 @@
 int isRunning();
 int getLineNumber();
 void initMe();
-int is_running = 1;
 
 int yylex();
 extern char* yytext;
 extern FILE* yyin;
 
-int getLineNumber() {
-    return 0;
-}
-
-int isRunning() {
-    return is_running;
-}
 
 int main(int argc, char** argv) {
     
@@ -35,7 +27,7 @@ int main(int argc, char** argv) {
         return 0;
     }
 
-
+ 
     int token = 0;
     while (isRunning()) {
         token = yylex();
@@ -71,9 +63,4 @@ int main(int argc, char** argv) {
     }
 
     return 0;
-}
-
-int yywrap() {
-    is_running = 0;
-    return 1;
 }
