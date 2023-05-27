@@ -1,1 +1,13 @@
-0.5 35 'a' "aaa" char bool int if then else adsdasads
+char int real bool
+if then     else
+loop
+input   output
+
+
+return      <= >= ==    
+!= some_identifier another.identifier lastIdentifier
+
+5 2.5 'a'
+"some string"
+
+, ; ( ) [ ] { } = + - * / % < > & | ~

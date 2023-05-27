@@ -8,7 +8,6 @@
  * Assim, nao conflitam entre si e com os tokens representados pelo proprio
  * valor ascii de caracteres isolados.
  */
-
 #define KW_CHAR           256
 #define KW_INT            257
 #define KW_REAL           258

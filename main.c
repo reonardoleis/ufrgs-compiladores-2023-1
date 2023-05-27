@@ -6,18 +6,18 @@
 int isRunning();
 int getLineNumber();
 void initMe();
+int is_running = 1;
 
 int yylex();
 extern char* yytext;
 extern FILE* yyin;
-int token = 0;
 
 int getLineNumber() {
     return 0;
 }
 
 int isRunning() {
-    return token != 0;
+    return is_running;
 }
 
 int main(int argc, char** argv) {
@@ -29,15 +29,17 @@ int main(int argc, char** argv) {
 
     char* input_file_name = argv[1];
     char* output_file_name = argv[2];
-
+    
     if (!(yyin = fopen(input_file_name, "r"))) {
         fprintf(stderr, "could not open input file\n");
         return 0;
     }
 
 
-    token = yylex();
+    int token = 0;
     while (isRunning()) {
+        token = yylex();
+
         if (!isRunning()) {
             return 0;
         }
@@ -47,7 +49,7 @@ int main(int argc, char** argv) {
             case KW_INT:        { fprintf(stderr, "KW_INT\n"); break;  }
             case KW_REAL:       { fprintf(stderr, "KW_REAL\n"); break;  }
             case KW_BOOL:       { fprintf(stderr, "KW_BOOL\n"); break;  }
-            case KW_IF:         { fprintf(stderr, "KW_IF %s\n", yytext); break;  }
+            case KW_IF:         { fprintf(stderr, "KW_IF\n"); break;  }
             case KW_THEN:       { fprintf(stderr, "KW_THEN\n"); break;  }
             case KW_ELSE:       { fprintf(stderr, "KW_ELSE\n"); break;  }
             case KW_LOOP:       { fprintf(stderr, "KW_LOOP\n"); break;  }
@@ -66,13 +68,12 @@ int main(int argc, char** argv) {
             case TOKEN_ERROR:   { fprintf(stderr, "TOKEN_ERROR\n"); break;  }
             default:            { fprintf(stderr, "OP %d\n", token);     break;}     
         }
-
-        token = yylex();
     }
 
     return 0;
 }
 
 int yywrap() {
+    is_running = 0;
     return 1;
 }
