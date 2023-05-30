@@ -1,3 +1,5 @@
+// Leonardo Reis da Silva
+
 #pragma once
 
 #include <stdio.h>
@@ -20,7 +22,12 @@ char* get_key(hash_t* hash);
 hash_t* hash_table[HASH_SIZE];
 
 
-void initMe(void) {}
+void initMe(void) {
+    int i;
+    for (i = 0; i < HASH_SIZE; i++) {
+        hash_table[i] = 0;
+    }
+}
 
 int hash(char *text) {
     int i;

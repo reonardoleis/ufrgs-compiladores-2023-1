@@ -1,3 +1,5 @@
+// Leonardo Reis da Silva
+
 #include <stdio.h>
 #include <stdlib.h>
 #include "hash.h"
@@ -33,7 +35,7 @@ int main(int argc, char** argv) {
         token = yylex();
 
         if (!isRunning()) {
-            return 0;
+            break;
         }
 
         switch (token) {
@@ -57,10 +59,16 @@ int main(int argc, char** argv) {
             case LIT_REAL:      { fprintf(stderr, "LIT_REAL\n"); break;  }
             case LIT_STRING:    { fprintf(stderr, "LIT_STRING\n"); break;  }
             case TK_IDENTIFIER: { fprintf(stderr, "TK_IDENTIFIER\n"); break;  }
+            case SINGLE_LINE_COMMENT: { fprintf(stderr, "SINGLE_LINE_COMMENT\n"); break;  }
+            case ENTER_MULTI_LINE_COMMENT: { fprintf(stderr, "ENTER_MULTI_LINE_COMMENT\n"); break;  }
+            case EXIT_MULTI_LINE_COMMENT: { fprintf(stderr, "EXIT_MULTI_LINE_COMMENT\n"); break;  }
             case TOKEN_ERROR:   { fprintf(stderr, "TOKEN_ERROR\n"); break;  }
-            default:            { fprintf(stderr, "OP %d\n", token);     break;}     
+            default:            { fprintf(stderr, "OP %s\n", yytext);     break;}     
         }
     }
+
+
+    fprintf(stderr, "Program had %d lines", getLineNumber());
 
     return 0;
 }

@@ -11,13 +11,13 @@
 %%
 
 
-<MULTI_LINE_COMMENT>"\/\/\/"            { BEGIN(0); }
-<MULTI_LINE_COMMENT>.*              { /* ignore */ }
+<MULTI_LINE_COMMENT>\/\/\/          { BEGIN(0); return EXIT_MULTI_LINE_COMMENT; }
+<MULTI_LINE_COMMENT>[^\n\/]*              { /* ignore */ }
 <MULTI_LINE_COMMENT>\n                   { if(yytext[0] == '\n') { increment_line_number(); } }
+<MULTI_LINE_COMMENT>.                    { /* ignore */ }
+(\\\\\\)            { BEGIN(MULTI_LINE_COMMENT); return ENTER_MULTI_LINE_COMMENT; }
 
-(\\\\\\)            { BEGIN(MULTI_LINE_COMMENT); }
-
-(\\\\)[^\\](.)*(\n)      { return SINGLE_LINE_COMMENT; }
+(\\\\)[^\\](.)*(\n)      { increment_line_number(); return SINGLE_LINE_COMMENT; }
 
 
 
@@ -41,7 +41,7 @@
 [0-9]+                  { hash_insert(yytext, LIT_INT); return LIT_INT; }
 \'[^\']\'                   { hash_insert(yytext, LIT_CHAR); return LIT_CHAR; }
 [0-9]+\.([0-9]+)        { hash_insert(yytext, LIT_REAL); return LIT_REAL; }
-(\"[^\"]*\")            { hash_insert(yytext, LIT_STRING); return LIT_STRING; }
+(\"([^\"\n]|\\\")*\")            { hash_insert(yytext, LIT_STRING); return LIT_STRING; }
 
 [a-zA-Z._]+ { hash_insert(yytext, TK_IDENTIFIER); return TK_IDENTIFIER; }
 [,;()\[\]{}=+\-*/%<>&|~] { return yytext[0]; }

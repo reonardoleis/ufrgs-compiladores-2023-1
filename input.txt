@@ -1,15 +1,42 @@
-char int
+"string" char bool 
+if                  then
+                else 
 
+,;()[]{}=+-*/%<>&|~
 
+identifier 
 
+2.5 5 200
 
-"some string" 'c' 5.5
+"\n\n\n"
 
-523
+"string\""
+"st\"ring"
 
-/// multi line
-comments "are" extremely fun 1234
-2.5 3.5
-44334555 \\\
+loop input output return
 
-int a real b
+\\ comments
+
+,;()[]{}=+-*/%<>&|~
+
+identifier 
+
+2.5 5 200
+
+loop input output return
+
+// comments
+
+\\\ \\\ comments asdssd \\\ //
+100 5 2 char int +  // // / /
+        comment comment "AaaA" ///
+
+<= >= == !=
+
+'c'
+100 5 2 char int +  // // / /
+        comment comment "AaaA"
+
+<= >= == !=
+
+'c'
