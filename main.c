@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "hash.h"
-#include "tokens.h"
+#include "y.tab.h"
 
 int isRunning();
 int getLineNumber();
@@ -29,46 +29,10 @@ int main(int argc, char** argv) {
         return 0;
     }
 
- 
     int token = 0;
-    while (isRunning()) {
-        token = yylex();
+    yyparse();
 
-        if (!isRunning()) {
-            break;
-        }
+    fprintf(stderr, "Successful compilation. Program had %d lines.", getLineNumber());
 
-        switch (token) {
-            case KW_CHAR:       { fprintf(stderr, "KW_CHAR\n"); break; }
-            case KW_INT:        { fprintf(stderr, "KW_INT\n"); break;  }
-            case KW_REAL:       { fprintf(stderr, "KW_REAL\n"); break;  }
-            case KW_BOOL:       { fprintf(stderr, "KW_BOOL\n"); break;  }
-            case KW_IF:         { fprintf(stderr, "KW_IF\n"); break;  }
-            case KW_THEN:       { fprintf(stderr, "KW_THEN\n"); break;  }
-            case KW_ELSE:       { fprintf(stderr, "KW_ELSE\n"); break;  }
-            case KW_LOOP:       { fprintf(stderr, "KW_LOOP\n"); break;  }
-            case KW_INPUT:      { fprintf(stderr, "KW_INPUT\n"); break;  }
-            case KW_OUTPUT:     { fprintf(stderr, "KW_OUTPUT\n"); break;  }
-            case KW_RETURN:     { fprintf(stderr, "KW_RETURN\n"); break;  }
-            case OPERATOR_LE:   { fprintf(stderr, "OPERATOR_LE\n"); break;  }
-            case OPERATOR_GE:   { fprintf(stderr, "OPERATOR_GE\n"); break;  }
-            case OPERATOR_EQ:   { fprintf(stderr, "OPERATOR_EQ\n"); break;  }
-            case OPERATOR_DIF:  { fprintf(stderr, "OPERATOR_DIF\n"); break;  }
-            case LIT_INT:       { fprintf(stderr, "LIT_INT\n"); break;  }
-            case LIT_CHAR:      { fprintf(stderr, "LIT_CHAR\n"); break;  }
-            case LIT_REAL:      { fprintf(stderr, "LIT_REAL\n"); break;  }
-            case LIT_STRING:    { fprintf(stderr, "LIT_STRING\n"); break;  }
-            case TK_IDENTIFIER: { fprintf(stderr, "TK_IDENTIFIER\n"); break;  }
-            case SINGLE_LINE_COMMENT: { fprintf(stderr, "SINGLE_LINE_COMMENT\n"); break;  }
-            case ENTER_MULTI_LINE_COMMENT: { fprintf(stderr, "ENTER_MULTI_LINE_COMMENT\n"); break;  }
-            case EXIT_MULTI_LINE_COMMENT: { fprintf(stderr, "EXIT_MULTI_LINE_COMMENT\n"); break;  }
-            case TOKEN_ERROR:   { fprintf(stderr, "TOKEN_ERROR\n"); break;  }
-            default:            { fprintf(stderr, "OP %s\n", yytext);     break;}     
-        }
-    }
-
-
-    fprintf(stderr, "Program had %d lines", getLineNumber());
-
-    return 0;
+    exit(0);
 }

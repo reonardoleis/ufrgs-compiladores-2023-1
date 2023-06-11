@@ -1,42 +1,95 @@
-"string" char bool 
-if                  then
-                else 
+int a = 1;
+char b = 'a';
+real c = 1.5;
+bool d = 1;
+int matrix[100]; 
 
-,;()[]{}=+-*/%<>&|~
+int vec[5] 1 2 3 4 5;
 
-identifier 
+int sum(int a, int b) {
+    return a + b;
+}
 
-2.5 5 200
+char foo() {
+    a = 1;
+    {{{{{{};;};;};};};};
 
-"\n\n\n"
+    b = 'c';
 
-"string\""
-"st\"ring"
+    c = 2.5;
+    d[0] = 10;
 
-loop input output return
+    {
+        a = 5;
+    }
 
-\\ comments
+    d[1] = 2;
 
-,;()[]{}=+-*/%<>&|~
+    output "test", d[0], a + b, (a / 2) * d[0];
 
-identifier 
+    a = input(int);
+    ;;;;;;;;;;;;;;;;;;
 
-2.5 5 200
+    if(a) a = 5;
 
-loop input output return
+    if(a) {
+        a = 5;
+    }
 
-// comments
+    if(a) {
+        a = 5;
+    };
 
-\\\ \\\ comments asdssd \\\ //
-100 5 2 char int +  // // / /
-        comment comment "AaaA" ///
+    if(a) {
+        a = 5;
+        {
+            a = 5;
+            b = 5;
+            {{{{{{;};};};};};}
+        }
 
-<= >= == !=
+        {
+            a = 5;
+        };;;;;;
 
-'c'
-100 5 2 char int +  // // / /
-        comment comment "AaaA"
+        if(c) a = 5;
 
-<= >= == !=
+        if(d) {
+            a = 5;
+            {{{{;;;;}}}}
+            {
+                a = 5;
+                if(b) a = 5;
+                if(c) { b = 5; }
+            }
+        }
+    }
 
-'c'
+    if (a) { a = 5; }
+    else { b = 5; }
+
+    if (a) a = 5;
+    else {
+        {{{{{;;;};}}}}
+        a = 5;
+
+        if(b) a = 5;
+    };
+
+    a = f(a, b, c, d, e, f, g, h, i, j, k, l, d[0], (d[0] + 2 * (a / 2)), 2, 5, 5, input(int));
+
+    c = 100;
+    if (c >= 0) loop a = 5;
+
+    if (c >= 0) loop {
+        output "test", c;
+        c = c - 1;
+    }
+
+    if (a | b & (c > d | (-a > b))) {
+        c = -1;
+        d = ~a;
+    }
+
+    return a + d[0] * (c / 2);
+}

@@ -1,10 +1,8 @@
 // Leonardo Reis da Silva
 
 #pragma once
-
-#define SINGLE_LINE_COMMENT 300
-#define ENTER_MULTI_LINE_COMMENT 301
-#define EXIT_MULTI_LINE_COMMENT 302
+#include <stdio.h>
+#include <stdlib.h>
 
 int is_running = 1;
 int line_number = 1;
@@ -24,4 +22,9 @@ int yywrap(void) {
 
 int isRunning(void) {
     return is_running;
+}
+
+int yyerror(char *s) {
+    fprintf(stderr, "Error: %s at line %d\n", s, getLineNumber());
+    exit(3);
 }
