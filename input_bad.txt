@@ -1,0 +1,5 @@
+
+int foo(int c, int d) {
+    output 1, 2, 3;
+    i = foo(a);
+}

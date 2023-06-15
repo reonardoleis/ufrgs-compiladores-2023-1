@@ -1,9 +1,10 @@
 %{
 
-#include "y.tab.h"
+
 #include "definitions.h"
 #include "hash.h"
 #include "symbols.h"
+#include "y.tab.h"
 
 %}
 
@@ -39,12 +40,12 @@
 "=="          {  return OPERATOR_EQ; }
 "!="          {  return OPERATOR_DIF; }
 
-[0-9]+                  {  hash_insert(yytext, LIT_INT); return LIT_INT; }
-\'[^\']\'                   {  hash_insert(yytext, LIT_CHAR); return LIT_CHAR; }
-[0-9]+\.([0-9]+)        {   hash_insert(yytext, LIT_REAL); return LIT_REAL; }
-(\"([^\"\n]|\\\")*\")            {   hash_insert(yytext, LIT_STRING); return LIT_STRING; }
+[0-9]+                  {  yylval.symbol = hash_insert(yytext, LIT_INT); return LIT_INT; }
+\'[^\']\'                   {  yylval.symbol = hash_insert(yytext, LIT_CHAR); return LIT_CHAR; }
+[0-9]+\.([0-9]+)        {   yylval.symbol = hash_insert(yytext, LIT_REAL); return LIT_REAL; }
+(\"([^\"\n]|\\\")*\")            {   yylval.symbol = hash_insert(yytext, LIT_STRING); return LIT_STRING; }
 
-[a-zA-Z._]+ {   hash_insert(yytext, TK_IDENTIFIER); return TK_IDENTIFIER; }
+[a-zA-Z._]+ {   yylval.symbol = hash_insert(yytext, TK_IDENTIFIER); return TK_IDENTIFIER; }
 [,;()\[\]{}=+\-*/%<>&|~] {  return yytext[0]; }
 
 [\n\t ]       { if(yytext[0] == '\n') { increment_line_number(); } }

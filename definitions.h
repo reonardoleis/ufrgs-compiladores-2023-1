@@ -11,7 +11,7 @@ int getLineNumber() {
     return line_number;
 }
 
-int increment_line_number() {
+void increment_line_number() {
     line_number++;
 }
 

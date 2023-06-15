@@ -26,6 +26,14 @@
 
 %token TOKEN_ERROR 
 
+%{
+#include "hash.h"    
+%}
+
+%union{ 
+    hash_t* symbol; 
+}
+
 %left '~' '&' '|' OPERATOR_LE OPERATOR_GE OPERATOR_EQ OPERATOR_DIF '>' '<'
 %left '+' '-'
 %left '*' '/'
@@ -39,7 +47,7 @@ declaration_list: declaration declaration_list
     ;
 
 declaration: var_declaration ';'
-    |        vec_declaration vec_init ';'
+    |        vec_declaration vec_init_opt ';'
     |        func_declaration
 
 
@@ -59,9 +67,9 @@ var_declaration: KW_INT TK_IDENTIFIER '=' LIT_INT
     |            KW_BOOL TK_IDENTIFIER '=' LIT_REAL
     ;
 
-vec_init: LIT_INT vec_init
-    |     LIT_REAL vec_init
-    |     LIT_CHAR vec_init
+vec_init_opt: LIT_INT vec_init_opt
+    |     LIT_REAL vec_init_opt
+    |     LIT_CHAR vec_init_opt
     |
     ;
 
@@ -77,8 +85,11 @@ parameter: KW_INT TK_IDENTIFIER
     |      KW_BOOL TK_IDENTIFIER
     ;
 
-parameter_list: parameter
-    |           parameter ',' parameter_list
+parameter_list: parameter parameter_list_aux
+    | 
+    ;
+
+parameter_list_aux: ',' parameter parameter_list_aux
     |
     ;
 
@@ -155,10 +166,14 @@ expr: TK_IDENTIFIER
 
 func_call: TK_IDENTIFIER '(' expr_list ')';
 
-expr_list:  expr
-    |       expr ',' expr_list
+expr_list:  expr expr_list_aux
     |
     ;
+
+expr_list_aux: ',' expr expr_list_aux
+    |
+    ;
+
 
 %%
 

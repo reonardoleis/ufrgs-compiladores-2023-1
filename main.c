@@ -16,13 +16,13 @@ extern FILE* yyin;
 
 int main(int argc, char** argv) {
     
-    if (argc < 3) {
+    if (argc < 2 /* 3 when output file is required */) {
         fprintf(stderr, "usage: ./a.out input.txt output.txt\n");
         return 0;
     }
 
     char* input_file_name = argv[1];
-    char* output_file_name = argv[2];
+    // char* output_file_name = argv[2];
     
     if (!(yyin = fopen(input_file_name, "r"))) {
         fprintf(stderr, "could not open input file\n");
