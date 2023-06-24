@@ -59,22 +59,21 @@ extern int yydebug;
     KW_REAL = 260,                 /* KW_REAL  */
     KW_BOOL = 261,                 /* KW_BOOL  */
     KW_IF = 262,                   /* KW_IF  */
-    KW_THEN = 263,                 /* KW_THEN  */
-    KW_ELSE = 264,                 /* KW_ELSE  */
-    KW_LOOP = 265,                 /* KW_LOOP  */
-    KW_INPUT = 266,                /* KW_INPUT  */
-    KW_OUTPUT = 267,               /* KW_OUTPUT  */
-    KW_RETURN = 268,               /* KW_RETURN  */
-    OPERATOR_LE = 269,             /* OPERATOR_LE  */
-    OPERATOR_GE = 270,             /* OPERATOR_GE  */
-    OPERATOR_EQ = 271,             /* OPERATOR_EQ  */
-    OPERATOR_DIF = 272,            /* OPERATOR_DIF  */
-    TK_IDENTIFIER = 273,           /* TK_IDENTIFIER  */
-    LIT_INT = 274,                 /* LIT_INT  */
-    LIT_REAL = 275,                /* LIT_REAL  */
-    LIT_CHAR = 276,                /* LIT_CHAR  */
-    LIT_STRING = 277,              /* LIT_STRING  */
-    TOKEN_ERROR = 278              /* TOKEN_ERROR  */
+    KW_ELSE = 263,                 /* KW_ELSE  */
+    KW_LOOP = 264,                 /* KW_LOOP  */
+    KW_INPUT = 265,                /* KW_INPUT  */
+    KW_OUTPUT = 266,               /* KW_OUTPUT  */
+    KW_RETURN = 267,               /* KW_RETURN  */
+    OPERATOR_LE = 268,             /* OPERATOR_LE  */
+    OPERATOR_GE = 269,             /* OPERATOR_GE  */
+    OPERATOR_EQ = 270,             /* OPERATOR_EQ  */
+    OPERATOR_DIF = 271,            /* OPERATOR_DIF  */
+    TK_IDENTIFIER = 272,           /* TK_IDENTIFIER  */
+    LIT_INT = 273,                 /* LIT_INT  */
+    LIT_REAL = 274,                /* LIT_REAL  */
+    LIT_CHAR = 275,                /* LIT_CHAR  */
+    LIT_STRING = 276,              /* LIT_STRING  */
+    TOKEN_ERROR = 277              /* TOKEN_ERROR  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -88,32 +87,32 @@ extern int yydebug;
 #define KW_REAL 260
 #define KW_BOOL 261
 #define KW_IF 262
-#define KW_THEN 263
-#define KW_ELSE 264
-#define KW_LOOP 265
-#define KW_INPUT 266
-#define KW_OUTPUT 267
-#define KW_RETURN 268
-#define OPERATOR_LE 269
-#define OPERATOR_GE 270
-#define OPERATOR_EQ 271
-#define OPERATOR_DIF 272
-#define TK_IDENTIFIER 273
-#define LIT_INT 274
-#define LIT_REAL 275
-#define LIT_CHAR 276
-#define LIT_STRING 277
-#define TOKEN_ERROR 278
+#define KW_ELSE 263
+#define KW_LOOP 264
+#define KW_INPUT 265
+#define KW_OUTPUT 266
+#define KW_RETURN 267
+#define OPERATOR_LE 268
+#define OPERATOR_GE 269
+#define OPERATOR_EQ 270
+#define OPERATOR_DIF 271
+#define TK_IDENTIFIER 272
+#define LIT_INT 273
+#define LIT_REAL 274
+#define LIT_CHAR 275
+#define LIT_STRING 276
+#define TOKEN_ERROR 277
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 33 "parser.y"
- 
-    hash_t* symbol; 
+#line 9 "parser.y"
 
-#line 117 "y.tab.h"
+    hash_t* symbol; 
+    AST *ast;
+
+#line 116 "y.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

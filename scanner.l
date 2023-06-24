@@ -1,9 +1,9 @@
 %{
 
-
 #include "definitions.h"
 #include "hash.h"
 #include "symbols.h"
+#include "ast.h"
 #include "y.tab.h"
 
 %}
@@ -24,16 +24,15 @@
 
 
 "char"        {  return KW_CHAR; }
-"int"      {   return KW_INT; }
-"real"        {   return KW_REAL; }
-"bool"        {   return KW_BOOL; }
-"if"          {  return KW_IF; }
-"then"        {  return KW_THEN; }
-"else"        {  return KW_ELSE; }
-"loop"        {  return KW_LOOP; }
-"input"       {  return KW_INPUT; }
-"output"      {  return KW_OUTPUT; }
-"return"     {  return KW_RETURN; }
+"int"         { return KW_INT; }
+"real"        {  return KW_REAL; }
+"bool"        { return KW_BOOL; }
+"if"          { return KW_IF; }
+"else"        { return KW_ELSE; }
+"loop"        { return KW_LOOP; }
+"input"       { return KW_INPUT; }
+"output"      { return KW_OUTPUT; }
+"return"      { return KW_RETURN; }
 
 "<="          {  return OPERATOR_LE; }
 ">="          {  return OPERATOR_GE; }
@@ -59,7 +58,5 @@
 
 %%
 
-
-#include "hash.h"
 #include "y.tab.c"
 #include "main.c"

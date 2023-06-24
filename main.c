@@ -10,29 +10,41 @@ int getLineNumber();
 void initMe();
 
 int yylex();
-extern char* yytext;
-extern FILE* yyin;
+extern char *yytext;
+extern FILE *yyin;
 
+int main(int argc, char **argv)
+{
 
-int main(int argc, char** argv) {
-    
-    if (argc < 2 /* 3 when output file is required */) {
+    if (argc < 3)
+    {
         fprintf(stderr, "usage: ./a.out input.txt output.txt\n");
         return 0;
     }
 
-    char* input_file_name = argv[1];
-    // char* output_file_name = argv[2];
-    
-    if (!(yyin = fopen(input_file_name, "r"))) {
+    char *input_file_name = argv[1];
+    char* output_file_name = argv[2];
+
+    if (!(yyin = fopen(input_file_name, "r")))
+    {
         fprintf(stderr, "could not open input file\n");
         return 0;
     }
+
+    FILE *output_file;
+    if (!(output_file = fopen(output_file_name, "w")))
+    {
+        fprintf(stderr, "could not open output file\n");
+        return 0;
+    }
+
 
     int token = 0;
     yyparse();
 
     fprintf(stderr, "Successful compilation. Program had %d lines.", getLineNumber());
 
+    char* code = (char*) calloc(10000, sizeof(char));
+    fprintf(output_file, "%s", astToCode(root, code));
     exit(0);
 }
