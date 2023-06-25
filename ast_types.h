@@ -56,6 +56,7 @@
 #define AST_VEC_INIT_OPT_INT 54
 #define AST_VEC_INIT_OPT_REAL 55
 #define AST_VEC_INIT_OPT_CHAR 56
+
 #define AST_EXPR_LIST 57
 #define AST_FUNC_CALL 58
 #define AST_INPUT_EXPR_INT 63
@@ -70,7 +71,7 @@
 #define AST_VEC_INIT 72
 
 char *ast_type_str(int type);
-
+char *ast_func_param_type_str(int type);
 char *ast_type_str(int type)
 {
     switch (type)
@@ -210,6 +211,25 @@ char *ast_type_str(int type)
     default:
         char *unknown = (char *)calloc(1, sizeof(char) * 100);
         sprintf(unknown, "AST_TYPE_UNKNOWN(%d)", type);
+        return unknown;
+    }
+}
+
+char *ast_func_param_type_str(int type)
+{
+    switch (type)
+    {
+    case AST_PARAM_INT:
+        return "int";
+    case AST_PARAM_REAL:
+        return "real";
+    case AST_PARAM_CHAR:
+        return "char";
+    case AST_PARAM_BOOL:
+        return "bool";
+    default:
+        char *unknown = (char *)calloc(1, sizeof(char) * 100);
+        sprintf(unknown, "unknown(%d)", type);
         return unknown;
     }
 }

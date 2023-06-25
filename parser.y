@@ -78,7 +78,7 @@ declaration_list: declaration declaration_list  { $$ = astCreate(AST_DECL_LIST, 
     ;
 
 declaration: var_declaration ';'    { $$ = $1; }
-    |        vec_declaration vec_init_opt ';' { $$ = astCreate(AST_VEC_INIT, NULL, $1, $2, NULL, NULL); }
+    |        vec_declaration ';' { $$ = $1; }
     |        func_declaration   { $$ = $1; }
 
 
@@ -98,16 +98,16 @@ var_declaration: KW_INT TK_IDENTIFIER '=' LIT_INT   { $$ = astCreate(AST_VAR_DEC
     |            KW_BOOL TK_IDENTIFIER '=' LIT_REAL     { $$ = astCreate(AST_VAR_DECL_BOOL, $2, astCreate(AST_LIT_REAL, $4, NULL, NULL, NULL, NULL), NULL, NULL, NULL); }
     ;
 
-vec_init_opt: LIT_INT vec_init_opt { $$ = astCreate(AST_VEC_INIT_OPT_INT, $1, $2, NULL, NULL, NULL); }
-    |     LIT_REAL vec_init_opt    { $$ = astCreate(AST_VEC_INIT_OPT_REAL, $1, $2, NULL, NULL, NULL); }
-    |     LIT_CHAR vec_init_opt     { $$ = astCreate(AST_VEC_INIT_OPT_CHAR, $1, $2, NULL, NULL, NULL); }
+vec_init_opt: LIT_INT vec_init_opt { $$ = astCreate(AST_VEC_INIT_OPT_INT, NULL, astCreate(AST_LIT_INT, $1, NULL, NULL, NULL, NULL), $2, NULL, NULL); }
+    |     LIT_REAL vec_init_opt    { $$ = astCreate(AST_VEC_INIT_OPT_REAL, NULL, astCreate(AST_LIT_INT, $1, NULL, NULL, NULL, NULL), $2, NULL, NULL); }
+    |     LIT_CHAR vec_init_opt     { $$ = astCreate(AST_VEC_INIT_OPT_CHAR, NULL, astCreate(AST_LIT_INT, $1, NULL, NULL, NULL, NULL), $2, NULL, NULL); }
     |     { $$ = 0; }
     ;
 
-vec_declaration: KW_INT TK_IDENTIFIER '[' LIT_INT ']'   { $$ = astCreate(AST_VEC_DECL_INT, $2,  astCreate(AST_SYMBOL, $4, NULL, NULL, NULL, NULL), NULL, NULL, NULL); }
-    |            KW_CHAR TK_IDENTIFIER '[' LIT_INT ']'  { $$ = astCreate(AST_VEC_DECL_CHAR, $2, astCreate(AST_SYMBOL, $4, NULL, NULL, NULL, NULL), NULL, NULL, NULL); }
-    |            KW_REAL TK_IDENTIFIER '[' LIT_INT ']'  { $$ = astCreate(AST_VEC_DECL_REAL, $2, astCreate(AST_SYMBOL, $4, NULL, NULL, NULL, NULL), NULL, NULL, NULL); }
-    |            KW_BOOL TK_IDENTIFIER '[' LIT_INT ']'  { $$ = astCreate(AST_VEC_DECL_BOOL, $2, astCreate(AST_SYMBOL, $4, NULL, NULL, NULL, NULL), NULL, NULL, NULL); }
+vec_declaration: KW_INT TK_IDENTIFIER '[' LIT_INT ']'  vec_init_opt  { $$ = astCreate(AST_VEC_DECL_INT, $2,  astCreate(AST_LIT_INT, $4, NULL, NULL, NULL, NULL), $6, NULL, NULL); }
+    |            KW_CHAR TK_IDENTIFIER '[' LIT_INT ']' vec_init_opt { $$ = astCreate(AST_VEC_DECL_CHAR, $2, astCreate(AST_LIT_INT, $4, NULL, NULL, NULL, NULL), $6, NULL, NULL); }
+    |            KW_REAL TK_IDENTIFIER '[' LIT_INT ']' vec_init_opt { $$ = astCreate(AST_VEC_DECL_REAL, $2, astCreate(AST_LIT_INT, $4, NULL, NULL, NULL, NULL), $6, NULL, NULL); }
+    |            KW_BOOL TK_IDENTIFIER '[' LIT_INT ']' vec_init_opt { $$ = astCreate(AST_VEC_DECL_BOOL, $2, astCreate(AST_LIT_INT, $4, NULL, NULL, NULL, NULL), $6, NULL, NULL); }
     ;
 
 parameter: KW_INT TK_IDENTIFIER     { $$ = astCreate(AST_PARAM_INT, $2, NULL, NULL, NULL, NULL); }
@@ -116,11 +116,11 @@ parameter: KW_INT TK_IDENTIFIER     { $$ = astCreate(AST_PARAM_INT, $2, NULL, NU
     |      KW_BOOL TK_IDENTIFIER    { $$ = astCreate(AST_PARAM_BOOL, $2, NULL, NULL, NULL, NULL); }
     ;
 
-parameter_list: parameter parameter_list_aux { astCreate(AST_PARAM_LIST, NULL, $1, $2, NULL, NULL); }
+parameter_list: parameter parameter_list_aux { $$ = astCreate(AST_PARAM_LIST, NULL, $1, $2, NULL, NULL); }
     | { $$ = 0;} 
     ;
 
-parameter_list_aux: ',' parameter parameter_list_aux { astCreate(AST_PARAM_LIST, NULL, $2, $3, NULL, NULL); }
+parameter_list_aux: ',' parameter parameter_list_aux { $$ = astCreate(AST_PARAM_LIST, NULL, $2, $3, NULL, NULL); }
     | { $$ = 0; }
     ;
 

@@ -1,2 +1,4 @@
-int a = 1;
-int b = 2;
+int main(int a) {
+    a = 5;
+    b = 5;
+}
