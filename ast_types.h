@@ -1,5 +1,9 @@
 #pragma once
 
+#include <string.h>
+#include <stdlib.h>
+#include <stdio.h>
+
 #define AST_SYMBOL 1
 #define AST_IDENTIFIER 34
 #define AST_LIT_INT 35
@@ -45,10 +49,8 @@
 #define AST_IF 31
 #define AST_IF_ELSE 32
 #define AST_LOOP 33
-#define AST_INPUT_EXPR 32
-#define AST_VEC_ACCESS 33
+
 #define AST_VEC_ATTRIB 48
-#define AST_VAR 49
 #define AST_VEC_DECL_INT 50
 #define AST_VEC_DECL_REAL 51
 #define AST_VEC_DECL_CHAR 52
@@ -69,164 +71,175 @@
 #define AST_VAR_DECL_BOOL 70
 #define AST_DECL_LIST 71
 #define AST_VEC_INIT 72
+#define AST_NESTED_EXPR 73
+#define AST_INPUT_EXPR 74
+#define AST_VEC_ACCESS 75
+#define AST_CONDITIONAL_STATEMENT 76
 
 char *ast_type_str(int type);
 char *ast_func_param_type_str(int type);
-char *ast_type_str(int type)
-{
-    switch (type)
-    {
-    case AST_SYMBOL:
-        return "AST_SYMBOL";
-    case AST_IDENTIFIER:
-        return "AST_IDENTIFIER";
-    case AST_LIT_INT:
-        return "AST_LIT_INT";
-    case AST_LIT_REAL:
-        return "AST_LIT_REAL";
-    case AST_LIT_CHAR:
-        return "AST_LIT_CHAR";
-    case AST_LIT_STRING:
-        return "AST_LIT_STRING";
-    case AST_PARAM_LIST:
-        return "AST_PARAM_LIST";
-    case AST_FUNC_DECL_INT:
-        return "AST_FUNC_DECL_INT";
-    case AST_FUNC_DECL_REAL:
-        return "AST_FUNC_DECL_REAL";
-    case AST_FUNC_DECL_CHAR:
-        return "AST_FUNC_DECL_CHAR";
-    case AST_FUNC_DECL_BOOL:
-        return "AST_FUNC_DECL_BOOL";
-    case AST_PARAM_INT:
-        return "AST_PARAM_INT";
-    case AST_PARAM_REAL:
-        return "AST_PARAM_REAL";
-    case AST_PARAM_CHAR:
-        return "AST_PARAM_CHAR";
-    case AST_PARAM_BOOL:
-        return "AST_PARAM_BOOL";
-    case AST_ADD:
-        return "AST_ADD";
-    case AST_SUB:
-        return "AST_SUB";
-    case AST_MUL:
-        return "AST_MUL";
-    case AST_DIV:
-        return "AST_DIV";
-    case AST_NEG:
-        return "AST_NEG";
-    case AST_NOT:
-        return "AST_NOT";
-    case AST_AND:
-        return "AST_AND";
-    case AST_OR:
-        return "AST_OR";
-    case AST_LE:
-        return "AST_LE";
-    case AST_GE:
-        return "AST_GE";
-    case AST_EQ:
-        return "AST_EQ";
-    case AST_DIF:
-        return "AST_DIF";
-    case AST_GT:
-        return "AST_GT";
-    case AST_LT:
-        return "AST_LT";
-    case AST_PROGRAM:
-        return "AST_PROGRAM";
-    case AST_DECLARATION_LIST:
-        return "AST_DECLARATION_LIST";
-    case AST_DECLARATION:
-        return "AST_DECLARATION";
-    case AST_PARAMETER_LIST:
-        return "AST_PARAMETER_LIST";
-    case AST_PARAMETER:
-        return "AST_PARAMETER";
-    case AST_FUNC_DECLARATION:
-        return "AST_FUNC_DECLARATION";
-    case AST_BODY:
-        return "AST_BODY";
-    case AST_CMD_LIST:
-        return "AST_CMD_LIST";
-    case AST_CMD:
-        return "AST_CMD";
-    case AST_VAR_ATTRIB:
-        return "AST_VAR_ATTRIB";
-    case AST_OUTPUT_CMD:
-        return "AST_OUTPUT_CMD";
-    case AST_OUTPUT_PARAM_LIST:
-        return "AST_OUTPUT_PARAM_LIST";
-    case AST_RETURN_CMD:
-        return "AST_RETURN_CMD";
-    case AST_IF:
-        return "AST_IF";
-    case AST_IF_ELSE:
-        return "AST_IF_ELSE";
-    case AST_LOOP:
-        return "AST_LOOP";
-    case AST_VEC_ATTRIB:
-        return "AST_VEC_ATTRIB";
-    case AST_VAR:
-        return "AST_VAR";
-    case AST_VEC_DECL_INT:
-        return "AST_VEC_DECL_INT";
-    case AST_VEC_DECL_REAL:
-        return "AST_VEC_DECL_REAL";
-    case AST_VEC_DECL_CHAR:
-        return "AST_VEC_DECL_CHAR";
-    case AST_VEC_DECL_BOOL:
-        return "AST_VEC_DECL_BOOL";
-    case AST_VEC_INIT_OPT_INT:
-        return "AST_VEC_INIT_OPT_INT";
-    case AST_VEC_INIT_OPT_REAL:
-        return "AST_VEC_INIT_OPT_REAL";
-    case AST_VEC_INIT_OPT_CHAR:
-        return "AST_VEC_INIT_OPT_CHAR";
-    case AST_EXPR_LIST:
-        return "AST_EXPR_LIST";
-    case AST_FUNC_CALL:
-        return "AST_FUNC_CALL";
-    case AST_INPUT_EXPR_INT:
-        return "AST_INPUT_EXPR_INT";
-    case AST_INPUT_EXPR_REAL:
-        return "AST_INPUT_EXPR_REAL";
-    case AST_INPUT_EXPR_CHAR:
-        return "AST_INPUT_EXPR_CHAR";
-    case AST_INPUT_EXPR_BOOL:
-        return "AST_INPUT_EXPR_BOOL";
-    case AST_VAR_DECL_INT:
-        return "AST_VAR_DECL_INT";
-    case AST_VAR_DECL_REAL:
-        return "AST_VAR_DECL_REAL";
-    case AST_VAR_DECL_CHAR:
-        return "AST_VAR_DECL_CHAR";
-    case AST_VAR_DECL_BOOL:
-        return "AST_VAR_DECL_BOOL";
-    case AST_DECL_LIST:
-        return "AST_DECL_LIST";
-    case AST_VEC_INIT:
-        return "AST_VEC_INIT";
-    default:
-        char *unknown = (char *)calloc(1, sizeof(char) * 100);
-        sprintf(unknown, "AST_TYPE_UNKNOWN(%d)", type);
-        return unknown;
+
+char* ast_type_str(int type) {
+    switch (type) {
+        case AST_SYMBOL:
+            return strdup("AST_SYMBOL");
+        case AST_IDENTIFIER:
+            return strdup("AST_IDENTIFIER");
+        case AST_LIT_INT:
+            return strdup("AST_LIT_INT");
+        case AST_LIT_REAL:
+            return strdup("AST_LIT_REAL");
+        case AST_LIT_CHAR:
+            return strdup("AST_LIT_CHAR");
+        case AST_LIT_STRING:
+            return strdup("AST_LIT_STRING");
+        case AST_PARAM_LIST:
+            return strdup("AST_PARAM_LIST");
+        case AST_FUNC_DECL_INT:
+            return strdup("AST_FUNC_DECL_INT");
+        case AST_FUNC_DECL_REAL:
+            return strdup("AST_FUNC_DECL_REAL");
+        case AST_FUNC_DECL_CHAR:
+            return strdup("AST_FUNC_DECL_CHAR");
+        case AST_FUNC_DECL_BOOL:
+            return strdup("AST_FUNC_DECL_BOOL");
+        case AST_PARAM_INT:
+            return strdup("AST_PARAM_INT");
+        case AST_PARAM_REAL:
+            return strdup("AST_PARAM_REAL");
+        case AST_PARAM_CHAR:
+            return strdup("AST_PARAM_CHAR");
+        case AST_PARAM_BOOL:
+            return strdup("AST_PARAM_BOOL");
+        case AST_ADD:
+            return strdup("AST_ADD");
+        case AST_SUB:
+            return strdup("AST_SUB");
+        case AST_MUL:
+            return strdup("AST_MUL");
+        case AST_DIV:
+            return strdup("AST_DIV");
+        case AST_NEG:
+            return strdup("AST_NEG");
+        case AST_NOT:
+            return strdup("AST_NOT");
+        case AST_AND:
+            return strdup("AST_AND");
+        case AST_OR:
+            return strdup("AST_OR");
+        case AST_LE:
+            return strdup("AST_LE");
+        case AST_GE:
+            return strdup("AST_GE");
+        case AST_EQ:
+            return strdup("AST_EQ");
+        case AST_DIF:
+            return strdup("AST_DIF");
+        case AST_GT:
+            return strdup("AST_GT");
+        case AST_LT:
+            return strdup("AST_LT");
+        case AST_PROGRAM:
+            return strdup("AST_PROGRAM");
+        case AST_DECLARATION_LIST:
+            return strdup("AST_DECLARATION_LIST");
+        case AST_DECLARATION:
+            return strdup("AST_DECLARATION");
+        case AST_PARAMETER_LIST:
+            return strdup("AST_PARAMETER_LIST");
+        case AST_PARAMETER:
+            return strdup("AST_PARAMETER");
+        case AST_FUNC_DECLARATION:
+            return strdup("AST_FUNC_DECLARATION");
+        case AST_BODY:
+            return strdup("AST_BODY");
+        case AST_CMD_LIST:
+            return strdup("AST_CMD_LIST");
+        case AST_CMD:
+            return strdup("AST_CMD");
+        case AST_VAR_ATTRIB:
+            return strdup("AST_VAR_ATTRIB");
+        case AST_OUTPUT_CMD:
+            return strdup("AST_OUTPUT_CMD");
+        case AST_OUTPUT_PARAM_LIST:
+            return strdup("AST_OUTPUT_PARAM_LIST");
+        case AST_RETURN_CMD:
+            return strdup("AST_RETURN_CMD");
+        case AST_IF:
+            return strdup("AST_IF");
+        case AST_IF_ELSE:
+            return strdup("AST_IF_ELSE");
+        case AST_LOOP:
+            return strdup("AST_LOOP");
+        case AST_VEC_ATTRIB:
+            return strdup("AST_VEC_ATTRIB");
+        case AST_VEC_DECL_INT:
+            return strdup("AST_VEC_DECL_INT");
+        case AST_VEC_DECL_REAL:
+            return strdup("AST_VEC_DECL_REAL");
+        case AST_VEC_DECL_CHAR:
+            return strdup("AST_VEC_DECL_CHAR");
+        case AST_VEC_DECL_BOOL:
+            return strdup("AST_VEC_DECL_BOOL");
+        case AST_VEC_INIT_OPT_INT:
+            return strdup("AST_VEC_INIT_OPT_INT");
+        case AST_VEC_INIT_OPT_REAL:
+            return strdup("AST_VEC_INIT_OPT_REAL");
+        case AST_VEC_INIT_OPT_CHAR:
+            return strdup("AST_VEC_INIT_OPT_CHAR");
+        case AST_EXPR_LIST:
+            return strdup("AST_EXPR_LIST");
+        case AST_FUNC_CALL:
+            return strdup("AST_FUNC_CALL");
+        case AST_INPUT_EXPR_INT:
+            return strdup("AST_INPUT_EXPR_INT");
+        case AST_INPUT_EXPR_REAL:
+            return strdup("AST_INPUT_EXPR_REAL");
+        case AST_INPUT_EXPR_CHAR:
+            return strdup("AST_INPUT_EXPR_CHAR");
+        case AST_INPUT_EXPR_BOOL:
+            return strdup("AST_INPUT_EXPR_BOOL");
+        case AST_VAR_DECL_INT:
+            return strdup("AST_VAR_DECL_INT");
+        case AST_VAR_DECL_REAL:
+            return strdup("AST_VAR_DECL_REAL");
+        case AST_VAR_DECL_CHAR:
+            return strdup("AST_VAR_DECL_CHAR");
+        case AST_VAR_DECL_BOOL:
+            return strdup("AST_VAR_DECL_BOOL");
+        case AST_DECL_LIST:
+            return strdup("AST_DECL_LIST");
+        case AST_VEC_INIT:
+            return strdup("AST_VEC_INIT");
+        case AST_NESTED_EXPR:
+            return strdup("AST_NESTED_EXPR");
+        case AST_VEC_ACCESS:
+            return strdup("AST_VEC_ACCESS");
+        case AST_INPUT_EXPR:
+            return strdup("AST_INPUT_EXPR");
+        case AST_CONDITIONAL_STATEMENT:
+            return strdup("AST_CONDITIONAL_STATEMENT");
+        default: {
+            char* unknown = (char*) calloc(1, sizeof(char) * 100);
+            sprintf(unknown, "AST_TYPE_UNKNOWN(%d)", type);
+            return unknown;
+        }
     }
 }
+
 
 char *ast_func_param_type_str(int type)
 {
     switch (type)
     {
     case AST_PARAM_INT:
-        return "int";
+        return strdup("int");
     case AST_PARAM_REAL:
-        return "real";
+        return strdup("real");
     case AST_PARAM_CHAR:
-        return "char";
+        return strdup("char");
     case AST_PARAM_BOOL:
-        return "bool";
+        return strdup("bool");
     default:
         char *unknown = (char *)calloc(1, sizeof(char) * 100);
         sprintf(unknown, "unknown(%d)", type);

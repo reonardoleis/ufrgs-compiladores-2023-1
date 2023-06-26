@@ -44,8 +44,6 @@ int main(int argc, char **argv)
 
     fprintf(stderr, "Successful compilation. Program had %d lines.", getLineNumber());
 
-    char* code;
-    code = (char*) calloc(1000000, sizeof(char));
-    fprintf(output_file, "%s", astToCode(root, code));
+    fprintf(output_file, "%s", astToCode(root));
     exit(0);
 }

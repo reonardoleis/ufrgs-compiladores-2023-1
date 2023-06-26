@@ -62,6 +62,7 @@
 %type<ast> declaration
 %type<ast> declaration_list
 %type<ast> program
+%type<ast> vec_attrib
 
 
 %left '~' '&' '|' OPERATOR_LE OPERATOR_GE OPERATOR_EQ OPERATOR_DIF '>' '<'
@@ -130,12 +131,12 @@ func_declaration: KW_INT TK_IDENTIFIER '(' parameter_list ')' body      { $$ = a
     |             KW_BOOL TK_IDENTIFIER '(' parameter_list ')' body     { $$ = astCreate(AST_FUNC_DECL_BOOL, $2, $4, $6, NULL, NULL); }
     ;
 
-body: '{' cmd_list '}' { $$ = $2; }
+body: '{' cmd_list '}' { $$ = astCreate(AST_BODY, NULL, $2, NULL, NULL, NULL); }
     ;
 
 cmd_list: cmd ';' cmd_list { $$ = astCreate(AST_CMD_LIST, 0, $1, $3, NULL, NULL); }
-    |     body cmd_list    { $$ = astCreate(AST_BODY, 0, $1, $2, NULL, NULL); }
-    |     if_statement cmd_list     { $$ = $1; }
+    |     body cmd_list    { $$ = astCreate(AST_CMD_LIST, 0, $1, $2, NULL, NULL); }
+    |     if_statement cmd_list     { $$ = astCreate(AST_CONDITIONAL_STATEMENT, 0, $1, $2, NULL, NULL); }
     |     { $$ = 0; }
     ;
 
@@ -144,28 +145,28 @@ if_body: body { $$ = $1; }
     ;
 
 if_statement: KW_IF '(' expr ')' if_body           { $$ = astCreate(AST_IF, 0, $3, $5, NULL, NULL); }
-    | KW_IF '(' expr ')' if_body KW_ELSE if_body   { $$ = astCreate(AST_IF, 0, $3, $5, $7, NULL); }
-    | KW_IF '(' expr ')' KW_LOOP if_body           { $$ = astCreate(AST_IF, 0, $3, NULL, $6, NULL); }
+    | KW_IF '(' expr ')' if_body KW_ELSE if_body   { $$ = astCreate(AST_IF_ELSE, 0, $3, $5, $7, NULL); }
+    | KW_IF '(' expr ')' KW_LOOP if_body           { $$ = astCreate(AST_LOOP, 0, $3, $6, NULL, NULL); }
     ;
 
 cmd:  var_attrib {  $$ = $1; }
-    | vec_attrib { $$ = 0; }
-    | output_cmd { $$ = 0; }
-    | return_cmd { $$ = 0; }
+    | vec_attrib { $$ = $1; }
+    | output_cmd { $$ = $1; }
+    | return_cmd { $$ = $1; }
     | { $$ = 0; }
     ;
 
 var_attrib: TK_IDENTIFIER '=' expr { $$ = astCreate(AST_VAR_ATTRIB, $1, $3, NULL, NULL, NULL);  }
     ;
 
-vec_attrib: TK_IDENTIFIER '[' expr ']' '=' expr { astCreate(AST_VEC_ATTRIB, $1, $3, $6, NULL, NULL); };
+vec_attrib: TK_IDENTIFIER '[' expr ']' '=' expr { $$ = astCreate(AST_VEC_ATTRIB, $1, $3, $6, NULL, NULL); };
 
 output_cmd: KW_OUTPUT output_param_list { $$ = astCreate(AST_OUTPUT_CMD, 0, $2, NULL, NULL, NULL); }
     ;
 
-output_param_list: LIT_STRING ',' output_param_list     { $$ = astCreate(AST_OUTPUT_PARAM_LIST, $1, $3, NULL, NULL, NULL); }
+output_param_list: LIT_STRING ',' output_param_list     { $$ = astCreate(AST_OUTPUT_PARAM_LIST, NULL, astCreate(AST_LIT_STRING, $1, NULL, NULL, NULL, NULL), $3, NULL, NULL); }
     |              expr ',' output_param_list           { $$ = astCreate(AST_OUTPUT_PARAM_LIST, 0, $1, $3, NULL, NULL); }
-    |              LIT_STRING                           { $$ = astCreate(AST_OUTPUT_PARAM_LIST, $1, NULL, NULL, NULL, NULL); }
+    |              LIT_STRING                           { $$ = astCreate(AST_OUTPUT_PARAM_LIST, NULL, astCreate(AST_LIT_STRING, $1, NULL, NULL, NULL, NULL), NULL, NULL, NULL); }
     |              expr                                 { $$ = $1; }
     ;
 
@@ -179,7 +180,7 @@ input_expr: KW_INPUT '(' KW_INT ')'  { $$ = astCreate(AST_INPUT_EXPR_INT, 0, NUL
     ;
 
 expr: LIT_INT                               { $$ = astCreate(AST_LIT_INT, $1, NULL, NULL, NULL, NULL); }
-    | TK_IDENTIFIER                         { $$ = astCreate(AST_VAR, $1, NULL, NULL, NULL, NULL);    }
+    | TK_IDENTIFIER                         { $$ = astCreate(AST_IDENTIFIER, $1, NULL, NULL, NULL, NULL);    }
     | LIT_CHAR                              { $$ = astCreate(AST_LIT_CHAR, $1, NULL, NULL, NULL, NULL); }
     | LIT_REAL                              { $$ = astCreate(AST_LIT_REAL, $1, NULL, NULL, NULL, NULL); }
     | TK_IDENTIFIER '[' expr ']'            { $$ = astCreate(AST_VEC_ACCESS, $1, $3, NULL, NULL, NULL);   }
@@ -199,7 +200,7 @@ expr: LIT_INT                               { $$ = astCreate(AST_LIT_INT, $1, NU
     | expr OPERATOR_DIF expr                { $$ = astCreate(AST_DIF, 0, $1, $3, NULL, NULL);         }  
     | expr '>' expr                         { $$ = astCreate(AST_GT, 0, $1, $3, NULL, NULL);          }  
     | expr '<' expr                         { $$ = astCreate(AST_LT, 0, $1, $3, NULL, NULL);          }  
-    | '(' expr ')'                          { $$ = $2;                                                }  
+    | '(' expr ')'                          { $$ = astCreate(AST_NESTED_EXPR, 0, $2, NULL, NULL, NULL);                                                }  
 
 func_call: TK_IDENTIFIER '(' expr_list ')' { $$ = astCreate(AST_FUNC_CALL, $1, $3, NULL, NULL, NULL);  }
     ;
