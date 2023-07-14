@@ -1,5 +1,0 @@
-int fun ()
-{   
-    if (i == 0) {}
-    output "Incrementado algumas vezes a fica ",(2+x),a,"\n";
-}

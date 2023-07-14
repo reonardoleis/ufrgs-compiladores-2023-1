@@ -240,9 +240,10 @@ char *ast_func_param_type_str(int type)
         return strdup("char");
     case AST_PARAM_BOOL:
         return strdup("bool");
-    default:
+    default: {
         char *unknown = (char *)calloc(1, sizeof(char) * 100);
         sprintf(unknown, "unknown(%d)", type);
         return unknown;
+    }
     }
 }

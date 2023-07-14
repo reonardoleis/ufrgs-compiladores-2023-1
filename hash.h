@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include "symbols.h"
 
 #define HASH_SIZE 997
 
@@ -19,6 +20,7 @@ int hash(char *key);
 hash_t *hash_find(char *key);
 hash_t *hash_insert(char *text, int type);
 char *get_key(hash_t *hash);
+void hash_print();
 
 hash_t *hash_table[HASH_SIZE];
 
@@ -88,13 +90,12 @@ hash_t *hash_insert(char *text, int type)
     char *key = get_key(item);
     int pos = hash(key);
 
-    int exists = hash_table[pos] != NULL;
-    if (exists)
+    if (hash_table[pos])
     {
         hash_t *current_item = hash_table[pos];
         while (current_item->next != NULL)
         {
-            if (strcmp(get_key(current_item), key))
+            if (strcmp(get_key(current_item), key) == 0 /* current_item_key != key */)
             {
                 return current_item;
             }
@@ -109,4 +110,21 @@ hash_t *hash_insert(char *text, int type)
     hash_table[pos] = item;
 
     return hash_table[pos];
+}
+
+void hash_print()
+{
+    if (hash == NULL)
+    {
+        return;
+    }
+
+    hash_t* node;
+
+    int i;
+    for (i = 0; i < HASH_SIZE; i++) {
+        for (node = hash_table[i]; node; node = node->next) {
+            printf("Table[%d] has %s with type %s\n", i, node->text, symbol_type_str(node->type));
+        }
+    }
 }

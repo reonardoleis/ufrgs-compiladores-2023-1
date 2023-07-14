@@ -42,8 +42,10 @@ int main(int argc, char **argv)
     int token = 0;
     yyparse();
 
-    fprintf(stderr, "Successful compilation. Program had %d lines.", getLineNumber());
+    fprintf(stderr, "Successful compilation. Program had %d lines.\n\n", getLineNumber());
 
+
+    hash_print();
     fprintf(output_file, "%s", astToCode(root));
     exit(0);
 }

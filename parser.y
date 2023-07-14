@@ -4,6 +4,7 @@
 #include "hash.h"
 #include "ast_types.h"
 #include "ast.h"    
+#include "semantic.h"
 %}
 
 %union{
@@ -71,7 +72,10 @@
 
 %%
 
-program: declaration_list { root = astCreate(AST_PROGRAM, NULL, $1, NULL, NULL, NULL); $1 = root; $$ = $1; astPrint($1, 0); }
+program: declaration_list   { 
+                                root = astCreate(AST_PROGRAM, NULL, $1, NULL, NULL, NULL); $1 = root; $$ = $1; astPrint($1, 0); 
+                                check_and_set_declarations($1);
+                            }
     ;
 
 declaration_list: declaration declaration_list  { $$ = astCreate(AST_DECL_LIST, NULL, $1, $2, NULL, NULL); }
