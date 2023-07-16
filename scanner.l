@@ -39,12 +39,12 @@
 "=="          {  return OPERATOR_EQ; }
 "!="          {  return OPERATOR_DIF; }
 
-[0-9]+                  {  yylval.symbol = hash_insert(yytext, SYMBOL_LIT_INTEGER); return LIT_INT; }
-\'[^\']\'                   {  yylval.symbol = hash_insert(yytext, SYMBOL_LIT_CHAR); return LIT_CHAR; }
-[0-9]+\.([0-9]+)        {   yylval.symbol = hash_insert(yytext, SYMBOL_LIT_REAL); return LIT_REAL; }
-(\"([^\"\n]|\\\")*\")            {   yylval.symbol = hash_insert(yytext, SYMBOL_LIT_STRING); return LIT_STRING; }
+[0-9]+                  {  yylval.symbol = hash_insert(yytext, SYMBOL_LIT_INTEGER, DATATYPE_INT); return LIT_INT; }
+\'[^\']\'                   {  yylval.symbol = hash_insert(yytext, SYMBOL_LIT_CHAR, DATATYPE_CHAR); return LIT_CHAR; }
+[0-9]+\.([0-9]+)        {   yylval.symbol = hash_insert(yytext, SYMBOL_LIT_REAL, DATATYPE_REAL); return LIT_REAL; }
+(\"([^\"\n]|\\\")*\")            {   yylval.symbol = hash_insert(yytext, SYMBOL_LIT_STRING, 0); return LIT_STRING; }
 
-[a-zA-Z._]+ {   yylval.symbol = hash_insert(yytext, SYMBOL_IDENTIFIER); return TK_IDENTIFIER; }
+[a-zA-Z._]+ {   yylval.symbol = hash_insert(yytext, SYMBOL_IDENTIFIER, 0); return TK_IDENTIFIER; }
 [,;()\[\]{}=+\-*/%<>&|~] {  return yytext[0]; }
 
 [\n\t ]       { if(yytext[0] == '\n') { increment_line_number(); } }

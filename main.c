@@ -5,6 +5,7 @@
 #include "hash.h"
 #include "y.tab.h"
 
+
 int isRunning();
 int getLineNumber();
 void initMe();
@@ -19,7 +20,7 @@ int main(int argc, char **argv)
     if (argc < 3)
     {
         fprintf(stderr, "usage: ./a.out input.txt output.txt\n");
-        return 0;
+        exit(1);
     }
 
     char *input_file_name = argv[1];
@@ -28,7 +29,7 @@ int main(int argc, char **argv)
     if (!(yyin = fopen(input_file_name, "r")))
     {
         fprintf(stderr, "could not open input file\n");
-        return 0;
+        exit(2);
     }
 
     FILE *output_file;
@@ -42,10 +43,18 @@ int main(int argc, char **argv)
     int token = 0;
     yyparse();
 
-    fprintf(stderr, "Successful compilation. Program had %d lines.\n\n", getLineNumber());
+   // hash_print();
+
+    if (SemanticErrors == 0) {
+        fprintf(stderr, "\n\nSuccessful compilation. Program had %d lines.\n\n", getLineNumber());
+    } else {
+        fprintf(stderr, "\n\nCompilation failed with %d semantic errors. Program had %d lines.\n\n", SemanticErrors, getLineNumber());
+        exit(4);
+    }
+     
 
 
-    hash_print();
+ 
     fprintf(output_file, "%s", astToCode(root));
     exit(0);
 }

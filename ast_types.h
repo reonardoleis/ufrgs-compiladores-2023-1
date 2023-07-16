@@ -78,7 +78,6 @@
 
 char *ast_type_str(int type);
 char *ast_func_param_type_str(int type);
-
 char* ast_type_str(int type) {
     switch (type) {
         case AST_SYMBOL:
