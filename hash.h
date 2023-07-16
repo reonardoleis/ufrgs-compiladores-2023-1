@@ -15,6 +15,7 @@
 #define DATATYPE_BOOL 3
 #define DATATYPE_CHAR 4
 
+
 char* datatype_str[] = { "invalid", "int",  "real", "bool", "char" };
 
 typedef struct hash_t
@@ -26,6 +27,8 @@ typedef struct hash_t
     struct hash_t *next;
     int* params;
     int param_count;
+    int is_vector;
+    int is_function;
 } hash_t;
 
 
@@ -105,6 +108,8 @@ hash_t *hash_insert(char *text, int type, int datatype)
     item->datatype = datatype;
     item->params = (int *)calloc(100, sizeof(int));
     item->param_count = 0;
+    item->is_vector = 0;
+    item->is_function = 0;
     strcpy(item->text, text);
 
     char *key = get_key(item);

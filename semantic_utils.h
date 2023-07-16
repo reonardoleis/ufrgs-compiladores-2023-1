@@ -180,7 +180,8 @@ int validate_return_type(AST * func, AST * return_cmd) {
     }
 
     
-
+    fprintf(stderr, "return cmd type: %s\n", ast_type_str(return_cmd->type));
+    fprintf(stderr, "func symbol datatype: %s\n", datatype_str[func->symbol->datatype]);
 
     return 
         compatible_char_int ||
@@ -211,9 +212,6 @@ int verify_literal_compatibility(int lit_type1, int lit_type2) {
         return 1;
     }
 
-
-    
-
     if (lit_type1 == AST_LIT_CHAR && lit_type2 == AST_LIT_INT) {
         return 1;
     }
@@ -221,8 +219,6 @@ int verify_literal_compatibility(int lit_type1, int lit_type2) {
     if (lit_type1 == AST_LIT_INT && lit_type2 == AST_LIT_CHAR) {
         return 1;
     }
-
-
 
     return 0;
 }

@@ -1,9 +1,13 @@
-int a = 5;
-int b = 6;
-int c[1] 1;
-
+bool y = 0;
 int main() {
-    if ((1 > (a+b))) {} else {}
+   if(y) {
+     y = ~y;
+     return 1;
+   }
 
+   if (y) y = ~y;
 
+   {
+
+   }
 }

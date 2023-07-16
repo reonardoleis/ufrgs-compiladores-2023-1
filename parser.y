@@ -76,12 +76,19 @@ program: declaration_list   {
                                 root = astCreate(AST_PROGRAM, NULL, $1, NULL, NULL, NULL); $1 = root; $$ = $1; 
                                 check_and_set_declarations($1);
                                 check_undeclared();
+                                
                                 check_operands($1);
-                                check_attributions($1);	
-                                astPrint($1, 0);
+                                
+                                check_assignments($1);	
+                                
                                 check_return($1);
+                                
                                 check_function_call($1);
+                               
                                 check_conditional_stmts($1);
+
+                                astPrint($1, 0);
+                                
                             }
     ;
 

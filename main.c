@@ -48,7 +48,7 @@ int main(int argc, char **argv)
     if (SemanticErrors == 0) {
         fprintf(stderr, "\n\nSuccessful compilation. Program had %d lines.\n\n", getLineNumber());
     } else {
-        fprintf(stderr, "\n\nCompilation failed with %d semantic errors. Program had %d lines.\n\n", SemanticErrors, getLineNumber());
+        fprintf(stderr, "\n\nCompilation failed with %d Semantic errors. Program had %d lines.\n\n", SemanticErrors, getLineNumber());
         exit(4);
     }
      
