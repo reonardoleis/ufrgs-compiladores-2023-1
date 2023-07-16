@@ -78,8 +78,10 @@ program: declaration_list   {
                                 check_undeclared();
                                 check_operands($1);
                                 check_attributions($1);	
+                                astPrint($1, 0);
                                 check_return($1);
-                                //astPrint($1, 0);
+                                check_function_call($1);
+                                check_conditional_stmts($1);
                             }
     ;
 
@@ -109,8 +111,8 @@ var_declaration: KW_INT TK_IDENTIFIER '=' LIT_INT   { $$ = astCreate(AST_VAR_DEC
     ;
 
 vec_init_opt: LIT_INT vec_init_opt { $$ = astCreate(AST_VEC_INIT_OPT_INT, NULL, astCreate(AST_LIT_INT, $1, NULL, NULL, NULL, NULL), $2, NULL, NULL); }
-    |     LIT_REAL vec_init_opt    { $$ = astCreate(AST_VEC_INIT_OPT_REAL, NULL, astCreate(AST_LIT_INT, $1, NULL, NULL, NULL, NULL), $2, NULL, NULL); }
-    |     LIT_CHAR vec_init_opt     { $$ = astCreate(AST_VEC_INIT_OPT_CHAR, NULL, astCreate(AST_LIT_INT, $1, NULL, NULL, NULL, NULL), $2, NULL, NULL); }
+    |     LIT_REAL vec_init_opt    { $$ = astCreate(AST_VEC_INIT_OPT_REAL, NULL, astCreate(AST_LIT_REAL, $1, NULL, NULL, NULL, NULL), $2, NULL, NULL); }
+    |     LIT_CHAR vec_init_opt     { $$ = astCreate(AST_VEC_INIT_OPT_CHAR, NULL, astCreate(AST_LIT_CHAR, $1, NULL, NULL, NULL, NULL), $2, NULL, NULL); }
     |     { $$ = 0; }
     ;
 

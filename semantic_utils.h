@@ -9,6 +9,7 @@ int is_unary(AST *node);
 int is_binary(AST *node);
 int is_func_declaration(AST *node);
 int validate_return_type(AST * func, AST * return_cmd);
+int verify_literal_compatibility(int lit_type1, int lit_type2);
 
 int is_arithmetic(AST *node) {
     if (!node) return 0;
@@ -60,6 +61,10 @@ int is_numeric(AST *node) {
                 }
                 return 0;    
             }
+        case AST_IDENTIFIER:
+            return node->symbol->datatype == DATATYPE_INT 
+                || node->symbol->datatype == DATATYPE_REAL
+                || node->symbol->datatype == DATATYPE_CHAR;
         default:
             return 0;
     }
@@ -113,7 +118,7 @@ int is_unary(AST *node) {
 
     switch (node->type) {
         case AST_NOT:
-        case AST_SUB:
+        case AST_NEG:
             return 1;
         default:
             return 0;
@@ -149,16 +154,75 @@ int is_func_declaration(AST *node) {
 }
 
 int validate_return_type(AST * func, AST * return_cmd) {
-    
+
     if (!func || !return_cmd) return 0;
 
 
+    int compatible_char_int = 0;
+
+    int datatype = 0;
+
+    if (return_cmd->symbol) {
+        datatype = return_cmd->symbol->datatype;
+    } else {
+        datatype = return_cmd->result_datatype;
+    }
+
+    if (datatype == DATATYPE_CHAR && func->symbol->datatype == DATATYPE_INT) {
+        compatible_char_int = 1;
+    }
+
+   
+
+
+    if (datatype == DATATYPE_INT && func->symbol->datatype == DATATYPE_CHAR) {
+        compatible_char_int = 1;
+    }
+
+    
+
 
     return 
-        (return_cmd->symbol->datatype == func->symbol->datatype) ||
+        compatible_char_int ||
+        (datatype == func->symbol->datatype) ||
         (return_cmd->type == AST_LIT_INT && func->symbol->datatype == DATATYPE_INT) ||
         (return_cmd->type == AST_LIT_CHAR && func->symbol->datatype == DATATYPE_INT) ||
         (return_cmd->type == AST_LIT_INT && func->symbol->datatype == DATATYPE_CHAR) ||
         (return_cmd->type == AST_LIT_CHAR && func->symbol->datatype == DATATYPE_CHAR) ||
         (return_cmd->type == AST_LIT_REAL && func->symbol->datatype == DATATYPE_REAL);
+}
+
+int compare_datatypes(int a, int b) {
+    int compatible_char_int = 0;
+    if (a == DATATYPE_CHAR && b == DATATYPE_INT) {
+        compatible_char_int = 1;
+    }
+
+    if (a == DATATYPE_INT && b == DATATYPE_CHAR) {
+        compatible_char_int = 1;
+    }
+
+    return compatible_char_int || a == b;
+}
+
+
+int verify_literal_compatibility(int lit_type1, int lit_type2) {
+    if (lit_type1 == lit_type2) {
+        return 1;
+    }
+
+
+    
+
+    if (lit_type1 == AST_LIT_CHAR && lit_type2 == AST_LIT_INT) {
+        return 1;
+    }
+
+    if (lit_type1 == AST_LIT_INT && lit_type2 == AST_LIT_CHAR) {
+        return 1;
+    }
+
+
+
+    return 0;
 }

@@ -8,6 +8,7 @@
 #define SYMBOL_VARIABLE 5
 #define SYMBOL_FUNCTION 6
 #define SYMBOL_VECTOR 7
+#define SYMBOL_PARAMETER 8
 
 char* symbol_type_str(int symbol_type);
 char* symbol_type_str(int symbol_type) {

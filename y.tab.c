@@ -650,16 +650,16 @@ static const yytype_int8 yytranslate[] =
 /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    75,    75,    86,    87,    90,    91,    92,    95,    96,
-      97,    98,   100,   101,   102,   103,   105,   106,   107,   108,
-     111,   112,   113,   114,   117,   118,   119,   120,   123,   124,
-     125,   126,   129,   130,   133,   134,   137,   138,   139,   140,
-     143,   146,   147,   148,   149,   152,   153,   156,   157,   158,
-     161,   162,   163,   164,   165,   168,   171,   173,   176,   177,
-     178,   179,   182,   185,   186,   187,   188,   191,   192,   193,
-     194,   195,   196,   197,   198,   199,   200,   201,   202,   203,
-     204,   205,   206,   207,   208,   209,   210,   211,   212,   214,
-     217,   218,   221,   222
+       0,    75,    75,    88,    89,    92,    93,    94,    97,    98,
+      99,   100,   102,   103,   104,   105,   107,   108,   109,   110,
+     113,   114,   115,   116,   119,   120,   121,   122,   125,   126,
+     127,   128,   131,   132,   135,   136,   139,   140,   141,   142,
+     145,   148,   149,   150,   151,   154,   155,   158,   159,   160,
+     163,   164,   165,   166,   167,   170,   173,   175,   178,   179,
+     180,   181,   184,   187,   188,   189,   190,   193,   194,   195,
+     196,   197,   198,   199,   200,   201,   202,   203,   204,   205,
+     206,   207,   208,   209,   210,   211,   212,   213,   214,   216,
+     219,   220,   223,   224
 };
 #endif
 
@@ -1361,560 +1361,562 @@ yyreduce:
                                 check_undeclared();
                                 check_operands((yyvsp[0].ast));
                                 check_attributions((yyvsp[0].ast));	
+                                astPrint((yyvsp[0].ast), 0);
                                 check_return((yyvsp[0].ast));
-                                //astPrint($1, 0);
+                                check_function_call((yyvsp[0].ast));
+                                check_conditional_stmts((yyvsp[0].ast));
                             }
-#line 1368 "y.tab.c"
+#line 1370 "y.tab.c"
     break;
 
   case 3: /* declaration_list: declaration declaration_list  */
-#line 86 "parser.y"
+#line 88 "parser.y"
                                                 { (yyval.ast) = astCreate(AST_DECL_LIST, NULL, (yyvsp[-1].ast), (yyvsp[0].ast), NULL, NULL); }
-#line 1374 "y.tab.c"
+#line 1376 "y.tab.c"
     break;
 
   case 4: /* declaration_list: %empty  */
-#line 87 "parser.y"
+#line 89 "parser.y"
                  { (yyval.ast) = 0; }
-#line 1380 "y.tab.c"
+#line 1382 "y.tab.c"
     break;
 
   case 5: /* declaration: var_declaration ';'  */
-#line 90 "parser.y"
+#line 92 "parser.y"
                                     { (yyval.ast) = (yyvsp[-1].ast); }
-#line 1386 "y.tab.c"
+#line 1388 "y.tab.c"
     break;
 
   case 6: /* declaration: vec_declaration ';'  */
-#line 91 "parser.y"
+#line 93 "parser.y"
                                  { (yyval.ast) = (yyvsp[-1].ast); }
-#line 1392 "y.tab.c"
+#line 1394 "y.tab.c"
     break;
 
   case 7: /* declaration: func_declaration  */
-#line 92 "parser.y"
+#line 94 "parser.y"
                                 { (yyval.ast) = (yyvsp[0].ast); }
-#line 1398 "y.tab.c"
+#line 1400 "y.tab.c"
     break;
 
   case 8: /* var_declaration: KW_INT TK_IDENTIFIER '=' LIT_INT  */
-#line 95 "parser.y"
+#line 97 "parser.y"
                                                     { (yyval.ast) = astCreate(AST_VAR_DECL_INT, (yyvsp[-2].symbol), astCreate(AST_LIT_INT, (yyvsp[0].symbol), NULL, NULL, NULL, NULL), NULL, NULL, NULL); }
-#line 1404 "y.tab.c"
+#line 1406 "y.tab.c"
     break;
 
   case 9: /* var_declaration: KW_CHAR TK_IDENTIFIER '=' LIT_INT  */
-#line 96 "parser.y"
+#line 98 "parser.y"
                                                     { (yyval.ast) = astCreate(AST_VAR_DECL_CHAR, (yyvsp[-2].symbol), astCreate(AST_LIT_INT, (yyvsp[0].symbol), NULL, NULL, NULL, NULL), NULL, NULL, NULL); }
-#line 1410 "y.tab.c"
+#line 1412 "y.tab.c"
     break;
 
   case 10: /* var_declaration: KW_REAL TK_IDENTIFIER '=' LIT_INT  */
-#line 97 "parser.y"
+#line 99 "parser.y"
                                                       { (yyval.ast) = astCreate(AST_VAR_DECL_REAL, (yyvsp[-2].symbol), astCreate(AST_LIT_INT, (yyvsp[0].symbol), NULL, NULL, NULL, NULL), NULL, NULL, NULL); }
-#line 1416 "y.tab.c"
+#line 1418 "y.tab.c"
     break;
 
   case 11: /* var_declaration: KW_BOOL TK_IDENTIFIER '=' LIT_INT  */
-#line 98 "parser.y"
+#line 100 "parser.y"
                                                     { (yyval.ast) = astCreate(AST_VAR_DECL_BOOL, (yyvsp[-2].symbol), astCreate(AST_LIT_INT, (yyvsp[0].symbol), NULL, NULL, NULL, NULL), NULL, NULL, NULL); }
-#line 1422 "y.tab.c"
+#line 1424 "y.tab.c"
     break;
 
   case 12: /* var_declaration: KW_INT TK_IDENTIFIER '=' LIT_CHAR  */
-#line 100 "parser.y"
+#line 102 "parser.y"
                                                     { (yyval.ast) = astCreate(AST_VAR_DECL_INT, (yyvsp[-2].symbol), astCreate(AST_LIT_CHAR, (yyvsp[0].symbol), NULL, NULL, NULL, NULL), NULL, NULL, NULL); }
-#line 1428 "y.tab.c"
+#line 1430 "y.tab.c"
     break;
 
   case 13: /* var_declaration: KW_CHAR TK_IDENTIFIER '=' LIT_CHAR  */
-#line 101 "parser.y"
+#line 103 "parser.y"
                                                     { (yyval.ast) = astCreate(AST_VAR_DECL_CHAR, (yyvsp[-2].symbol),astCreate(AST_LIT_CHAR, (yyvsp[0].symbol), NULL, NULL, NULL, NULL), NULL, NULL, NULL); }
-#line 1434 "y.tab.c"
+#line 1436 "y.tab.c"
     break;
 
   case 14: /* var_declaration: KW_REAL TK_IDENTIFIER '=' LIT_CHAR  */
-#line 102 "parser.y"
+#line 104 "parser.y"
                                                      { (yyval.ast) = astCreate(AST_VAR_DECL_REAL, (yyvsp[-2].symbol), astCreate(AST_LIT_CHAR, (yyvsp[0].symbol), NULL, NULL, NULL, NULL), NULL, NULL, NULL); }
-#line 1440 "y.tab.c"
+#line 1442 "y.tab.c"
     break;
 
   case 15: /* var_declaration: KW_BOOL TK_IDENTIFIER '=' LIT_CHAR  */
-#line 103 "parser.y"
+#line 105 "parser.y"
                                                      { (yyval.ast) = astCreate(AST_VAR_DECL_BOOL, (yyvsp[-2].symbol), astCreate(AST_LIT_CHAR, (yyvsp[0].symbol), NULL, NULL, NULL, NULL), NULL, NULL, NULL); }
-#line 1446 "y.tab.c"
+#line 1448 "y.tab.c"
     break;
 
   case 16: /* var_declaration: KW_INT TK_IDENTIFIER '=' LIT_REAL  */
-#line 105 "parser.y"
+#line 107 "parser.y"
                                                    { (yyval.ast) = astCreate(AST_VAR_DECL_INT, (yyvsp[-2].symbol), astCreate(AST_LIT_REAL, (yyvsp[0].symbol), NULL, NULL, NULL, NULL), NULL, NULL, NULL); }
-#line 1452 "y.tab.c"
+#line 1454 "y.tab.c"
     break;
 
   case 17: /* var_declaration: KW_CHAR TK_IDENTIFIER '=' LIT_REAL  */
-#line 106 "parser.y"
+#line 108 "parser.y"
                                                     { (yyval.ast) = astCreate(AST_VAR_DECL_CHAR, (yyvsp[-2].symbol), astCreate(AST_LIT_REAL, (yyvsp[0].symbol), NULL, NULL, NULL, NULL), NULL, NULL, NULL); }
-#line 1458 "y.tab.c"
+#line 1460 "y.tab.c"
     break;
 
   case 18: /* var_declaration: KW_REAL TK_IDENTIFIER '=' LIT_REAL  */
-#line 107 "parser.y"
+#line 109 "parser.y"
                                                          { (yyval.ast) = astCreate(AST_VAR_DECL_REAL, (yyvsp[-2].symbol), astCreate(AST_LIT_REAL, (yyvsp[0].symbol), NULL, NULL, NULL, NULL), NULL, NULL, NULL); }
-#line 1464 "y.tab.c"
+#line 1466 "y.tab.c"
     break;
 
   case 19: /* var_declaration: KW_BOOL TK_IDENTIFIER '=' LIT_REAL  */
-#line 108 "parser.y"
+#line 110 "parser.y"
                                                         { (yyval.ast) = astCreate(AST_VAR_DECL_BOOL, (yyvsp[-2].symbol), astCreate(AST_LIT_REAL, (yyvsp[0].symbol), NULL, NULL, NULL, NULL), NULL, NULL, NULL); }
-#line 1470 "y.tab.c"
+#line 1472 "y.tab.c"
     break;
 
   case 20: /* vec_init_opt: LIT_INT vec_init_opt  */
-#line 111 "parser.y"
+#line 113 "parser.y"
                                    { (yyval.ast) = astCreate(AST_VEC_INIT_OPT_INT, NULL, astCreate(AST_LIT_INT, (yyvsp[-1].symbol), NULL, NULL, NULL, NULL), (yyvsp[0].ast), NULL, NULL); }
-#line 1476 "y.tab.c"
+#line 1478 "y.tab.c"
     break;
 
   case 21: /* vec_init_opt: LIT_REAL vec_init_opt  */
-#line 112 "parser.y"
-                                   { (yyval.ast) = astCreate(AST_VEC_INIT_OPT_REAL, NULL, astCreate(AST_LIT_INT, (yyvsp[-1].symbol), NULL, NULL, NULL, NULL), (yyvsp[0].ast), NULL, NULL); }
-#line 1482 "y.tab.c"
+#line 114 "parser.y"
+                                   { (yyval.ast) = astCreate(AST_VEC_INIT_OPT_REAL, NULL, astCreate(AST_LIT_REAL, (yyvsp[-1].symbol), NULL, NULL, NULL, NULL), (yyvsp[0].ast), NULL, NULL); }
+#line 1484 "y.tab.c"
     break;
 
   case 22: /* vec_init_opt: LIT_CHAR vec_init_opt  */
-#line 113 "parser.y"
-                                    { (yyval.ast) = astCreate(AST_VEC_INIT_OPT_CHAR, NULL, astCreate(AST_LIT_INT, (yyvsp[-1].symbol), NULL, NULL, NULL, NULL), (yyvsp[0].ast), NULL, NULL); }
-#line 1488 "y.tab.c"
+#line 115 "parser.y"
+                                    { (yyval.ast) = astCreate(AST_VEC_INIT_OPT_CHAR, NULL, astCreate(AST_LIT_CHAR, (yyvsp[-1].symbol), NULL, NULL, NULL, NULL), (yyvsp[0].ast), NULL, NULL); }
+#line 1490 "y.tab.c"
     break;
 
   case 23: /* vec_init_opt: %empty  */
-#line 114 "parser.y"
+#line 116 "parser.y"
           { (yyval.ast) = 0; }
-#line 1494 "y.tab.c"
+#line 1496 "y.tab.c"
     break;
 
   case 24: /* vec_declaration: KW_INT TK_IDENTIFIER '[' LIT_INT ']' vec_init_opt  */
-#line 117 "parser.y"
+#line 119 "parser.y"
                                                                      { (yyval.ast) = astCreate(AST_VEC_DECL_INT, (yyvsp[-4].symbol),  astCreate(AST_LIT_INT, (yyvsp[-2].symbol), NULL, NULL, NULL, NULL), (yyvsp[0].ast), NULL, NULL); }
-#line 1500 "y.tab.c"
+#line 1502 "y.tab.c"
     break;
 
   case 25: /* vec_declaration: KW_CHAR TK_IDENTIFIER '[' LIT_INT ']' vec_init_opt  */
-#line 118 "parser.y"
+#line 120 "parser.y"
                                                                     { (yyval.ast) = astCreate(AST_VEC_DECL_CHAR, (yyvsp[-4].symbol), astCreate(AST_LIT_INT, (yyvsp[-2].symbol), NULL, NULL, NULL, NULL), (yyvsp[0].ast), NULL, NULL); }
-#line 1506 "y.tab.c"
+#line 1508 "y.tab.c"
     break;
 
   case 26: /* vec_declaration: KW_REAL TK_IDENTIFIER '[' LIT_INT ']' vec_init_opt  */
-#line 119 "parser.y"
+#line 121 "parser.y"
                                                                     { (yyval.ast) = astCreate(AST_VEC_DECL_REAL, (yyvsp[-4].symbol), astCreate(AST_LIT_INT, (yyvsp[-2].symbol), NULL, NULL, NULL, NULL), (yyvsp[0].ast), NULL, NULL); }
-#line 1512 "y.tab.c"
+#line 1514 "y.tab.c"
     break;
 
   case 27: /* vec_declaration: KW_BOOL TK_IDENTIFIER '[' LIT_INT ']' vec_init_opt  */
-#line 120 "parser.y"
+#line 122 "parser.y"
                                                                     { (yyval.ast) = astCreate(AST_VEC_DECL_BOOL, (yyvsp[-4].symbol), astCreate(AST_LIT_INT, (yyvsp[-2].symbol), NULL, NULL, NULL, NULL), (yyvsp[0].ast), NULL, NULL); }
-#line 1518 "y.tab.c"
+#line 1520 "y.tab.c"
     break;
 
   case 28: /* parameter: KW_INT TK_IDENTIFIER  */
-#line 123 "parser.y"
+#line 125 "parser.y"
                                     { (yyval.ast) = astCreate(AST_PARAM_INT, (yyvsp[0].symbol), NULL, NULL, NULL, NULL); }
-#line 1524 "y.tab.c"
+#line 1526 "y.tab.c"
     break;
 
   case 29: /* parameter: KW_CHAR TK_IDENTIFIER  */
-#line 124 "parser.y"
+#line 126 "parser.y"
                                     { (yyval.ast) = astCreate(AST_PARAM_CHAR, (yyvsp[0].symbol), NULL, NULL, NULL, NULL); }
-#line 1530 "y.tab.c"
+#line 1532 "y.tab.c"
     break;
 
   case 30: /* parameter: KW_REAL TK_IDENTIFIER  */
-#line 125 "parser.y"
+#line 127 "parser.y"
                                     { (yyval.ast) = astCreate(AST_PARAM_REAL, (yyvsp[0].symbol), NULL, NULL, NULL, NULL); }
-#line 1536 "y.tab.c"
+#line 1538 "y.tab.c"
     break;
 
   case 31: /* parameter: KW_BOOL TK_IDENTIFIER  */
-#line 126 "parser.y"
+#line 128 "parser.y"
                                     { (yyval.ast) = astCreate(AST_PARAM_BOOL, (yyvsp[0].symbol), NULL, NULL, NULL, NULL); }
-#line 1542 "y.tab.c"
+#line 1544 "y.tab.c"
     break;
 
   case 32: /* parameter_list: parameter parameter_list_aux  */
-#line 129 "parser.y"
+#line 131 "parser.y"
                                              { (yyval.ast) = astCreate(AST_PARAM_LIST, NULL, (yyvsp[-1].ast), (yyvsp[0].ast), NULL, NULL); }
-#line 1548 "y.tab.c"
+#line 1550 "y.tab.c"
     break;
 
   case 33: /* parameter_list: %empty  */
-#line 130 "parser.y"
+#line 132 "parser.y"
       { (yyval.ast) = 0;}
-#line 1554 "y.tab.c"
+#line 1556 "y.tab.c"
     break;
 
   case 34: /* parameter_list_aux: ',' parameter parameter_list_aux  */
-#line 133 "parser.y"
+#line 135 "parser.y"
                                                      { (yyval.ast) = astCreate(AST_PARAM_LIST, NULL, (yyvsp[-1].ast), (yyvsp[0].ast), NULL, NULL); }
-#line 1560 "y.tab.c"
+#line 1562 "y.tab.c"
     break;
 
   case 35: /* parameter_list_aux: %empty  */
-#line 134 "parser.y"
+#line 136 "parser.y"
       { (yyval.ast) = 0; }
-#line 1566 "y.tab.c"
+#line 1568 "y.tab.c"
     break;
 
   case 36: /* func_declaration: KW_INT TK_IDENTIFIER '(' parameter_list ')' body  */
-#line 137 "parser.y"
+#line 139 "parser.y"
                                                                         { (yyval.ast) = astCreate(AST_FUNC_DECL_INT, (yyvsp[-4].symbol), (yyvsp[-2].ast), (yyvsp[0].ast), NULL, NULL); }
-#line 1572 "y.tab.c"
+#line 1574 "y.tab.c"
     break;
 
   case 37: /* func_declaration: KW_CHAR TK_IDENTIFIER '(' parameter_list ')' body  */
-#line 138 "parser.y"
+#line 140 "parser.y"
                                                                         { (yyval.ast) = astCreate(AST_FUNC_DECL_CHAR, (yyvsp[-4].symbol), (yyvsp[-2].ast), (yyvsp[0].ast), NULL, NULL); }
-#line 1578 "y.tab.c"
+#line 1580 "y.tab.c"
     break;
 
   case 38: /* func_declaration: KW_REAL TK_IDENTIFIER '(' parameter_list ')' body  */
-#line 139 "parser.y"
+#line 141 "parser.y"
                                                                         { (yyval.ast) = astCreate(AST_FUNC_DECL_REAL, (yyvsp[-4].symbol), (yyvsp[-2].ast), (yyvsp[0].ast), NULL, NULL); }
-#line 1584 "y.tab.c"
+#line 1586 "y.tab.c"
     break;
 
   case 39: /* func_declaration: KW_BOOL TK_IDENTIFIER '(' parameter_list ')' body  */
-#line 140 "parser.y"
+#line 142 "parser.y"
                                                                         { (yyval.ast) = astCreate(AST_FUNC_DECL_BOOL, (yyvsp[-4].symbol), (yyvsp[-2].ast), (yyvsp[0].ast), NULL, NULL); }
-#line 1590 "y.tab.c"
+#line 1592 "y.tab.c"
     break;
 
   case 40: /* body: '{' cmd_list '}'  */
-#line 143 "parser.y"
+#line 145 "parser.y"
                        { (yyval.ast) = astCreate(AST_BODY, NULL, (yyvsp[-1].ast), NULL, NULL, NULL); }
-#line 1596 "y.tab.c"
+#line 1598 "y.tab.c"
     break;
 
   case 41: /* cmd_list: cmd ';' cmd_list  */
-#line 146 "parser.y"
+#line 148 "parser.y"
                            { (yyval.ast) = astCreate(AST_CMD_LIST, 0, (yyvsp[-2].ast), (yyvsp[0].ast), NULL, NULL); }
-#line 1602 "y.tab.c"
+#line 1604 "y.tab.c"
     break;
 
   case 42: /* cmd_list: body cmd_list  */
-#line 147 "parser.y"
+#line 149 "parser.y"
                            { (yyval.ast) = astCreate(AST_CMD_LIST, 0, (yyvsp[-1].ast), (yyvsp[0].ast), NULL, NULL); }
-#line 1608 "y.tab.c"
+#line 1610 "y.tab.c"
     break;
 
   case 43: /* cmd_list: if_statement cmd_list  */
-#line 148 "parser.y"
+#line 150 "parser.y"
                                     { (yyval.ast) = astCreate(AST_CONDITIONAL_STATEMENT, 0, (yyvsp[-1].ast), (yyvsp[0].ast), NULL, NULL); }
-#line 1614 "y.tab.c"
+#line 1616 "y.tab.c"
     break;
 
   case 44: /* cmd_list: %empty  */
-#line 149 "parser.y"
+#line 151 "parser.y"
           { (yyval.ast) = 0; }
-#line 1620 "y.tab.c"
+#line 1622 "y.tab.c"
     break;
 
   case 45: /* if_body: body  */
-#line 152 "parser.y"
+#line 154 "parser.y"
               { (yyval.ast) = (yyvsp[0].ast); }
-#line 1626 "y.tab.c"
+#line 1628 "y.tab.c"
     break;
 
   case 46: /* if_body: cmd ';'  */
-#line 153 "parser.y"
+#line 155 "parser.y"
                  { (yyval.ast) = (yyvsp[-1].ast); }
-#line 1632 "y.tab.c"
+#line 1634 "y.tab.c"
     break;
 
   case 47: /* if_statement: KW_IF '(' expr ')' if_body  */
-#line 156 "parser.y"
+#line 158 "parser.y"
                                                    { (yyval.ast) = astCreate(AST_IF, 0, (yyvsp[-2].ast), (yyvsp[0].ast), NULL, NULL); }
-#line 1638 "y.tab.c"
+#line 1640 "y.tab.c"
     break;
 
   case 48: /* if_statement: KW_IF '(' expr ')' if_body KW_ELSE if_body  */
-#line 157 "parser.y"
+#line 159 "parser.y"
                                                    { (yyval.ast) = astCreate(AST_IF_ELSE, 0, (yyvsp[-4].ast), (yyvsp[-2].ast), (yyvsp[0].ast), NULL); }
-#line 1644 "y.tab.c"
+#line 1646 "y.tab.c"
     break;
 
   case 49: /* if_statement: KW_IF '(' expr ')' KW_LOOP if_body  */
-#line 158 "parser.y"
+#line 160 "parser.y"
                                                    { (yyval.ast) = astCreate(AST_LOOP, 0, (yyvsp[-3].ast), (yyvsp[0].ast), NULL, NULL); }
-#line 1650 "y.tab.c"
+#line 1652 "y.tab.c"
     break;
 
   case 50: /* cmd: var_attrib  */
-#line 161 "parser.y"
+#line 163 "parser.y"
                  {  (yyval.ast) = (yyvsp[0].ast); }
-#line 1656 "y.tab.c"
+#line 1658 "y.tab.c"
     break;
 
   case 51: /* cmd: vec_attrib  */
-#line 162 "parser.y"
+#line 164 "parser.y"
                  { (yyval.ast) = (yyvsp[0].ast); }
-#line 1662 "y.tab.c"
+#line 1664 "y.tab.c"
     break;
 
   case 52: /* cmd: output_cmd  */
-#line 163 "parser.y"
+#line 165 "parser.y"
                  { (yyval.ast) = (yyvsp[0].ast); }
-#line 1668 "y.tab.c"
+#line 1670 "y.tab.c"
     break;
 
   case 53: /* cmd: return_cmd  */
-#line 164 "parser.y"
+#line 166 "parser.y"
                  { (yyval.ast) = (yyvsp[0].ast); }
-#line 1674 "y.tab.c"
+#line 1676 "y.tab.c"
     break;
 
   case 54: /* cmd: %empty  */
-#line 165 "parser.y"
+#line 167 "parser.y"
       { (yyval.ast) = 0; }
-#line 1680 "y.tab.c"
+#line 1682 "y.tab.c"
     break;
 
   case 55: /* var_attrib: TK_IDENTIFIER '=' expr  */
-#line 168 "parser.y"
+#line 170 "parser.y"
                                    { (yyval.ast) = astCreate(AST_VAR_ATTRIB, (yyvsp[-2].symbol), (yyvsp[0].ast), NULL, NULL, NULL);  }
-#line 1686 "y.tab.c"
+#line 1688 "y.tab.c"
     break;
 
   case 56: /* vec_attrib: TK_IDENTIFIER '[' expr ']' '=' expr  */
-#line 171 "parser.y"
+#line 173 "parser.y"
                                                 { (yyval.ast) = astCreate(AST_VEC_ATTRIB, (yyvsp[-5].symbol), (yyvsp[-3].ast), (yyvsp[0].ast), NULL, NULL); }
-#line 1692 "y.tab.c"
+#line 1694 "y.tab.c"
     break;
 
   case 57: /* output_cmd: KW_OUTPUT output_param_list  */
-#line 173 "parser.y"
+#line 175 "parser.y"
                                         { (yyval.ast) = astCreate(AST_OUTPUT_CMD, 0, (yyvsp[0].ast), NULL, NULL, NULL); }
-#line 1698 "y.tab.c"
+#line 1700 "y.tab.c"
     break;
 
   case 58: /* output_param_list: LIT_STRING ',' output_param_list  */
-#line 176 "parser.y"
+#line 178 "parser.y"
                                                         { (yyval.ast) = astCreate(AST_OUTPUT_PARAM_LIST, NULL, astCreate(AST_LIT_STRING, (yyvsp[-2].symbol), NULL, NULL, NULL, NULL), (yyvsp[0].ast), NULL, NULL); }
-#line 1704 "y.tab.c"
+#line 1706 "y.tab.c"
     break;
 
   case 59: /* output_param_list: expr ',' output_param_list  */
-#line 177 "parser.y"
+#line 179 "parser.y"
                                                         { (yyval.ast) = astCreate(AST_OUTPUT_PARAM_LIST, 0, (yyvsp[-2].ast), (yyvsp[0].ast), NULL, NULL); }
-#line 1710 "y.tab.c"
+#line 1712 "y.tab.c"
     break;
 
   case 60: /* output_param_list: LIT_STRING  */
-#line 178 "parser.y"
+#line 180 "parser.y"
                                                         { (yyval.ast) = astCreate(AST_OUTPUT_PARAM_LIST, NULL, astCreate(AST_LIT_STRING, (yyvsp[0].symbol), NULL, NULL, NULL, NULL), NULL, NULL, NULL); }
-#line 1716 "y.tab.c"
+#line 1718 "y.tab.c"
     break;
 
   case 61: /* output_param_list: expr  */
-#line 179 "parser.y"
+#line 181 "parser.y"
                                                         { (yyval.ast) = (yyvsp[0].ast); }
-#line 1722 "y.tab.c"
+#line 1724 "y.tab.c"
     break;
 
   case 62: /* return_cmd: KW_RETURN expr  */
-#line 182 "parser.y"
+#line 184 "parser.y"
                            { (yyval.ast) = astCreate(AST_RETURN_CMD, 0, (yyvsp[0].ast), NULL, NULL, NULL); }
-#line 1728 "y.tab.c"
+#line 1730 "y.tab.c"
     break;
 
   case 63: /* input_expr: KW_INPUT '(' KW_INT ')'  */
-#line 185 "parser.y"
+#line 187 "parser.y"
                                      { (yyval.ast) = astCreate(AST_INPUT_EXPR_INT, 0, NULL, NULL, NULL, NULL); }
-#line 1734 "y.tab.c"
+#line 1736 "y.tab.c"
     break;
 
   case 64: /* input_expr: KW_INPUT '(' KW_CHAR ')'  */
-#line 186 "parser.y"
+#line 188 "parser.y"
                                      { (yyval.ast) = astCreate(AST_INPUT_EXPR_CHAR, 0, NULL, NULL, NULL, NULL); }
-#line 1740 "y.tab.c"
+#line 1742 "y.tab.c"
     break;
 
   case 65: /* input_expr: KW_INPUT '(' KW_REAL ')'  */
-#line 187 "parser.y"
+#line 189 "parser.y"
                                      { (yyval.ast) = astCreate(AST_INPUT_EXPR_REAL, 0, NULL, NULL, NULL, NULL); }
-#line 1746 "y.tab.c"
+#line 1748 "y.tab.c"
     break;
 
   case 66: /* input_expr: KW_INPUT '(' KW_BOOL ')'  */
-#line 188 "parser.y"
+#line 190 "parser.y"
                                      { (yyval.ast) = astCreate(AST_INPUT_EXPR_BOOL, 0, NULL, NULL, NULL, NULL); }
-#line 1752 "y.tab.c"
+#line 1754 "y.tab.c"
     break;
 
   case 67: /* expr: LIT_INT  */
-#line 191 "parser.y"
+#line 193 "parser.y"
                                             { (yyval.ast) = astCreate(AST_LIT_INT, (yyvsp[0].symbol), NULL, NULL, NULL, NULL); }
-#line 1758 "y.tab.c"
+#line 1760 "y.tab.c"
     break;
 
   case 68: /* expr: TK_IDENTIFIER  */
-#line 192 "parser.y"
+#line 194 "parser.y"
                                             { (yyval.ast) = astCreate(AST_IDENTIFIER, (yyvsp[0].symbol), NULL, NULL, NULL, NULL);    }
-#line 1764 "y.tab.c"
+#line 1766 "y.tab.c"
     break;
 
   case 69: /* expr: LIT_CHAR  */
-#line 193 "parser.y"
+#line 195 "parser.y"
                                             { (yyval.ast) = astCreate(AST_LIT_CHAR, (yyvsp[0].symbol), NULL, NULL, NULL, NULL); }
-#line 1770 "y.tab.c"
+#line 1772 "y.tab.c"
     break;
 
   case 70: /* expr: LIT_REAL  */
-#line 194 "parser.y"
+#line 196 "parser.y"
                                             { (yyval.ast) = astCreate(AST_LIT_REAL, (yyvsp[0].symbol), NULL, NULL, NULL, NULL); }
-#line 1776 "y.tab.c"
+#line 1778 "y.tab.c"
     break;
 
   case 71: /* expr: TK_IDENTIFIER '[' expr ']'  */
-#line 195 "parser.y"
+#line 197 "parser.y"
                                             { (yyval.ast) = astCreate(AST_VEC_ACCESS, (yyvsp[-3].symbol), (yyvsp[-1].ast), NULL, NULL, NULL);   }
-#line 1782 "y.tab.c"
+#line 1784 "y.tab.c"
     break;
 
   case 72: /* expr: input_expr  */
-#line 196 "parser.y"
+#line 198 "parser.y"
                                             { (yyval.ast) = (yyvsp[0].ast);                                                 }
-#line 1788 "y.tab.c"
+#line 1790 "y.tab.c"
     break;
 
   case 73: /* expr: func_call  */
-#line 197 "parser.y"
+#line 199 "parser.y"
                                             { (yyval.ast) = (yyvsp[0].ast);                                                }
-#line 1794 "y.tab.c"
+#line 1796 "y.tab.c"
     break;
 
   case 74: /* expr: expr '*' expr  */
-#line 198 "parser.y"
+#line 200 "parser.y"
                                             { (yyval.ast) = astCreate(AST_MUL, 0, (yyvsp[-2].ast), (yyvsp[0].ast), NULL, NULL);         }
-#line 1800 "y.tab.c"
+#line 1802 "y.tab.c"
     break;
 
   case 75: /* expr: expr '/' expr  */
-#line 199 "parser.y"
+#line 201 "parser.y"
                                             { (yyval.ast) = astCreate(AST_DIV, 0, (yyvsp[-2].ast), (yyvsp[0].ast), NULL, NULL);         }
-#line 1806 "y.tab.c"
+#line 1808 "y.tab.c"
     break;
 
   case 76: /* expr: expr '+' expr  */
-#line 200 "parser.y"
+#line 202 "parser.y"
                                             { (yyval.ast) = astCreate(AST_ADD, 0, (yyvsp[-2].ast), (yyvsp[0].ast), NULL, NULL);         }
-#line 1812 "y.tab.c"
+#line 1814 "y.tab.c"
     break;
 
   case 77: /* expr: expr '-' expr  */
-#line 201 "parser.y"
+#line 203 "parser.y"
                                             { (yyval.ast) = astCreate(AST_SUB, 0, (yyvsp[-2].ast), (yyvsp[0].ast), NULL, NULL);         }
-#line 1818 "y.tab.c"
+#line 1820 "y.tab.c"
     break;
 
   case 78: /* expr: '-' expr  */
-#line 202 "parser.y"
+#line 204 "parser.y"
                                             { (yyval.ast) = astCreate(AST_NEG, 0, (yyvsp[0].ast), NULL, NULL, NULL);       }
-#line 1824 "y.tab.c"
+#line 1826 "y.tab.c"
     break;
 
   case 79: /* expr: '~' expr  */
-#line 203 "parser.y"
+#line 205 "parser.y"
                                             { (yyval.ast) = astCreate(AST_NOT, 0, (yyvsp[0].ast), NULL, NULL, NULL);       }
-#line 1830 "y.tab.c"
+#line 1832 "y.tab.c"
     break;
 
   case 80: /* expr: expr '&' expr  */
-#line 204 "parser.y"
+#line 206 "parser.y"
                                             { (yyval.ast) = astCreate(AST_AND, 0, (yyvsp[-2].ast), (yyvsp[0].ast), NULL, NULL);         }
-#line 1836 "y.tab.c"
+#line 1838 "y.tab.c"
     break;
 
   case 81: /* expr: expr '|' expr  */
-#line 205 "parser.y"
+#line 207 "parser.y"
                                             { (yyval.ast) = astCreate(AST_OR, 0, (yyvsp[-2].ast), (yyvsp[0].ast), NULL, NULL);          }
-#line 1842 "y.tab.c"
+#line 1844 "y.tab.c"
     break;
 
   case 82: /* expr: expr OPERATOR_LE expr  */
-#line 206 "parser.y"
+#line 208 "parser.y"
                                             { (yyval.ast) = astCreate(AST_LE, 0, (yyvsp[-2].ast), (yyvsp[0].ast), NULL, NULL);          }
-#line 1848 "y.tab.c"
+#line 1850 "y.tab.c"
     break;
 
   case 83: /* expr: expr OPERATOR_GE expr  */
-#line 207 "parser.y"
+#line 209 "parser.y"
                                             { (yyval.ast) = astCreate(AST_GE, 0, (yyvsp[-2].ast), (yyvsp[0].ast), NULL, NULL);          }
-#line 1854 "y.tab.c"
+#line 1856 "y.tab.c"
     break;
 
   case 84: /* expr: expr OPERATOR_EQ expr  */
-#line 208 "parser.y"
+#line 210 "parser.y"
                                             { (yyval.ast) = astCreate(AST_EQ, 0, (yyvsp[-2].ast), (yyvsp[0].ast), NULL, NULL);          }
-#line 1860 "y.tab.c"
+#line 1862 "y.tab.c"
     break;
 
   case 85: /* expr: expr OPERATOR_DIF expr  */
-#line 209 "parser.y"
+#line 211 "parser.y"
                                             { (yyval.ast) = astCreate(AST_DIF, 0, (yyvsp[-2].ast), (yyvsp[0].ast), NULL, NULL);         }
-#line 1866 "y.tab.c"
+#line 1868 "y.tab.c"
     break;
 
   case 86: /* expr: expr '>' expr  */
-#line 210 "parser.y"
+#line 212 "parser.y"
                                             { (yyval.ast) = astCreate(AST_GT, 0, (yyvsp[-2].ast), (yyvsp[0].ast), NULL, NULL);          }
-#line 1872 "y.tab.c"
+#line 1874 "y.tab.c"
     break;
 
   case 87: /* expr: expr '<' expr  */
-#line 211 "parser.y"
+#line 213 "parser.y"
                                             { (yyval.ast) = astCreate(AST_LT, 0, (yyvsp[-2].ast), (yyvsp[0].ast), NULL, NULL);          }
-#line 1878 "y.tab.c"
+#line 1880 "y.tab.c"
     break;
 
   case 88: /* expr: '(' expr ')'  */
-#line 212 "parser.y"
+#line 214 "parser.y"
                                             { (yyval.ast) = astCreate(AST_NESTED_EXPR, 0, (yyvsp[-1].ast), NULL, NULL, NULL);                                                }
-#line 1884 "y.tab.c"
+#line 1886 "y.tab.c"
     break;
 
   case 89: /* func_call: TK_IDENTIFIER '(' expr_list ')'  */
-#line 214 "parser.y"
+#line 216 "parser.y"
                                            { (yyval.ast) = astCreate(AST_FUNC_CALL, (yyvsp[-3].symbol), (yyvsp[-1].ast), NULL, NULL, NULL);  }
-#line 1890 "y.tab.c"
+#line 1892 "y.tab.c"
     break;
 
   case 90: /* expr_list: expr expr_list_aux  */
-#line 217 "parser.y"
+#line 219 "parser.y"
                                       { (yyval.ast) = astCreate(AST_EXPR_LIST, NULL, (yyvsp[-1].ast), (yyvsp[0].ast), NULL, NULL);}
-#line 1896 "y.tab.c"
+#line 1898 "y.tab.c"
     break;
 
   case 91: /* expr_list: %empty  */
-#line 218 "parser.y"
+#line 220 "parser.y"
                                       { (yyval.ast) = 0; }
-#line 1902 "y.tab.c"
+#line 1904 "y.tab.c"
     break;
 
   case 92: /* expr_list_aux: ',' expr expr_list_aux  */
-#line 221 "parser.y"
+#line 223 "parser.y"
                                       { (yyval.ast) = astCreate(AST_EXPR_LIST, NULL, (yyvsp[-1].ast), (yyvsp[0].ast), NULL, NULL);}
-#line 1908 "y.tab.c"
+#line 1910 "y.tab.c"
     break;
 
   case 93: /* expr_list_aux: %empty  */
-#line 222 "parser.y"
+#line 224 "parser.y"
                                       { (yyval.ast) = 0; }
-#line 1914 "y.tab.c"
+#line 1916 "y.tab.c"
     break;
 
 
-#line 1918 "y.tab.c"
+#line 1920 "y.tab.c"
 
       default: break;
     }
@@ -2107,7 +2109,7 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 226 "parser.y"
+#line 228 "parser.y"
 
 
 #include "definitions.h" // yyparse() is defined here

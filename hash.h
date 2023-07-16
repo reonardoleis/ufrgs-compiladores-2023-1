@@ -24,6 +24,8 @@ typedef struct hash_t
     char *text;
     int line_number;
     struct hash_t *next;
+    int* params;
+    int param_count;
 } hash_t;
 
 
@@ -101,6 +103,8 @@ hash_t *hash_insert(char *text, int type, int datatype)
     item->text = (char *)calloc(strlen(text) + 1, sizeof(char));
     item->line_number = line_number;
     item->datatype = datatype;
+    item->params = (int *)calloc(100, sizeof(int));
+    item->param_count = 0;
     strcpy(item->text, text);
 
     char *key = get_key(item);
@@ -149,7 +153,20 @@ void hash_print()
     int i;
     for (i = 0; i < HASH_SIZE; i++) {
         for (node = hash_table[i]; node; node = node->next) {
-            printf("Table[%d] has %s with type %s of %s datatype\n", i, node->text, symbol_type_str(node->type), datatype_str[node->datatype]);
+            printf("Table[%d] has %s with type %s of %s datatype", i, node->text, symbol_type_str(node->type), datatype_str[node->datatype]);
+            if (hash_table[i]->type == SYMBOL_FUNCTION) {
+                printf(" and params: ");
+                int j;
+                for (j = 0; j < 100; j++) {
+                    if (node->params[j] == 0) {
+                        break;
+                    }
+
+                    printf("%s ", datatype_str[node->params[j]]);
+                }
+            }
+
+            printf("\n");
         }
     }
 }
@@ -195,6 +212,11 @@ int ast_type_to_datatype(int ast_type) {
         case AST_FUNC_DECL_REAL: return DATATYPE_REAL;
         case AST_FUNC_DECL_BOOL: return DATATYPE_BOOL;
         case AST_FUNC_DECL_CHAR: return DATATYPE_CHAR;
+
+        case AST_PARAM_INT: return DATATYPE_INT;
+        case AST_PARAM_REAL: return DATATYPE_REAL;
+        case AST_PARAM_BOOL: return DATATYPE_BOOL;
+        case AST_PARAM_CHAR: return DATATYPE_CHAR;
     }
 
     return 0;
