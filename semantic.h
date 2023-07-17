@@ -18,6 +18,7 @@ int expression_typecheck(AST *node);
 int find_first_datatype(AST *node);
 int check_assignments(AST *node);
 int check_return(AST *node);
+int check_return_aux(AST *node, int required_datatype);
 int check_conditional_stmts(AST *node);
 
 void check_and_set_declarations(AST *node)
@@ -115,9 +116,12 @@ void check_and_set_declarations(AST *node)
                 ++SemanticErrors;
             }
 
+
             node->symbol->type = SYMBOL_FUNCTION;
             node->symbol->datatype = ast_type_to_datatype(node->type);
             node->symbol->is_function = 1;
+
+        
 
             AST *param = node->son[0];
             int count = 0;
@@ -446,8 +450,6 @@ void check_operands(AST *node)
         else
         {
             node->result_datatype = find_first_datatype(node);
-
-            fprintf(stderr, "result datatype: %s\n", datatype_str[node->result_datatype]);
         }
 
         break;
@@ -660,83 +662,43 @@ int check_assignments(AST *node)
     }
 }
 
-int check_return(AST *node)
-{
-    int i;
 
+int check_return(AST *node) {
+    int i;
+    int required_vec_type = 0;
     if (!node)
         return 0;
 
-    int found = 0;
-    static int errored = 0;
-    if (is_func_declaration(node) || node->type == AST_BODY)
+    switch (node->type)
     {
-        AST *body;
-        if (node->type == AST_BODY) {
-            body = node;
-        } else {
-            body = node->son[1];
-        }
-    
-        AST *cmd_list =  cmd_list = body->son[0];
-           
-       
-     
-        if (cmd_list)
+    case AST_FUNC_DECL_INT:
+    case AST_FUNC_DECL_CHAR:
+    case AST_FUNC_DECL_REAL:
+    case AST_FUNC_DECL_BOOL:
+    {
+        if (node->symbol)
         {
-            AST *cmd = cmd_list->son[0];
-            while (cmd)
+        
+     
+            if (!check_return_aux(node, node->symbol->datatype)) {
+                fprintf(stderr, "Semantic error: function %s is missing return statement\n", node->symbol->text);
+                ++SemanticErrors;
+            }
+
+            AST *param = node->son[0];
+            int count = 0;
+            while (param)
             {
 
-                if (cmd->type == AST_RETURN_CMD)
-                {
-                    found = 1;
-     
-                    if (!compare_datatypes(cmd->son[0]->result_datatype, node->symbol->datatype) && !(validate_return_type(node, cmd->son[0])))
-                    {
-                 
-                        if (cmd->son[0]->result_datatype != 0 ||  cmd->son[0]->symbol)
-                        {
-                            if (cmd->son[0]->result_datatype != 0) {
-                                fprintf(stderr, "Semantic error: invalid return type (expected %s, got %s)\n", datatype_str[node->symbol->datatype], datatype_str[cmd->son[0]->result_datatype]);
-                                ++SemanticErrors;
-                            } else {
-                                fprintf(stderr, "Semantic error: invalid return type (expected %s, got %s -> %s)\n", datatype_str[node->symbol->datatype], ast_type_str(cmd->son[0]->type), cmd->son[0]->symbol ? datatype_str[cmd->son[0]->symbol->datatype] : "invalid");
-                                ++SemanticErrors;
-                            }
-                        }
-                    }
-                }
-
-                if (cmd->type == AST_IF || cmd->type == AST_IF_ELSE || cmd->type == AST_LOOP) {
-                    if (cmd->son[1]->type == AST_BODY) {
-                        found = check_return(cmd->son[1]);
-                    } else {
-                        fprintf(stderr, "IF HAS NO BODY!\n");
-                    }
-                }
-
-                if (cmd->type == AST_BODY) {
-                    fprintf(stderr, "BODY!\n");
-                }
-
-                if (cmd_list->son[1] != NULL)
-                {
-                    cmd_list = cmd_list->son[1];
-                    if (cmd_list)
-                        cmd = cmd_list->son[0];
-                }
-                else
-                {
-                    cmd = NULL;
-                }
+                node->symbol->params[count] = ast_type_to_datatype(param->son[0]->type);
+                param = param->son[1];
+                ++count;
             }
+
+            node->symbol->param_count = count;
         }
 
-        if (!found && !errored) {
-            errored = 1;
-        fprintf(stderr, "Semantic error: missing return statement\n");
-        ++SemanticErrors;
+        break;
     }
     }
 
@@ -744,8 +706,51 @@ int check_return(AST *node)
     {
         check_return(node->son[i]);
     }
+}
 
-   
+int check_return_aux(AST *node, int required_datatype)
+{
+    int i;
+
+    if (!node) return 0;
+
+    int found = 0;
+
+    if (node->type == AST_RETURN_CMD)
+    {
+        int return_datatype = node->son[0]->result_datatype;
+
+        if (node->son[0]->symbol && node->son[0]->symbol->is_vector && node->son[0]->type != AST_VEC_ACCESS)
+        {
+            fprintf(stderr, "Semantic error: invalid return type (expected %s, got vector)\n", datatype_str[required_datatype]);
+            ++SemanticErrors;
+        }
+
+        if (node->son[0]->symbol && node->son[0]->symbol->is_function && node->son[0]->type != AST_FUNC_CALL)
+        {
+            fprintf(stderr, "Semantic error: invalid return type (expected %s, got function)\n", datatype_str[required_datatype]);
+            ++SemanticErrors;
+        }
+
+       
+        if (return_datatype != required_datatype && !validate_return_type(required_datatype, node->son[0]))
+        {
+            if (return_datatype != 0) {
+                fprintf(stderr, "Semantic error: invalid return type (expected %s, got %s)\n", datatype_str[required_datatype], datatype_str[return_datatype]);
+            } else {
+                fprintf(stderr, "Semantic error: invalid return type (expected %s, got incompatible type)\n", datatype_str[required_datatype]);
+            }
+            
+            ++SemanticErrors;
+        }
+
+        found = 1;
+    }
+
+    for (i = 0; i < MAX_SONS; i++)
+    {
+        found = found | check_return_aux(node->son[i], required_datatype);
+    }
 
     return found;
 }
@@ -759,40 +764,17 @@ int check_function_call(AST *node)
 
     if (node->type == AST_FUNC_CALL)
     {
+        int parameter_count = 0;
         int found = 0;
         int error_in_number_of_params = 0;
         AST *expr_list = node->son[0];
+        AST *expr_list_copy = expr_list;
         if (expr_list)
         {
             AST *expr = expr_list->son[0];
             int index = 0;
             while (expr)
             {
-
-                if (node->symbol->params[index] == 0 && !error_in_number_of_params)
-                {
-                    AST *aux_expr = expr;
-                    AST *aux_expr_list = expr_list;
-                    while (aux_expr)
-                    {
-                        if (aux_expr_list->son[1] != NULL)
-                        {
-                            aux_expr_list = aux_expr_list->son[1];
-                            if (aux_expr_list)
-                                aux_expr = aux_expr_list->son[0];
-                        }
-                        else
-                        {
-                            aux_expr = NULL;
-                        }
-
-                        index++;
-                    }
-                    fprintf(stderr, "Semantic error: invalid number of parameters in function call %s (expected %d, got %d)\n", node->symbol->text, node->symbol->param_count, index);
-                    ++SemanticErrors;
-                    error_in_number_of_params = 1;
-                }
-
                 int expected_datatype = node->symbol->params[index];
                 int actual_datatype;
 
@@ -820,14 +802,37 @@ int check_function_call(AST *node)
                 }
                 else
                 {
-                    if (node->symbol->params[index] != 0)
-                    {
-                        fprintf(stderr, "Semantic error: invalid number of parameters in function call %s (expected %d got %d)\n", node->symbol->text, node->symbol->param_count, index);
-                        ++SemanticErrors;
-                    }
                     expr = NULL;
                 }
             }
+
+            expr = expr_list_copy->son[0];
+          
+            while (expr)
+            {
+                parameter_count++;
+                if (expr_list_copy->son[1] != NULL)
+                {
+                    expr_list_copy = expr_list_copy->son[1];
+                    if (expr_list_copy)
+                        expr = expr_list_copy->son[0];
+                }
+                else
+                {
+                    expr = NULL;
+                }
+            }
+        }
+
+        if (parameter_count != node->symbol->param_count)
+        {
+            if (parameter_count == 0) {
+                fprintf(stderr, "Semantic error: invalid number of parameters (expected %d, got none)\n", node->symbol->param_count);
+            } else {
+                fprintf(stderr, "Semantic error: invalid number of parameters (expected %d, got %d)\n", node->symbol->param_count, parameter_count);
+            }
+            
+            ++SemanticErrors;
         }
     }
 

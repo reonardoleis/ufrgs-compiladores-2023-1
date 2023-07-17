@@ -87,7 +87,7 @@ program: declaration_list   {
                                
                                 check_conditional_stmts($1);
 
-                                astPrint($1, 0);
+                                // astPrint($1, 0);
                                 
                             }
     ;

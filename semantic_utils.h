@@ -8,7 +8,7 @@ int is_logic(AST *node);
 int is_unary(AST *node);
 int is_binary(AST *node);
 int is_func_declaration(AST *node);
-int validate_return_type(AST * func, AST * return_cmd);
+int validate_return_type(int required_return_datatype, AST * return_cmd);
 int verify_literal_compatibility(int lit_type1, int lit_type2);
 
 int is_arithmetic(AST *node) {
@@ -153,9 +153,9 @@ int is_func_declaration(AST *node) {
     return node->type == AST_FUNC_DECL_INT || node->type == AST_FUNC_DECL_REAL || node->type == AST_FUNC_DECL_CHAR || node->type == AST_FUNC_DECL_BOOL;
 }
 
-int validate_return_type(AST * func, AST * return_cmd) {
+int validate_return_type(int required_return_type, AST * return_cmd) {
 
-    if (!func || !return_cmd) return 0;
+    if (!return_cmd) return 0;
 
 
     int compatible_char_int = 0;
@@ -168,29 +168,26 @@ int validate_return_type(AST * func, AST * return_cmd) {
         datatype = return_cmd->result_datatype;
     }
 
-    if (datatype == DATATYPE_CHAR && func->symbol->datatype == DATATYPE_INT) {
+    if (datatype == DATATYPE_CHAR && required_return_type == DATATYPE_INT) {
         compatible_char_int = 1;
     }
 
    
 
 
-    if (datatype == DATATYPE_INT && func->symbol->datatype == DATATYPE_CHAR) {
+    if (datatype == DATATYPE_INT && required_return_type == DATATYPE_CHAR) {
         compatible_char_int = 1;
     }
 
-    
-    fprintf(stderr, "return cmd type: %s\n", ast_type_str(return_cmd->type));
-    fprintf(stderr, "func symbol datatype: %s\n", datatype_str[func->symbol->datatype]);
 
     return 
         compatible_char_int ||
-        (datatype == func->symbol->datatype) ||
-        (return_cmd->type == AST_LIT_INT && func->symbol->datatype == DATATYPE_INT) ||
-        (return_cmd->type == AST_LIT_CHAR && func->symbol->datatype == DATATYPE_INT) ||
-        (return_cmd->type == AST_LIT_INT && func->symbol->datatype == DATATYPE_CHAR) ||
-        (return_cmd->type == AST_LIT_CHAR && func->symbol->datatype == DATATYPE_CHAR) ||
-        (return_cmd->type == AST_LIT_REAL && func->symbol->datatype == DATATYPE_REAL);
+        (datatype == required_return_type) ||
+        (return_cmd->type == AST_LIT_INT && required_return_type == DATATYPE_INT) ||
+        (return_cmd->type == AST_LIT_CHAR && required_return_type == DATATYPE_INT) ||
+        (return_cmd->type == AST_LIT_INT && required_return_type == DATATYPE_CHAR) ||
+        (return_cmd->type == AST_LIT_CHAR && required_return_type == DATATYPE_CHAR) ||
+        (return_cmd->type == AST_LIT_REAL && required_return_type == DATATYPE_REAL);
 }
 
 int compare_datatypes(int a, int b) {
