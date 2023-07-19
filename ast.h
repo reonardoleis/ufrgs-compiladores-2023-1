@@ -12,25 +12,27 @@ typedef struct ast_node
     hash_t *symbol;
     int typechecked;
     int result_datatype;
+    int line_number;
     struct ast_node *son[MAX_SONS];
 } AST;
 
 AST *root;
 
-AST *astCreate(int type, hash_t *symbol, AST *s0, AST *s1, AST *s2, AST *s3);
+AST *astCreate(int type, hash_t *symbol, AST *s0, AST *s1, AST *s2, AST *s3, int line_number);
 void astPrint(AST *node, int level);
 char *astToCode(AST *node);
 char *handleVecOptInitialization(AST *vec_init_opt_root_node);
 char *handleFunctinDeclarationParams(AST *func_decl_params_root_node);
 int isLeaf(AST *node);
 
-AST *astCreate(int type, hash_t *symbol, AST *s0, AST *s1, AST *s2, AST *s3)
+AST *astCreate(int type, hash_t *symbol, AST *s0, AST *s1, AST *s2, AST *s3, int line_number)
 {
     // fprintf(stderr, "astCreate(%s)\n", ast_type_str(type));
     AST *ast = (AST *)calloc(1, sizeof(AST));
     ast->type = type;
     ast->typechecked = 0;
     ast->symbol = symbol;
+    ast->line_number = line_number;
     ast->son[0] = s0;
     ast->son[1] = s1;
     ast->son[2] = s2;

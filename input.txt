@@ -4,16 +4,19 @@ int v[2] 1 2;
 real r = 5.2;
 real vr[2] 10.5 123.23;
 int main(int ggg) {
+    \\ a
+    \\ b
+    \\ c
     y = (x > 2) | y | (y & (x < 0));
 
     if (y) {
-        x = -(x * 2) + 4/(5 - v[0]);
+        x = -(x * 2.5) + 4/(5 - v[0]);
     }
 
     r = r * 2.0;
 
     if (r > 2.2) {
-        if (r > vr[0]) loop {}
+        if (r > vr) loop {}
     } else {
         x = -(-(-(-(x * 1 + (5 / v[0] + v[1])))));
         return 2;
