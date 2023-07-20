@@ -65,8 +65,8 @@
 %type<ast> program
 %type<ast> vec_attrib
 
-
-%left '~' '&' '|' OPERATOR_LE OPERATOR_GE OPERATOR_EQ OPERATOR_DIF '>' '<'
+%left '&' '|'
+%left '~' OPERATOR_LE OPERATOR_GE OPERATOR_EQ OPERATOR_DIF '>' '<'
 %left '+' '-'
 %left '*' '/'
 
@@ -87,8 +87,8 @@ program: declaration_list   {
                                
                                 check_conditional_stmts($1);
 
-                                // astPrint($1, 0);
                                 
+                                // astPrint($1, 0);
                             }
     ;
 

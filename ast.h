@@ -24,6 +24,7 @@ char *astToCode(AST *node);
 char *handleVecOptInitialization(AST *vec_init_opt_root_node);
 char *handleFunctinDeclarationParams(AST *func_decl_params_root_node);
 int isLeaf(AST *node);
+int is_input_cmd(AST *node);
 
 AST *astCreate(int type, hash_t *symbol, AST *s0, AST *s1, AST *s2, AST *s3, int line_number)
 {
@@ -281,4 +282,25 @@ char *handleFunctinDeclarationParams(AST *func_decl_params_root_node)
     strcat(out, current_opt->son[0]->symbol->text);
 
     return out;
+}
+
+int is_input_cmd(AST *node)
+{
+    return node->type == AST_INPUT_EXPR_INT || node->type == AST_INPUT_EXPR_REAL || node->type == AST_INPUT_EXPR_CHAR || node->type == AST_INPUT_EXPR_BOOL;
+}
+
+int get_input_cmd_type(AST *node);
+
+int get_input_cmd_type(AST *node) {
+    if (node->type == AST_INPUT_EXPR_INT) {
+        return DATATYPE_INT;
+    } else if (node->type == AST_INPUT_EXPR_REAL) {
+        return DATATYPE_REAL;
+    } else if (node->type == AST_INPUT_EXPR_CHAR) {
+        return DATATYPE_CHAR;
+    } else if (node->type == AST_INPUT_EXPR_BOOL) {
+        return DATATYPE_BOOL;
+    } else {
+        return -1;
+    }
 }

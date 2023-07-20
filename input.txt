@@ -1,18 +1,4 @@
-int a = 1;
-char b = 'a';
-real c = 1.5;
-bool d = 1;
-int matrix[100];
-
-int vec[5] 1 2 3 4 5;
-
-real sum(int x, int y)
-{
-    return x+ y;
-}
-
-char foo()
-{
-
-    return a + matrix[0] * (sum(1, 2) / 2);
-}
+int main(bool a) {
+    a = (-input(int) > 2) | ~~~(a | -input(real) > 2.0);
+    return 1;
+} 

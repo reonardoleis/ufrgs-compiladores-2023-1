@@ -219,9 +219,9 @@ enum yysymbol_kind_t
   YYSYMBOL_LIT_CHAR = 20,                  /* LIT_CHAR  */
   YYSYMBOL_LIT_STRING = 21,                /* LIT_STRING  */
   YYSYMBOL_TOKEN_ERROR = 22,               /* TOKEN_ERROR  */
-  YYSYMBOL_23_ = 23,                       /* '~'  */
-  YYSYMBOL_24_ = 24,                       /* '&'  */
-  YYSYMBOL_25_ = 25,                       /* '|'  */
+  YYSYMBOL_23_ = 23,                       /* '&'  */
+  YYSYMBOL_24_ = 24,                       /* '|'  */
+  YYSYMBOL_25_ = 25,                       /* '~'  */
   YYSYMBOL_26_ = 26,                       /* '>'  */
   YYSYMBOL_27_ = 27,                       /* '<'  */
   YYSYMBOL_28_ = 28,                       /* '+'  */
@@ -590,7 +590,7 @@ union yyalloc
 /* YYFINAL -- State number of the termination state.  */
 #define YYFINAL  15
 /* YYLAST -- Last index in YYTABLE.  */
-#define YYLAST   266
+#define YYLAST   274
 
 /* YYNTOKENS -- Number of terminals.  */
 #define YYNTOKENS  41
@@ -619,7 +619,7 @@ static const yytype_int8 yytranslate[] =
        0,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,     2,     2,     2,     2,     2,    24,     2,
+       2,     2,     2,     2,     2,     2,     2,     2,    23,     2,
       37,    38,    30,    28,    36,    29,     2,    31,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,    32,
       27,    33,    26,     2,     2,     2,     2,     2,     2,     2,
@@ -628,7 +628,7 @@ static const yytype_int8 yytranslate[] =
        2,    34,     2,    35,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,    39,    25,    40,    23,     2,     2,     2,
+       2,     2,     2,    39,    24,    40,    25,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
@@ -679,7 +679,7 @@ static const char *const yytname[] =
   "KW_REAL", "KW_BOOL", "KW_IF", "KW_ELSE", "KW_LOOP", "KW_INPUT",
   "KW_OUTPUT", "KW_RETURN", "OPERATOR_LE", "OPERATOR_GE", "OPERATOR_EQ",
   "OPERATOR_DIF", "TK_IDENTIFIER", "LIT_INT", "LIT_REAL", "LIT_CHAR",
-  "LIT_STRING", "TOKEN_ERROR", "'~'", "'&'", "'|'", "'>'", "'<'", "'+'",
+  "LIT_STRING", "TOKEN_ERROR", "'&'", "'|'", "'~'", "'>'", "'<'", "'+'",
   "'-'", "'*'", "'/'", "';'", "'='", "'['", "']'", "','", "'('", "')'",
   "'{'", "'}'", "$accept", "program", "declaration_list", "declaration",
   "var_declaration", "vec_init_opt", "vec_declaration", "parameter",
@@ -710,25 +710,25 @@ yysymbol_name (yysymbol_kind_t yysymbol)
    STATE-NUM.  */
 static const yytype_int16 yypact[] =
 {
-     132,    -9,     7,    37,    45,    66,  -166,   132,    42,    52,
-    -166,   -21,   -12,    -5,    43,  -166,  -166,  -166,  -166,    84,
-      64,   151,    98,    68,   151,   194,    75,   151,   197,    76,
-     151,  -166,  -166,  -166,    65,    82,    89,    91,    97,    77,
-      94,  -166,  -166,  -166,   116,    95,  -166,  -166,  -166,   117,
-     137,  -166,  -166,  -166,   141,   156,   209,  -166,  -166,  -166,
-    -166,   151,  -166,   165,   209,   165,   209,   165,   209,   165,
-     209,   209,   209,  -166,    77,    -2,  -166,  -166,  -166,  -166,
-    -166,  -166,  -166,  -166,  -166,  -166,  -166,   158,    50,    78,
-      31,    -2,   166,    -2,   173,  -166,  -166,  -166,  -166,    78,
-     181,     2,  -166,  -166,  -166,   199,    78,    78,    78,  -166,
-    -166,   134,  -166,   218,    78,    78,  -166,  -166,  -166,    -2,
-      96,   168,    78,    78,    50,   162,    60,   115,    78,    78,
+      96,    -9,     7,    37,    45,    66,  -166,    96,    42,    48,
+    -166,   -21,   -12,    -5,    39,  -166,  -166,  -166,  -166,    98,
+      64,   188,   118,    68,   188,   137,    72,   188,   187,    73,
+     188,  -166,  -166,  -166,    49,    76,    77,    87,    89,    86,
+      70,  -166,  -166,  -166,    74,    95,  -166,  -166,  -166,    79,
+     103,  -166,  -166,  -166,    99,   114,   252,  -166,  -166,  -166,
+    -166,   188,  -166,   121,   252,   121,   252,   121,   252,   121,
+     252,   252,   252,  -166,    86,    -2,  -166,  -166,  -166,  -166,
+    -166,  -166,  -166,  -166,  -166,  -166,  -166,   138,    50,    78,
+      31,    -2,   113,    -2,   140,  -166,  -166,  -166,  -166,    78,
+     158,     2,  -166,  -166,  -166,   162,    78,    78,    78,  -166,
+    -166,   135,  -166,   219,    78,    78,  -166,  -166,  -166,    -2,
+      97,   210,    78,    78,    50,   238,    47,   116,    78,    78,
       78,    78,    78,    78,    78,    78,    78,    78,    78,    78,
-      50,   218,   172,  -166,    44,   198,   200,   201,   202,   195,
-     153,   203,  -166,  -166,   162,   162,   162,   162,   162,   162,
-     162,   162,    60,    60,  -166,  -166,  -166,   204,    46,  -166,
-     243,   221,  -166,  -166,  -166,  -166,  -166,    78,  -166,  -166,
-      78,  -166,    46,  -166,   153,   218,  -166,  -166
+      50,   219,   173,  -166,    44,   136,   179,   180,   183,   196,
+     154,   190,  -166,  -166,   238,   238,   238,   238,   225,   225,
+     238,   238,    47,    47,  -166,  -166,  -166,   197,    46,  -166,
+     221,   204,  -166,  -166,  -166,  -166,  -166,    78,  -166,  -166,
+      78,  -166,    46,  -166,   154,   219,  -166,  -166
 };
 
 /* YYDEFACT[STATE-NUM] -- Default reduction number in state STATE-NUM.
@@ -760,9 +760,9 @@ static const yytype_int8 yydefact[] =
 /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int16 yypgoto[] =
 {
-    -166,  -166,   248,  -166,  -166,   186,  -166,   205,    48,   185,
+    -166,  -166,   230,  -166,  -166,   193,  -166,   199,   149,   170,
     -166,   -63,   -60,  -165,  -166,  -130,  -166,  -166,  -166,  -117,
-    -166,  -166,   -88,  -166,  -166,    79
+    -166,  -166,   -88,  -166,  -166,    90
 };
 
 /* YYDEFGOTO[NTERM-NUM].  */
@@ -785,26 +785,27 @@ static const yytype_int16 yytable[] =
      154,   155,   156,   157,   158,   159,   160,   161,   162,   163,
      164,   165,   171,   168,    13,    88,    89,    88,    89,   143,
      100,    90,    14,    90,   114,   115,    15,   101,   102,   103,
-     104,   105,    45,   106,    17,    50,    28,    29,    55,   107,
-      30,   169,    34,    75,    18,    75,    44,   108,   100,   184,
-     138,   139,   185,    49,    54,   101,   102,   103,   104,    57,
-      56,   106,    31,    32,    33,   169,    58,   107,    59,   128,
-     129,   130,   131,    61,    60,   108,    41,    42,    43,   169,
-     132,   133,   134,   135,   136,   137,   138,   139,   128,   129,
-     130,   131,    63,    65,   144,     1,     2,     3,     4,   132,
-     133,   134,   135,   136,   137,   138,   139,   128,   129,   130,
-     131,    64,    66,   153,    35,    36,    37,    38,   132,   133,
+     104,   105,    28,    29,    17,   106,    30,   138,   139,   107,
+      18,   169,    34,    75,    56,    75,    44,   108,   100,   184,
+      49,    54,   185,    57,    58,   101,   102,   103,   104,     1,
+       2,     3,     4,   106,    59,   169,    60,   107,    63,    64,
+     128,   129,   130,   131,    66,   108,    31,    32,    33,   169,
+     132,   133,    61,   134,   135,   136,   137,   138,   139,   128,
+     129,   130,   131,    65,    68,   144,    41,    42,    43,   132,
+     133,    67,   134,   135,   136,   137,   138,   139,   128,   129,
+     130,   131,    69,   117,   153,    46,    47,    48,   132,   133,
+      75,   134,   135,   136,   137,   138,   139,   128,   129,   130,
+     131,   140,   119,    45,   172,    99,    50,   132,   133,    55,
      134,   135,   136,   137,   138,   139,   128,   129,   130,   131,
-     140,   145,   146,   147,   148,    67,    68,   132,   133,   134,
-     135,   136,   137,   138,   139,   128,   129,   130,   131,   177,
-     136,   137,   138,   139,    69,    99,   132,   133,   134,   135,
-     136,   137,   138,   139,    75,   119,   117,   167,   128,   129,
-     130,   131,    46,    47,    48,    51,    52,    53,   121,   132,
-     133,   134,   135,   136,   137,   138,   139,    70,    71,    72,
-     176,   128,   129,   130,   131,   124,   172,   180,   173,   174,
-     175,   179,   132,   133,   134,   135,   136,   137,   138,   139,
-      77,   182,    79,   183,    81,    16,    83,    84,    85,    86,
-       0,     0,     0,   187,     0,     0,    74
+     177,    35,    36,    37,    38,   121,   132,   133,   124,   134,
+     135,   136,   137,   138,   139,    51,    52,    53,   167,   128,
+     129,   130,   131,   145,   146,   147,   148,   173,   174,   132,
+     133,   175,   134,   135,   136,   137,   138,   139,   179,   182,
+     180,   176,   128,   129,   130,   131,   183,    16,   128,   129,
+     130,   131,   132,   133,    86,   134,   135,   136,   137,   138,
+     139,   134,   135,   136,   137,   138,   139,    77,     0,    79,
+      74,    81,     0,    83,    84,    85,   136,   137,   138,   139,
+      70,    71,    72,     0,   187
 };
 
 static const yytype_int16 yycheck[] =
@@ -816,26 +817,27 @@ static const yytype_int16 yycheck[] =
      128,   129,   130,   131,   132,   133,   134,   135,   136,   137,
      138,   139,   182,     9,    17,    11,    12,    11,    12,   119,
       10,    17,    17,    17,    33,    34,     0,    17,    18,    19,
-      20,    21,    24,    23,    32,    27,    33,    34,    30,    29,
-      37,   144,    18,    39,    32,    39,    18,    37,    10,   177,
-      30,    31,   180,    18,    18,    17,    18,    19,    20,    17,
-      35,    23,    18,    19,    20,   168,    17,    29,    17,    13,
-      14,    15,    16,    36,    17,    37,    18,    19,    20,   182,
-      24,    25,    26,    27,    28,    29,    30,    31,    13,    14,
-      15,    16,    38,    38,    38,     3,     4,     5,     6,    24,
-      25,    26,    27,    28,    29,    30,    31,    13,    14,    15,
-      16,    35,    35,    38,     3,     4,     5,     6,    24,    25,
+      20,    21,    33,    34,    32,    25,    37,    30,    31,    29,
+      32,   144,    18,    39,    35,    39,    18,    37,    10,   177,
+      18,    18,   180,    17,    17,    17,    18,    19,    20,     3,
+       4,     5,     6,    25,    17,   168,    17,    29,    38,    35,
+      13,    14,    15,    16,    35,    37,    18,    19,    20,   182,
+      23,    24,    36,    26,    27,    28,    29,    30,    31,    13,
+      14,    15,    16,    38,    35,    38,    18,    19,    20,    23,
+      24,    38,    26,    27,    28,    29,    30,    31,    13,    14,
+      15,    16,    38,    40,    38,    18,    19,    20,    23,    24,
+      39,    26,    27,    28,    29,    30,    31,    13,    14,    15,
+      16,    36,    32,    24,    38,    37,    27,    23,    24,    30,
       26,    27,    28,    29,    30,    31,    13,    14,    15,    16,
-      36,     3,     4,     5,     6,    38,    35,    24,    25,    26,
-      27,    28,    29,    30,    31,    13,    14,    15,    16,    36,
-      28,    29,    30,    31,    38,    37,    24,    25,    26,    27,
-      28,    29,    30,    31,    39,    32,    40,    35,    13,    14,
-      15,    16,    18,    19,    20,    18,    19,    20,    37,    24,
-      25,    26,    27,    28,    29,    30,    31,    18,    19,    20,
-      35,    13,    14,    15,    16,    36,    38,    33,    38,    38,
-      38,    38,    24,    25,    26,    27,    28,    29,    30,    31,
-      64,     8,    66,    32,    68,     7,    70,    71,    72,    74,
-      -1,    -1,    -1,   184,    -1,    -1,    61
+      36,     3,     4,     5,     6,    37,    23,    24,    36,    26,
+      27,    28,    29,    30,    31,    18,    19,    20,    35,    13,
+      14,    15,    16,     3,     4,     5,     6,    38,    38,    23,
+      24,    38,    26,    27,    28,    29,    30,    31,    38,     8,
+      33,    35,    13,    14,    15,    16,    32,     7,    13,    14,
+      15,    16,    23,    24,    74,    26,    27,    28,    29,    30,
+      31,    26,    27,    28,    29,    30,    31,    64,    -1,    66,
+      61,    68,    -1,    70,    71,    72,    28,    29,    30,    31,
+      18,    19,    20,    -1,   184
 };
 
 /* YYSTOS[STATE-NUM] -- The symbol kind of the accessing symbol of
@@ -852,10 +854,10 @@ static const yytype_int8 yystos[] =
       18,    19,    20,    46,    48,    39,    52,    46,    52,    46,
       52,    46,    52,    46,    46,    46,    50,     7,    11,    12,
       17,    52,    53,    55,    56,    57,    58,    59,    61,    37,
-      10,    17,    18,    19,    20,    21,    23,    29,    37,    60,
+      10,    17,    18,    19,    20,    21,    25,    29,    37,    60,
       62,    63,    64,    63,    33,    34,    53,    40,    53,    32,
       63,    37,    34,    37,    36,    63,    63,    63,    13,    14,
-      15,    16,    24,    25,    26,    27,    28,    29,    30,    31,
+      15,    16,    23,    24,    26,    27,    28,    29,    30,    31,
       36,    63,    63,    53,    38,     3,     4,     5,     6,    63,
       63,    65,    60,    38,    63,    63,    63,    63,    63,    63,
       63,    63,    63,    63,    63,    63,    60,    35,     9,    52,
@@ -1370,560 +1372,560 @@ yyreduce:
                                
                                 check_conditional_stmts((yyvsp[0].ast));
 
-                                // astPrint($1, 0);
                                 
+                                astPrint((yyvsp[0].ast), 0);
                             }
-#line 1377 "y.tab.c"
+#line 1379 "y.tab.c"
     break;
 
   case 3: /* declaration_list: declaration declaration_list  */
 #line 95 "parser.y"
                                                 { (yyval.ast) = astCreate(AST_DECL_LIST, NULL, (yyvsp[-1].ast), (yyvsp[0].ast), NULL, NULL, getLineNumber()); }
-#line 1383 "y.tab.c"
+#line 1385 "y.tab.c"
     break;
 
   case 4: /* declaration_list: %empty  */
 #line 96 "parser.y"
                  { (yyval.ast) = 0; }
-#line 1389 "y.tab.c"
+#line 1391 "y.tab.c"
     break;
 
   case 5: /* declaration: var_declaration ';'  */
 #line 99 "parser.y"
                                     { (yyval.ast) = (yyvsp[-1].ast); }
-#line 1395 "y.tab.c"
+#line 1397 "y.tab.c"
     break;
 
   case 6: /* declaration: vec_declaration ';'  */
 #line 100 "parser.y"
                                  { (yyval.ast) = (yyvsp[-1].ast); }
-#line 1401 "y.tab.c"
+#line 1403 "y.tab.c"
     break;
 
   case 7: /* declaration: func_declaration  */
 #line 101 "parser.y"
                                 { (yyval.ast) = (yyvsp[0].ast); }
-#line 1407 "y.tab.c"
+#line 1409 "y.tab.c"
     break;
 
   case 8: /* var_declaration: KW_INT TK_IDENTIFIER '=' LIT_INT  */
 #line 104 "parser.y"
                                                     { (yyval.ast) = astCreate(AST_VAR_DECL_INT, (yyvsp[-2].symbol), astCreate(AST_LIT_INT, (yyvsp[0].symbol), NULL, NULL, NULL, NULL, getLineNumber()), NULL, NULL, NULL, getLineNumber()); }
-#line 1413 "y.tab.c"
+#line 1415 "y.tab.c"
     break;
 
   case 9: /* var_declaration: KW_CHAR TK_IDENTIFIER '=' LIT_INT  */
 #line 105 "parser.y"
                                                     { (yyval.ast) = astCreate(AST_VAR_DECL_CHAR, (yyvsp[-2].symbol), astCreate(AST_LIT_INT, (yyvsp[0].symbol), NULL, NULL, NULL, NULL, getLineNumber()), NULL, NULL, NULL, getLineNumber()); }
-#line 1419 "y.tab.c"
+#line 1421 "y.tab.c"
     break;
 
   case 10: /* var_declaration: KW_REAL TK_IDENTIFIER '=' LIT_INT  */
 #line 106 "parser.y"
                                                       { (yyval.ast) = astCreate(AST_VAR_DECL_REAL, (yyvsp[-2].symbol), astCreate(AST_LIT_INT, (yyvsp[0].symbol), NULL, NULL, NULL, NULL, getLineNumber()), NULL, NULL, NULL, getLineNumber()); }
-#line 1425 "y.tab.c"
+#line 1427 "y.tab.c"
     break;
 
   case 11: /* var_declaration: KW_BOOL TK_IDENTIFIER '=' LIT_INT  */
 #line 107 "parser.y"
                                                     { (yyval.ast) = astCreate(AST_VAR_DECL_BOOL, (yyvsp[-2].symbol), astCreate(AST_LIT_INT, (yyvsp[0].symbol), NULL, NULL, NULL, NULL, getLineNumber()), NULL, NULL, NULL, getLineNumber()); }
-#line 1431 "y.tab.c"
+#line 1433 "y.tab.c"
     break;
 
   case 12: /* var_declaration: KW_INT TK_IDENTIFIER '=' LIT_CHAR  */
 #line 109 "parser.y"
                                                     { (yyval.ast) = astCreate(AST_VAR_DECL_INT, (yyvsp[-2].symbol), astCreate(AST_LIT_CHAR, (yyvsp[0].symbol), NULL, NULL, NULL, NULL, getLineNumber()), NULL, NULL, NULL, getLineNumber()); }
-#line 1437 "y.tab.c"
+#line 1439 "y.tab.c"
     break;
 
   case 13: /* var_declaration: KW_CHAR TK_IDENTIFIER '=' LIT_CHAR  */
 #line 110 "parser.y"
                                                     { (yyval.ast) = astCreate(AST_VAR_DECL_CHAR, (yyvsp[-2].symbol),astCreate(AST_LIT_CHAR, (yyvsp[0].symbol), NULL, NULL, NULL, NULL, getLineNumber()), NULL, NULL, NULL, getLineNumber()); }
-#line 1443 "y.tab.c"
+#line 1445 "y.tab.c"
     break;
 
   case 14: /* var_declaration: KW_REAL TK_IDENTIFIER '=' LIT_CHAR  */
 #line 111 "parser.y"
                                                      { (yyval.ast) = astCreate(AST_VAR_DECL_REAL, (yyvsp[-2].symbol), astCreate(AST_LIT_CHAR, (yyvsp[0].symbol), NULL, NULL, NULL, NULL, getLineNumber()), NULL, NULL, NULL, getLineNumber()); }
-#line 1449 "y.tab.c"
+#line 1451 "y.tab.c"
     break;
 
   case 15: /* var_declaration: KW_BOOL TK_IDENTIFIER '=' LIT_CHAR  */
 #line 112 "parser.y"
                                                      { (yyval.ast) = astCreate(AST_VAR_DECL_BOOL, (yyvsp[-2].symbol), astCreate(AST_LIT_CHAR, (yyvsp[0].symbol), NULL, NULL, NULL, NULL, getLineNumber()), NULL, NULL, NULL, getLineNumber()); }
-#line 1455 "y.tab.c"
+#line 1457 "y.tab.c"
     break;
 
   case 16: /* var_declaration: KW_INT TK_IDENTIFIER '=' LIT_REAL  */
 #line 114 "parser.y"
                                                    { (yyval.ast) = astCreate(AST_VAR_DECL_INT, (yyvsp[-2].symbol), astCreate(AST_LIT_REAL, (yyvsp[0].symbol), NULL, NULL, NULL, NULL, getLineNumber()), NULL, NULL, NULL, getLineNumber()); }
-#line 1461 "y.tab.c"
+#line 1463 "y.tab.c"
     break;
 
   case 17: /* var_declaration: KW_CHAR TK_IDENTIFIER '=' LIT_REAL  */
 #line 115 "parser.y"
                                                     { (yyval.ast) = astCreate(AST_VAR_DECL_CHAR, (yyvsp[-2].symbol), astCreate(AST_LIT_REAL, (yyvsp[0].symbol), NULL, NULL, NULL, NULL, getLineNumber()), NULL, NULL, NULL, getLineNumber()); }
-#line 1467 "y.tab.c"
+#line 1469 "y.tab.c"
     break;
 
   case 18: /* var_declaration: KW_REAL TK_IDENTIFIER '=' LIT_REAL  */
 #line 116 "parser.y"
                                                          { (yyval.ast) = astCreate(AST_VAR_DECL_REAL, (yyvsp[-2].symbol), astCreate(AST_LIT_REAL, (yyvsp[0].symbol), NULL, NULL, NULL, NULL, getLineNumber()), NULL, NULL, NULL, getLineNumber()); }
-#line 1473 "y.tab.c"
+#line 1475 "y.tab.c"
     break;
 
   case 19: /* var_declaration: KW_BOOL TK_IDENTIFIER '=' LIT_REAL  */
 #line 117 "parser.y"
                                                         { (yyval.ast) = astCreate(AST_VAR_DECL_BOOL, (yyvsp[-2].symbol), astCreate(AST_LIT_REAL, (yyvsp[0].symbol), NULL, NULL, NULL, NULL, getLineNumber()), NULL, NULL, NULL, getLineNumber()); }
-#line 1479 "y.tab.c"
+#line 1481 "y.tab.c"
     break;
 
   case 20: /* vec_init_opt: LIT_INT vec_init_opt  */
 #line 120 "parser.y"
                                    { (yyval.ast) = astCreate(AST_VEC_INIT_OPT_INT, NULL, astCreate(AST_LIT_INT, (yyvsp[-1].symbol), NULL, NULL, NULL, NULL, getLineNumber()), (yyvsp[0].ast), NULL, NULL, getLineNumber()); }
-#line 1485 "y.tab.c"
+#line 1487 "y.tab.c"
     break;
 
   case 21: /* vec_init_opt: LIT_REAL vec_init_opt  */
 #line 121 "parser.y"
                                    { (yyval.ast) = astCreate(AST_VEC_INIT_OPT_REAL, NULL, astCreate(AST_LIT_REAL, (yyvsp[-1].symbol), NULL, NULL, NULL, NULL, getLineNumber()), (yyvsp[0].ast), NULL, NULL, getLineNumber()); }
-#line 1491 "y.tab.c"
+#line 1493 "y.tab.c"
     break;
 
   case 22: /* vec_init_opt: LIT_CHAR vec_init_opt  */
 #line 122 "parser.y"
                                     { (yyval.ast) = astCreate(AST_VEC_INIT_OPT_CHAR, NULL, astCreate(AST_LIT_CHAR, (yyvsp[-1].symbol), NULL, NULL, NULL, NULL, getLineNumber()), (yyvsp[0].ast), NULL, NULL, getLineNumber()); }
-#line 1497 "y.tab.c"
+#line 1499 "y.tab.c"
     break;
 
   case 23: /* vec_init_opt: %empty  */
 #line 123 "parser.y"
           { (yyval.ast) = 0; }
-#line 1503 "y.tab.c"
+#line 1505 "y.tab.c"
     break;
 
   case 24: /* vec_declaration: KW_INT TK_IDENTIFIER '[' LIT_INT ']' vec_init_opt  */
 #line 126 "parser.y"
                                                                      { (yyval.ast) = astCreate(AST_VEC_DECL_INT, (yyvsp[-4].symbol),  astCreate(AST_LIT_INT, (yyvsp[-2].symbol), NULL, NULL, NULL, NULL, getLineNumber()), (yyvsp[0].ast), NULL, NULL, getLineNumber()); }
-#line 1509 "y.tab.c"
+#line 1511 "y.tab.c"
     break;
 
   case 25: /* vec_declaration: KW_CHAR TK_IDENTIFIER '[' LIT_INT ']' vec_init_opt  */
 #line 127 "parser.y"
                                                                     { (yyval.ast) = astCreate(AST_VEC_DECL_CHAR, (yyvsp[-4].symbol), astCreate(AST_LIT_INT, (yyvsp[-2].symbol), NULL, NULL, NULL, NULL, getLineNumber()), (yyvsp[0].ast), NULL, NULL, getLineNumber()); }
-#line 1515 "y.tab.c"
+#line 1517 "y.tab.c"
     break;
 
   case 26: /* vec_declaration: KW_REAL TK_IDENTIFIER '[' LIT_INT ']' vec_init_opt  */
 #line 128 "parser.y"
                                                                     { (yyval.ast) = astCreate(AST_VEC_DECL_REAL, (yyvsp[-4].symbol), astCreate(AST_LIT_INT, (yyvsp[-2].symbol), NULL, NULL, NULL, NULL, getLineNumber()), (yyvsp[0].ast), NULL, NULL, getLineNumber()); }
-#line 1521 "y.tab.c"
+#line 1523 "y.tab.c"
     break;
 
   case 27: /* vec_declaration: KW_BOOL TK_IDENTIFIER '[' LIT_INT ']' vec_init_opt  */
 #line 129 "parser.y"
                                                                     { (yyval.ast) = astCreate(AST_VEC_DECL_BOOL, (yyvsp[-4].symbol), astCreate(AST_LIT_INT, (yyvsp[-2].symbol), NULL, NULL, NULL, NULL, getLineNumber()), (yyvsp[0].ast), NULL, NULL, getLineNumber()); }
-#line 1527 "y.tab.c"
+#line 1529 "y.tab.c"
     break;
 
   case 28: /* parameter: KW_INT TK_IDENTIFIER  */
 #line 132 "parser.y"
                                     { (yyval.ast) = astCreate(AST_PARAM_INT, (yyvsp[0].symbol), NULL, NULL, NULL, NULL, getLineNumber()); }
-#line 1533 "y.tab.c"
+#line 1535 "y.tab.c"
     break;
 
   case 29: /* parameter: KW_CHAR TK_IDENTIFIER  */
 #line 133 "parser.y"
                                     { (yyval.ast) = astCreate(AST_PARAM_CHAR, (yyvsp[0].symbol), NULL, NULL, NULL, NULL, getLineNumber()); }
-#line 1539 "y.tab.c"
+#line 1541 "y.tab.c"
     break;
 
   case 30: /* parameter: KW_REAL TK_IDENTIFIER  */
 #line 134 "parser.y"
                                     { (yyval.ast) = astCreate(AST_PARAM_REAL, (yyvsp[0].symbol), NULL, NULL, NULL, NULL, getLineNumber()); }
-#line 1545 "y.tab.c"
+#line 1547 "y.tab.c"
     break;
 
   case 31: /* parameter: KW_BOOL TK_IDENTIFIER  */
 #line 135 "parser.y"
                                     { (yyval.ast) = astCreate(AST_PARAM_BOOL, (yyvsp[0].symbol), NULL, NULL, NULL, NULL, getLineNumber()); }
-#line 1551 "y.tab.c"
+#line 1553 "y.tab.c"
     break;
 
   case 32: /* parameter_list: parameter parameter_list_aux  */
 #line 138 "parser.y"
                                              { (yyval.ast) = astCreate(AST_PARAM_LIST, NULL, (yyvsp[-1].ast), (yyvsp[0].ast), NULL, NULL, getLineNumber()); }
-#line 1557 "y.tab.c"
+#line 1559 "y.tab.c"
     break;
 
   case 33: /* parameter_list: %empty  */
 #line 139 "parser.y"
       { (yyval.ast) = astCreate(AST_EMPTY_PARAM_LIST, NULL, NULL, NULL, NULL, NULL, getLineNumber());}
-#line 1563 "y.tab.c"
+#line 1565 "y.tab.c"
     break;
 
   case 34: /* parameter_list_aux: ',' parameter parameter_list_aux  */
 #line 142 "parser.y"
                                                      { (yyval.ast) = astCreate(AST_PARAM_LIST, NULL, (yyvsp[-1].ast), (yyvsp[0].ast), NULL, NULL, getLineNumber()); }
-#line 1569 "y.tab.c"
+#line 1571 "y.tab.c"
     break;
 
   case 35: /* parameter_list_aux: %empty  */
 #line 143 "parser.y"
       { (yyval.ast) = 0; }
-#line 1575 "y.tab.c"
+#line 1577 "y.tab.c"
     break;
 
   case 36: /* func_declaration: KW_INT TK_IDENTIFIER '(' parameter_list ')' body  */
 #line 146 "parser.y"
                                                                         { (yyval.ast) = astCreate(AST_FUNC_DECL_INT, (yyvsp[-4].symbol), (yyvsp[-2].ast), (yyvsp[0].ast), NULL, NULL, getLineNumber()); }
-#line 1581 "y.tab.c"
+#line 1583 "y.tab.c"
     break;
 
   case 37: /* func_declaration: KW_CHAR TK_IDENTIFIER '(' parameter_list ')' body  */
 #line 147 "parser.y"
                                                                         { (yyval.ast) = astCreate(AST_FUNC_DECL_CHAR, (yyvsp[-4].symbol), (yyvsp[-2].ast), (yyvsp[0].ast), NULL, NULL, getLineNumber()); }
-#line 1587 "y.tab.c"
+#line 1589 "y.tab.c"
     break;
 
   case 38: /* func_declaration: KW_REAL TK_IDENTIFIER '(' parameter_list ')' body  */
 #line 148 "parser.y"
                                                                         { (yyval.ast) = astCreate(AST_FUNC_DECL_REAL, (yyvsp[-4].symbol), (yyvsp[-2].ast), (yyvsp[0].ast), NULL, NULL, getLineNumber()); }
-#line 1593 "y.tab.c"
+#line 1595 "y.tab.c"
     break;
 
   case 39: /* func_declaration: KW_BOOL TK_IDENTIFIER '(' parameter_list ')' body  */
 #line 149 "parser.y"
                                                                         { (yyval.ast) = astCreate(AST_FUNC_DECL_BOOL, (yyvsp[-4].symbol), (yyvsp[-2].ast), (yyvsp[0].ast), NULL, NULL, getLineNumber()); }
-#line 1599 "y.tab.c"
+#line 1601 "y.tab.c"
     break;
 
   case 40: /* body: '{' cmd_list '}'  */
 #line 152 "parser.y"
                        { (yyval.ast) = astCreate(AST_BODY, NULL, (yyvsp[-1].ast), NULL, NULL, NULL, getLineNumber()); }
-#line 1605 "y.tab.c"
+#line 1607 "y.tab.c"
     break;
 
   case 41: /* cmd_list: cmd ';' cmd_list  */
 #line 155 "parser.y"
                            { (yyval.ast) = astCreate(AST_CMD_LIST, 0, (yyvsp[-2].ast), (yyvsp[0].ast), NULL, NULL, getLineNumber()); }
-#line 1611 "y.tab.c"
+#line 1613 "y.tab.c"
     break;
 
   case 42: /* cmd_list: body cmd_list  */
 #line 156 "parser.y"
                            { (yyval.ast) = astCreate(AST_CMD_LIST, 0, (yyvsp[-1].ast), (yyvsp[0].ast), NULL, NULL, getLineNumber()); }
-#line 1617 "y.tab.c"
+#line 1619 "y.tab.c"
     break;
 
   case 43: /* cmd_list: if_statement cmd_list  */
 #line 157 "parser.y"
                                     { (yyval.ast) = astCreate(AST_CONDITIONAL_STATEMENT, 0, (yyvsp[-1].ast), (yyvsp[0].ast), NULL, NULL, getLineNumber()); }
-#line 1623 "y.tab.c"
+#line 1625 "y.tab.c"
     break;
 
   case 44: /* cmd_list: %empty  */
 #line 158 "parser.y"
           { (yyval.ast) = 0; }
-#line 1629 "y.tab.c"
+#line 1631 "y.tab.c"
     break;
 
   case 45: /* if_body: body  */
 #line 161 "parser.y"
               { (yyval.ast) = (yyvsp[0].ast); }
-#line 1635 "y.tab.c"
+#line 1637 "y.tab.c"
     break;
 
   case 46: /* if_body: cmd ';'  */
 #line 162 "parser.y"
                  { (yyval.ast) = (yyvsp[-1].ast); }
-#line 1641 "y.tab.c"
+#line 1643 "y.tab.c"
     break;
 
   case 47: /* if_statement: KW_IF '(' expr ')' if_body  */
 #line 165 "parser.y"
                                                    { (yyval.ast) = astCreate(AST_IF, 0, (yyvsp[-2].ast), (yyvsp[0].ast), NULL, NULL, getLineNumber()); }
-#line 1647 "y.tab.c"
+#line 1649 "y.tab.c"
     break;
 
   case 48: /* if_statement: KW_IF '(' expr ')' if_body KW_ELSE if_body  */
 #line 166 "parser.y"
                                                    { (yyval.ast) = astCreate(AST_IF_ELSE, 0, (yyvsp[-4].ast), (yyvsp[-2].ast), (yyvsp[0].ast), NULL, getLineNumber()); }
-#line 1653 "y.tab.c"
+#line 1655 "y.tab.c"
     break;
 
   case 49: /* if_statement: KW_IF '(' expr ')' KW_LOOP if_body  */
 #line 167 "parser.y"
                                                    { (yyval.ast) = astCreate(AST_LOOP, 0, (yyvsp[-3].ast), (yyvsp[0].ast), NULL, NULL, getLineNumber()); }
-#line 1659 "y.tab.c"
+#line 1661 "y.tab.c"
     break;
 
   case 50: /* cmd: var_attrib  */
 #line 170 "parser.y"
                  {  (yyval.ast) = (yyvsp[0].ast); }
-#line 1665 "y.tab.c"
+#line 1667 "y.tab.c"
     break;
 
   case 51: /* cmd: vec_attrib  */
 #line 171 "parser.y"
                  { (yyval.ast) = (yyvsp[0].ast); }
-#line 1671 "y.tab.c"
+#line 1673 "y.tab.c"
     break;
 
   case 52: /* cmd: output_cmd  */
 #line 172 "parser.y"
                  { (yyval.ast) = (yyvsp[0].ast); }
-#line 1677 "y.tab.c"
+#line 1679 "y.tab.c"
     break;
 
   case 53: /* cmd: return_cmd  */
 #line 173 "parser.y"
                  { (yyval.ast) = (yyvsp[0].ast); }
-#line 1683 "y.tab.c"
+#line 1685 "y.tab.c"
     break;
 
   case 54: /* cmd: %empty  */
 #line 174 "parser.y"
       { (yyval.ast) = 0; }
-#line 1689 "y.tab.c"
+#line 1691 "y.tab.c"
     break;
 
   case 55: /* var_attrib: TK_IDENTIFIER '=' expr  */
 #line 177 "parser.y"
                                    { (yyval.ast) = astCreate(AST_VAR_ATTRIB, (yyvsp[-2].symbol), (yyvsp[0].ast), NULL, NULL, NULL, getLineNumber());  }
-#line 1695 "y.tab.c"
+#line 1697 "y.tab.c"
     break;
 
   case 56: /* vec_attrib: TK_IDENTIFIER '[' expr ']' '=' expr  */
 #line 180 "parser.y"
                                                 { (yyval.ast) = astCreate(AST_VEC_ATTRIB, (yyvsp[-5].symbol), (yyvsp[-3].ast), (yyvsp[0].ast), NULL, NULL, getLineNumber()); }
-#line 1701 "y.tab.c"
+#line 1703 "y.tab.c"
     break;
 
   case 57: /* output_cmd: KW_OUTPUT output_param_list  */
 #line 182 "parser.y"
                                         { (yyval.ast) = astCreate(AST_OUTPUT_CMD, 0, (yyvsp[0].ast), NULL, NULL, NULL, getLineNumber()); }
-#line 1707 "y.tab.c"
+#line 1709 "y.tab.c"
     break;
 
   case 58: /* output_param_list: LIT_STRING ',' output_param_list  */
 #line 185 "parser.y"
                                                         { (yyval.ast) = astCreate(AST_OUTPUT_PARAM_LIST, NULL, astCreate(AST_LIT_STRING, (yyvsp[-2].symbol), NULL, NULL, NULL, NULL, getLineNumber()), (yyvsp[0].ast), NULL, NULL, getLineNumber()); }
-#line 1713 "y.tab.c"
+#line 1715 "y.tab.c"
     break;
 
   case 59: /* output_param_list: expr ',' output_param_list  */
 #line 186 "parser.y"
                                                         { (yyval.ast) = astCreate(AST_OUTPUT_PARAM_LIST, 0, (yyvsp[-2].ast), (yyvsp[0].ast), NULL, NULL, getLineNumber()); }
-#line 1719 "y.tab.c"
+#line 1721 "y.tab.c"
     break;
 
   case 60: /* output_param_list: LIT_STRING  */
 #line 187 "parser.y"
                                                         { (yyval.ast) = astCreate(AST_OUTPUT_PARAM_LIST, NULL, astCreate(AST_LIT_STRING, (yyvsp[0].symbol), NULL, NULL, NULL, NULL, getLineNumber()), NULL, NULL, NULL, getLineNumber()); }
-#line 1725 "y.tab.c"
+#line 1727 "y.tab.c"
     break;
 
   case 61: /* output_param_list: expr  */
 #line 188 "parser.y"
                                                         { (yyval.ast) = (yyvsp[0].ast); }
-#line 1731 "y.tab.c"
+#line 1733 "y.tab.c"
     break;
 
   case 62: /* return_cmd: KW_RETURN expr  */
 #line 191 "parser.y"
                            { (yyval.ast) = astCreate(AST_RETURN_CMD, 0, (yyvsp[0].ast), NULL, NULL, NULL, getLineNumber()); }
-#line 1737 "y.tab.c"
+#line 1739 "y.tab.c"
     break;
 
   case 63: /* input_expr: KW_INPUT '(' KW_INT ')'  */
 #line 194 "parser.y"
                                      { (yyval.ast) = astCreate(AST_INPUT_EXPR_INT, 0, NULL, NULL, NULL, NULL, getLineNumber()); }
-#line 1743 "y.tab.c"
+#line 1745 "y.tab.c"
     break;
 
   case 64: /* input_expr: KW_INPUT '(' KW_CHAR ')'  */
 #line 195 "parser.y"
                                      { (yyval.ast) = astCreate(AST_INPUT_EXPR_CHAR, 0, NULL, NULL, NULL, NULL, getLineNumber()); }
-#line 1749 "y.tab.c"
+#line 1751 "y.tab.c"
     break;
 
   case 65: /* input_expr: KW_INPUT '(' KW_REAL ')'  */
 #line 196 "parser.y"
                                      { (yyval.ast) = astCreate(AST_INPUT_EXPR_REAL, 0, NULL, NULL, NULL, NULL, getLineNumber()); }
-#line 1755 "y.tab.c"
+#line 1757 "y.tab.c"
     break;
 
   case 66: /* input_expr: KW_INPUT '(' KW_BOOL ')'  */
 #line 197 "parser.y"
                                      { (yyval.ast) = astCreate(AST_INPUT_EXPR_BOOL, 0, NULL, NULL, NULL, NULL, getLineNumber()); }
-#line 1761 "y.tab.c"
+#line 1763 "y.tab.c"
     break;
 
   case 67: /* expr: LIT_INT  */
 #line 200 "parser.y"
                                             { (yyval.ast) = astCreate(AST_LIT_INT, (yyvsp[0].symbol), NULL, NULL, NULL, NULL, getLineNumber()); }
-#line 1767 "y.tab.c"
+#line 1769 "y.tab.c"
     break;
 
   case 68: /* expr: TK_IDENTIFIER  */
 #line 201 "parser.y"
                                             { (yyval.ast) = astCreate(AST_IDENTIFIER, (yyvsp[0].symbol), NULL, NULL, NULL, NULL, getLineNumber());    }
-#line 1773 "y.tab.c"
+#line 1775 "y.tab.c"
     break;
 
   case 69: /* expr: LIT_CHAR  */
 #line 202 "parser.y"
                                             { (yyval.ast) = astCreate(AST_LIT_CHAR, (yyvsp[0].symbol), NULL, NULL, NULL, NULL, getLineNumber()); }
-#line 1779 "y.tab.c"
+#line 1781 "y.tab.c"
     break;
 
   case 70: /* expr: LIT_REAL  */
 #line 203 "parser.y"
                                             { (yyval.ast) = astCreate(AST_LIT_REAL, (yyvsp[0].symbol), NULL, NULL, NULL, NULL, getLineNumber()); }
-#line 1785 "y.tab.c"
+#line 1787 "y.tab.c"
     break;
 
   case 71: /* expr: TK_IDENTIFIER '[' expr ']'  */
 #line 204 "parser.y"
                                             { (yyval.ast) = astCreate(AST_VEC_ACCESS, (yyvsp[-3].symbol), (yyvsp[-1].ast), NULL, NULL, NULL, getLineNumber());   }
-#line 1791 "y.tab.c"
+#line 1793 "y.tab.c"
     break;
 
   case 72: /* expr: input_expr  */
 #line 205 "parser.y"
                                             { (yyval.ast) = (yyvsp[0].ast);                                                 }
-#line 1797 "y.tab.c"
+#line 1799 "y.tab.c"
     break;
 
   case 73: /* expr: func_call  */
 #line 206 "parser.y"
                                             { (yyval.ast) = (yyvsp[0].ast);                                                }
-#line 1803 "y.tab.c"
+#line 1805 "y.tab.c"
     break;
 
   case 74: /* expr: expr '*' expr  */
 #line 207 "parser.y"
                                             { (yyval.ast) = astCreate(AST_MUL, 0, (yyvsp[-2].ast), (yyvsp[0].ast), NULL, NULL, getLineNumber());         }
-#line 1809 "y.tab.c"
+#line 1811 "y.tab.c"
     break;
 
   case 75: /* expr: expr '/' expr  */
 #line 208 "parser.y"
                                             { (yyval.ast) = astCreate(AST_DIV, 0, (yyvsp[-2].ast), (yyvsp[0].ast), NULL, NULL, getLineNumber());         }
-#line 1815 "y.tab.c"
+#line 1817 "y.tab.c"
     break;
 
   case 76: /* expr: expr '+' expr  */
 #line 209 "parser.y"
                                             { (yyval.ast) = astCreate(AST_ADD, 0, (yyvsp[-2].ast), (yyvsp[0].ast), NULL, NULL, getLineNumber());         }
-#line 1821 "y.tab.c"
+#line 1823 "y.tab.c"
     break;
 
   case 77: /* expr: expr '-' expr  */
 #line 210 "parser.y"
                                             { (yyval.ast) = astCreate(AST_SUB, 0, (yyvsp[-2].ast), (yyvsp[0].ast), NULL, NULL, getLineNumber());         }
-#line 1827 "y.tab.c"
+#line 1829 "y.tab.c"
     break;
 
   case 78: /* expr: '-' expr  */
 #line 211 "parser.y"
                                             { (yyval.ast) = astCreate(AST_NEG, 0, (yyvsp[0].ast), NULL, NULL, NULL, getLineNumber());       }
-#line 1833 "y.tab.c"
+#line 1835 "y.tab.c"
     break;
 
   case 79: /* expr: '~' expr  */
 #line 212 "parser.y"
                                             { (yyval.ast) = astCreate(AST_NOT, 0, (yyvsp[0].ast), NULL, NULL, NULL, getLineNumber());       }
-#line 1839 "y.tab.c"
+#line 1841 "y.tab.c"
     break;
 
   case 80: /* expr: expr '&' expr  */
 #line 213 "parser.y"
                                             { (yyval.ast) = astCreate(AST_AND, 0, (yyvsp[-2].ast), (yyvsp[0].ast), NULL, NULL, getLineNumber());         }
-#line 1845 "y.tab.c"
+#line 1847 "y.tab.c"
     break;
 
   case 81: /* expr: expr '|' expr  */
 #line 214 "parser.y"
                                             { (yyval.ast) = astCreate(AST_OR, 0, (yyvsp[-2].ast), (yyvsp[0].ast), NULL, NULL, getLineNumber());          }
-#line 1851 "y.tab.c"
+#line 1853 "y.tab.c"
     break;
 
   case 82: /* expr: expr OPERATOR_LE expr  */
 #line 215 "parser.y"
                                             { (yyval.ast) = astCreate(AST_LE, 0, (yyvsp[-2].ast), (yyvsp[0].ast), NULL, NULL, getLineNumber());          }
-#line 1857 "y.tab.c"
+#line 1859 "y.tab.c"
     break;
 
   case 83: /* expr: expr OPERATOR_GE expr  */
 #line 216 "parser.y"
                                             { (yyval.ast) = astCreate(AST_GE, 0, (yyvsp[-2].ast), (yyvsp[0].ast), NULL, NULL, getLineNumber());          }
-#line 1863 "y.tab.c"
+#line 1865 "y.tab.c"
     break;
 
   case 84: /* expr: expr OPERATOR_EQ expr  */
 #line 217 "parser.y"
                                             { (yyval.ast) = astCreate(AST_EQ, 0, (yyvsp[-2].ast), (yyvsp[0].ast), NULL, NULL, getLineNumber());          }
-#line 1869 "y.tab.c"
+#line 1871 "y.tab.c"
     break;
 
   case 85: /* expr: expr OPERATOR_DIF expr  */
 #line 218 "parser.y"
                                             { (yyval.ast) = astCreate(AST_DIF, 0, (yyvsp[-2].ast), (yyvsp[0].ast), NULL, NULL, getLineNumber());         }
-#line 1875 "y.tab.c"
+#line 1877 "y.tab.c"
     break;
 
   case 86: /* expr: expr '>' expr  */
 #line 219 "parser.y"
                                             { (yyval.ast) = astCreate(AST_GT, 0, (yyvsp[-2].ast), (yyvsp[0].ast), NULL, NULL, getLineNumber());          }
-#line 1881 "y.tab.c"
+#line 1883 "y.tab.c"
     break;
 
   case 87: /* expr: expr '<' expr  */
 #line 220 "parser.y"
                                             { (yyval.ast) = astCreate(AST_LT, 0, (yyvsp[-2].ast), (yyvsp[0].ast), NULL, NULL, getLineNumber());          }
-#line 1887 "y.tab.c"
+#line 1889 "y.tab.c"
     break;
 
   case 88: /* expr: '(' expr ')'  */
 #line 221 "parser.y"
                                             { (yyval.ast) = astCreate(AST_NESTED_EXPR, 0, (yyvsp[-1].ast), NULL, NULL, NULL, getLineNumber());                                                }
-#line 1893 "y.tab.c"
+#line 1895 "y.tab.c"
     break;
 
   case 89: /* func_call: TK_IDENTIFIER '(' expr_list ')'  */
 #line 223 "parser.y"
                                            { (yyval.ast) = astCreate(AST_FUNC_CALL, (yyvsp[-3].symbol), (yyvsp[-1].ast), NULL, NULL, NULL, getLineNumber());  }
-#line 1899 "y.tab.c"
+#line 1901 "y.tab.c"
     break;
 
   case 90: /* expr_list: expr expr_list_aux  */
 #line 226 "parser.y"
                                       { (yyval.ast) = astCreate(AST_EXPR_LIST, NULL, (yyvsp[-1].ast), (yyvsp[0].ast), NULL, NULL, getLineNumber());}
-#line 1905 "y.tab.c"
+#line 1907 "y.tab.c"
     break;
 
   case 91: /* expr_list: %empty  */
 #line 227 "parser.y"
                                       { (yyval.ast) = 0; }
-#line 1911 "y.tab.c"
+#line 1913 "y.tab.c"
     break;
 
   case 92: /* expr_list_aux: ',' expr expr_list_aux  */
 #line 230 "parser.y"
                                       { (yyval.ast) = astCreate(AST_EXPR_LIST, NULL, (yyvsp[-1].ast), (yyvsp[0].ast), NULL, NULL, getLineNumber());}
-#line 1917 "y.tab.c"
+#line 1919 "y.tab.c"
     break;
 
   case 93: /* expr_list_aux: %empty  */
 #line 231 "parser.y"
                                       { (yyval.ast) = 0; }
-#line 1923 "y.tab.c"
+#line 1925 "y.tab.c"
     break;
 
 
-#line 1927 "y.tab.c"
+#line 1929 "y.tab.c"
 
       default: break;
     }

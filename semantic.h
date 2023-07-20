@@ -181,9 +181,13 @@ void check_operands(AST *node)
     if (!node)
         return;
 
+    if (is_input_cmd(node)) {
+        int datatype = get_input_cmd_type(node);
+        node->result_datatype = datatype;
+    }
+
     switch (node->type)
     {
-
     case AST_NESTED_EXPR:
     {
         int datatype = find_first_datatype(node);
@@ -232,14 +236,16 @@ void check_operands(AST *node)
 
         int errored = 0;
 
-        if (!(left_operand->type == AST_NESTED_EXPR) && !(left_operand->type == AST_NEG) && !is_numeric(left_operand) && !is_arithmetic(left_operand))
+        if (!(left_operand->type == AST_NESTED_EXPR) && !(left_operand->type == AST_NEG) && !is_numeric(left_operand) 
+        && !is_arithmetic(left_operand) && !is_input_cmd(left_operand))
         {
             errored = 1;
             fprintf(stderr, "Semantic error: invalid left operand at line %d\n", node->line_number);
             ++SemanticErrors;
         }
 
-        if (!(right_operand->type == AST_NESTED_EXPR) && !(right_operand->type == AST_NEG) && !is_numeric(right_operand) && !is_arithmetic(right_operand))
+        if (!(right_operand->type == AST_NESTED_EXPR) && !(right_operand->type == AST_NEG) && !is_numeric(right_operand) 
+        && !is_arithmetic(right_operand)  && !is_input_cmd(right_operand))
         {
             errored = 1;
             fprintf(stderr, "Semantic error: invalid right operand at line %d\n", node->line_number);
@@ -261,18 +267,18 @@ void check_operands(AST *node)
                 right_datatype = right_operand->symbol->datatype;
             }
 
-            if (left_operand->type == AST_NESTED_EXPR)
+            if (left_operand->type == AST_NESTED_EXPR || is_input_cmd(left_operand) || left_operand->type == AST_NEG)
             {
                 left_datatype = find_first_datatype(left_operand);
             }
 
-            if (right_operand->type == AST_NESTED_EXPR)
+            if (right_operand->type == AST_NESTED_EXPR || is_input_cmd(right_operand) || right_operand->type == AST_NEG)
             {
                 right_datatype = find_first_datatype(right_operand);
             }
 
 
-            if (left_operand->symbol && right_operand->symbol && left_datatype != right_datatype)
+            if ((left_operand->symbol || is_input_cmd(left_operand) || left_operand->type == AST_NEG) && (right_operand->symbol || is_input_cmd(right_operand) || left_operand->type == AST_NEG)  && left_datatype != right_datatype)
             {
                 fprintf(stderr, "Semantic error: operands should have same type at line %d\n", node->line_number);
                 ++SemanticErrors;
@@ -303,13 +309,13 @@ void check_operands(AST *node)
             ++SemanticErrors;
         }
 
-        if (operand->symbol &&operand->symbol->is_function && operand->type != AST_FUNC_CALL)
+        if (operand->symbol && operand->symbol->is_function && operand->type != AST_FUNC_CALL)
         {
             fprintf(stderr, "Semantic error: invalid unary operand (function should be called) at line %d\n", node->line_number);
             ++SemanticErrors;
         }
 
-        if (!(operand->type == AST_NESTED_EXPR) && !is_numeric(operand) && !is_arithmetic(operand))
+        if (operand->type != AST_NESTED_EXPR && !is_numeric(operand) && !is_arithmetic(operand) && !is_input_cmd(operand))
         {
             fprintf(stderr, "Semantic error: invalid unary arithmetic/numeric operand at line %d\n", node->line_number);
             ++SemanticErrors;
@@ -363,13 +369,13 @@ void check_operands(AST *node)
 
         int errored = 0;
 
-        if (!is_bool(left_operand) && !(left_operand->type == AST_NESTED_EXPR) && !is_logic(left_operand))
+        if (!is_bool(left_operand) && !(left_operand->type == AST_NESTED_EXPR) && !is_logic(left_operand) && !is_input_cmd(left_operand))
         {
             fprintf(stderr, "Semantic error: invalid left operand for %s at line %d\n", ast_type_str(node->type), node->line_number);
             ++SemanticErrors;
         }
 
-        if (!is_bool(right_operand) && !(right_operand->type == AST_NESTED_EXPR) && !is_logic(right_operand))
+        if (!is_bool(right_operand) && !(right_operand->type == AST_NESTED_EXPR) && !is_logic(right_operand)  && !is_input_cmd(right_operand))
         {
             fprintf(stderr, "Semantic error: invalid right operand for %s at line %d\n", ast_type_str(node->type), node->line_number);
             ++SemanticErrors;
@@ -390,18 +396,18 @@ void check_operands(AST *node)
                 right_datatype = right_operand->symbol->datatype;
             }
 
-            if (left_operand->type == AST_NESTED_EXPR)
+            if (left_operand->type == AST_NESTED_EXPR || is_input_cmd(left_operand))
             {
                 left_datatype = find_first_datatype(left_operand);
             }
 
-            if (right_operand->type == AST_NESTED_EXPR)
+            if (right_operand->type == AST_NESTED_EXPR || is_input_cmd(right_operand))
             {
                 right_datatype = find_first_datatype(right_operand);
             }
 
 
-            if (left_operand->symbol && right_operand->symbol && left_datatype != right_datatype)
+            if ((left_operand->symbol || is_input_cmd(left_operand)) && (right_operand->symbol || is_input_cmd(right_operand)) && left_datatype != right_datatype)
             {
                 fprintf(stderr, "Semantic error: operands should have same type at line %d\n", node->line_number);
                 ++SemanticErrors;
@@ -438,10 +444,15 @@ void check_operands(AST *node)
             ++SemanticErrors;
         }
 
-        if (!(operand->type == AST_NESTED_EXPR) && !is_logic(operand) && !is_bool(operand))
+        if (operand->type != AST_NESTED_EXPR && !is_logic(operand) && !is_bool(operand) && !is_input_cmd(operand))
         {
-            fprintf(stderr, "Semantic error: invalid unary logical operand (%s) at line %d\n", datatype_str[operand->symbol->datatype], node->line_number);
-            ++SemanticErrors;
+            if (operand->symbol) {
+                fprintf(stderr, "Semantic error: invalid unary logical operand (%s) at line %d\n", datatype_str[operand->symbol->datatype], node->line_number);
+                ++SemanticErrors;
+            } else {
+                fprintf(stderr, "Semantic error: invalid unary logical operand (%s) at line %d\n", datatype_str[get_input_cmd_type(operand)], node->line_number);
+                ++SemanticErrors;
+            }
         }
 
         if (!expression_typecheck(node))
@@ -533,6 +544,11 @@ int expression_typecheck(AST *node)
         node->typechecked = 1;
         return expression_typecheck(node->son[0]);
     }
+
+    if (is_input_cmd(node)) {
+        node->typechecked = 1;
+        return get_input_cmd_type(node);
+    }
 }
 
 int find_first_datatype(AST *node)
@@ -569,6 +585,10 @@ int find_first_datatype(AST *node)
     if (is_unary(node))
     {
         return find_first_datatype(node->son[0]);
+    }
+
+    if (is_input_cmd(node)) {
+        return get_input_cmd_type(node);
     }
 }
 
