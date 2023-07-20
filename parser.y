@@ -136,7 +136,7 @@ parameter: KW_INT TK_IDENTIFIER     { $$ = astCreate(AST_PARAM_INT, $2, NULL, NU
     ;
 
 parameter_list: parameter parameter_list_aux { $$ = astCreate(AST_PARAM_LIST, NULL, $1, $2, NULL, NULL, getLineNumber()); }
-    | { $$ = 0;} 
+    | { $$ = astCreate(AST_EMPTY_PARAM_LIST, NULL, NULL, NULL, NULL, NULL, getLineNumber());} 
     ;
 
 parameter_list_aux: ',' parameter parameter_list_aux { $$ = astCreate(AST_PARAM_LIST, NULL, $2, $3, NULL, NULL, getLineNumber()); }

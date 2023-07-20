@@ -1558,7 +1558,7 @@ yyreduce:
 
   case 33: /* parameter_list: %empty  */
 #line 139 "parser.y"
-      { (yyval.ast) = 0;}
+      { (yyval.ast) = astCreate(AST_EMPTY_PARAM_LIST, NULL, NULL, NULL, NULL, NULL, getLineNumber());}
 #line 1563 "y.tab.c"
     break;
 

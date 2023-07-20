@@ -771,6 +771,12 @@ int check_function_call(AST *node)
 
     if (node->type == AST_FUNC_CALL)
     {
+        if (node->symbol->type == SYMBOL_IDENTIFIER) {
+            //fprintf(stderr, "Semantic error: call to undeclared function %s at line %d\n", node->symbol->text, node->line_number);
+            //++SemanticErrors;
+            return 0;
+        }
+
         int parameter_count = 0;
         int found = 0;
         int error_in_number_of_params = 0;
@@ -791,7 +797,25 @@ int check_function_call(AST *node)
                 }
                 else
                 {
-                    actual_datatype = expr->symbol->datatype;
+                    if (expr->symbol) {
+                        actual_datatype = expr->symbol->datatype;
+                    } else {
+                        // it is an input(type)
+                        switch (expr->type) {
+                            case AST_INPUT_EXPR_INT:
+                                actual_datatype = DATATYPE_INT;
+                                break;
+                            case AST_INPUT_EXPR_CHAR:
+                                actual_datatype = DATATYPE_CHAR;
+                                break;
+                            case AST_INPUT_EXPR_REAL:
+                                actual_datatype = DATATYPE_REAL;
+                                break;
+                            case AST_INPUT_EXPR_BOOL:
+                                actual_datatype = DATATYPE_BOOL;
+                                break;
+                        }
+                    }
                 }
 
                 if (!compare_datatypes(expected_datatype, actual_datatype) && expected_datatype != 0)
