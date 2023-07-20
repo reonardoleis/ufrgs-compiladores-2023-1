@@ -112,7 +112,7 @@ void check_and_set_declarations(AST *node)
         {
             if (node->symbol->type != SYMBOL_IDENTIFIER)
             {
-                fprintf(stderr, "Semantic error: identifier %s already declared at line %d\n", node->symbol->text, node->line_number);
+                fprintf(stderr, "Semantic error: identifier %s already declared at line %d\n", node->symbol->text, node->son[0]->line_number);
                 ++SemanticErrors;
             }
 
@@ -124,6 +124,9 @@ void check_and_set_declarations(AST *node)
         
 
             AST *param = node->son[0];
+            if (param->type == AST_EMPTY_PARAM_LIST) {
+                break;
+            }
             int count = 0;
             while (param)
             {
@@ -144,7 +147,6 @@ void check_and_set_declarations(AST *node)
     case AST_PARAM_REAL:
     case AST_PARAM_BOOL:
     {
-
         if (node->symbol)
         {
             if (node->symbol->type != SYMBOL_IDENTIFIER)
@@ -687,6 +689,10 @@ int check_return(AST *node) {
             }
 
             AST *param = node->son[0];
+            if (param->type == AST_EMPTY_PARAM_LIST) {
+                break;
+            }
+
             int count = 0;
             while (param)
             {
