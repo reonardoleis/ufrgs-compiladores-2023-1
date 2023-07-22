@@ -1373,7 +1373,7 @@ yyreduce:
                                 check_conditional_stmts((yyvsp[0].ast));
 
                                 
-                                astPrint((yyvsp[0].ast), 0);
+                                // astPrint($1, 0);
                             }
 #line 1379 "y.tab.c"
     break;

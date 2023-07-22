@@ -1,4 +1,9 @@
-int main(bool a) {
-    a = (-input(int) > 2) | ~~~(a | -input(real) > 2.0);
-    return 1;
-} 
+int a = 5;
+real b = 1.0;
+
+int c[1] 1;
+
+int main() {
+    c[0] = a();
+    return a;
+}

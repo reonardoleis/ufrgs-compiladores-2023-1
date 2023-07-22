@@ -148,7 +148,7 @@ hash_t *hash_insert(char *text, int type, int datatype)
 
 void hash_print()
 {
-    if (hash == NULL)
+    if (hash_table == NULL)
     {
         return;
     }

@@ -17,9 +17,10 @@ void check_operands(AST *node);
 int expression_typecheck(AST *node);
 int find_first_datatype(AST *node);
 int check_assignments(AST *node);
-int check_return(AST *node);
+void check_return(AST *node);
 int check_return_aux(AST *node, int required_datatype);
-int check_conditional_stmts(AST *node);
+void check_conditional_stmts(AST *node);
+void check_function_call(AST *node);
 
 void check_and_set_declarations(AST *node)
 {
@@ -116,15 +117,13 @@ void check_and_set_declarations(AST *node)
                 ++SemanticErrors;
             }
 
-
             node->symbol->type = SYMBOL_FUNCTION;
             node->symbol->datatype = ast_type_to_datatype(node->type);
             node->symbol->is_function = 1;
 
-        
-
             AST *param = node->son[0];
-            if (param->type == AST_EMPTY_PARAM_LIST) {
+            if (param->type == AST_EMPTY_PARAM_LIST)
+            {
                 break;
             }
             int count = 0;
@@ -181,13 +180,32 @@ void check_operands(AST *node)
     if (!node)
         return;
 
-    if (is_input_cmd(node)) {
+    if (is_input_cmd(node))
+    {
         int datatype = get_input_cmd_type(node);
         node->result_datatype = datatype;
     }
 
     switch (node->type)
     {
+    case AST_FUNC_CALL:
+    {
+        if (node->symbol && !node->symbol->is_function)
+        {
+            fprintf(stderr, "Semantic error: tried to call %s which is not a function at line %d\n", node->symbol->text, node->line_number);
+            ++SemanticErrors;
+        }
+        break;
+    }
+    case AST_VEC_ACCESS:
+    {
+        if (node->symbol && !node->symbol->is_vector)
+        {
+            fprintf(stderr, "Semantic error: tried to index %s which is not a vector at line %d\n", node->symbol->text, node->line_number);
+            ++SemanticErrors;
+        }
+        break;
+    }
     case AST_NESTED_EXPR:
     {
         int datatype = find_first_datatype(node);
@@ -236,16 +254,14 @@ void check_operands(AST *node)
 
         int errored = 0;
 
-        if (!(left_operand->type == AST_NESTED_EXPR) && !(left_operand->type == AST_NEG) && !is_numeric(left_operand) 
-        && !is_arithmetic(left_operand) && !is_input_cmd(left_operand))
+        if (!(left_operand->type == AST_NESTED_EXPR) && !(left_operand->type == AST_NEG) && !is_numeric(left_operand) && !is_arithmetic(left_operand) && !is_input_cmd(left_operand))
         {
             errored = 1;
             fprintf(stderr, "Semantic error: invalid left operand at line %d\n", node->line_number);
             ++SemanticErrors;
         }
 
-        if (!(right_operand->type == AST_NESTED_EXPR) && !(right_operand->type == AST_NEG) && !is_numeric(right_operand) 
-        && !is_arithmetic(right_operand)  && !is_input_cmd(right_operand))
+        if (!(right_operand->type == AST_NESTED_EXPR) && !(right_operand->type == AST_NEG) && !is_numeric(right_operand) && !is_arithmetic(right_operand) && !is_input_cmd(right_operand))
         {
             errored = 1;
             fprintf(stderr, "Semantic error: invalid right operand at line %d\n", node->line_number);
@@ -277,8 +293,9 @@ void check_operands(AST *node)
                 right_datatype = find_first_datatype(right_operand);
             }
 
-
-            if ((left_operand->symbol || is_input_cmd(left_operand) || left_operand->type == AST_NEG) && (right_operand->symbol || is_input_cmd(right_operand) || left_operand->type == AST_NEG)  && left_datatype != right_datatype)
+            if ((left_operand->symbol || is_input_cmd(left_operand) || left_operand->type == AST_NEG) && 
+            (right_operand->symbol || is_input_cmd(right_operand) || left_operand->type == AST_NEG) && left_datatype != right_datatype &&
+            !compare_datatypes(left_datatype, right_datatype))
             {
                 fprintf(stderr, "Semantic error: operands should have same type at line %d\n", node->line_number);
                 ++SemanticErrors;
@@ -300,7 +317,7 @@ void check_operands(AST *node)
 
     case AST_NEG:
     {
-        
+
         AST *operand = node->son[0];
 
         if (operand->symbol && operand->symbol->is_vector && operand->type != AST_VEC_ACCESS)
@@ -329,7 +346,8 @@ void check_operands(AST *node)
         else
         {
             node->result_datatype = find_first_datatype(node);
-            if (node->result_datatype == DATATYPE_BOOL) {
+            if (node->result_datatype == DATATYPE_BOOL)
+            {
                 fprintf(stderr, "Semantic error: invalid resulting expression type for %s (got bool, expected numeric-compatible type) at line %d\n", ast_type_str(node->type), node->line_number);
                 ++SemanticErrors;
             }
@@ -375,7 +393,7 @@ void check_operands(AST *node)
             ++SemanticErrors;
         }
 
-        if (!is_bool(right_operand) && !(right_operand->type == AST_NESTED_EXPR) && !is_logic(right_operand)  && !is_input_cmd(right_operand))
+        if (!is_bool(right_operand) && !(right_operand->type == AST_NESTED_EXPR) && !is_logic(right_operand) && !is_input_cmd(right_operand))
         {
             fprintf(stderr, "Semantic error: invalid right operand for %s at line %d\n", ast_type_str(node->type), node->line_number);
             ++SemanticErrors;
@@ -406,7 +424,6 @@ void check_operands(AST *node)
                 right_datatype = find_first_datatype(right_operand);
             }
 
-
             if ((left_operand->symbol || is_input_cmd(left_operand)) && (right_operand->symbol || is_input_cmd(right_operand)) && left_datatype != right_datatype)
             {
                 fprintf(stderr, "Semantic error: operands should have same type at line %d\n", node->line_number);
@@ -431,7 +448,6 @@ void check_operands(AST *node)
     {
         AST *operand = node->son[0];
 
-    
         if (operand->symbol && operand->symbol->is_vector && operand->type != AST_VEC_ACCESS)
         {
             fprintf(stderr, "Semantic error: invalid unary logical operand (vector should be indexed) at line %d\n", node->line_number);
@@ -446,10 +462,13 @@ void check_operands(AST *node)
 
         if (operand->type != AST_NESTED_EXPR && !is_logic(operand) && !is_bool(operand) && !is_input_cmd(operand))
         {
-            if (operand->symbol) {
+            if (operand->symbol)
+            {
                 fprintf(stderr, "Semantic error: invalid unary logical operand (%s) at line %d\n", datatype_str[operand->symbol->datatype], node->line_number);
                 ++SemanticErrors;
-            } else {
+            }
+            else
+            {
                 fprintf(stderr, "Semantic error: invalid unary logical operand (%s) at line %d\n", datatype_str[get_input_cmd_type(operand)], node->line_number);
                 ++SemanticErrors;
             }
@@ -532,7 +551,6 @@ int expression_typecheck(AST *node)
         }
     }
 
-
     if (is_binary(node))
     {
         node->typechecked = 1;
@@ -545,10 +563,13 @@ int expression_typecheck(AST *node)
         return expression_typecheck(node->son[0]);
     }
 
-    if (is_input_cmd(node)) {
+    if (is_input_cmd(node))
+    {
         node->typechecked = 1;
         return get_input_cmd_type(node);
     }
+
+    return 0;
 }
 
 int find_first_datatype(AST *node)
@@ -587,9 +608,12 @@ int find_first_datatype(AST *node)
         return find_first_datatype(node->son[0]);
     }
 
-    if (is_input_cmd(node)) {
+    if (is_input_cmd(node))
+    {
         return get_input_cmd_type(node);
     }
+
+    return 0;
 }
 
 int check_assignments(AST *node)
@@ -601,29 +625,56 @@ int check_assignments(AST *node)
 
     if (node->type == AST_VAR_ATTRIB)
     {
+        if (node->symbol && node->symbol->is_function)
+        {
+            fprintf(stderr, "Semantic error: invalid assignment to function %s at line %d\n", node->symbol->text, node->line_number);
+            ++SemanticErrors;
+        }
+
 
         int expected_datatype = node->symbol->datatype;
         int resulting_datatype = node->son[0]->result_datatype;
 
         if (node->son[0]->type == AST_IDENTIFIER)
         {
-            if (node->son[0]->symbol->is_vector && node->son[0]->type != AST_VEC_ACCESS)
+            if (node->symbol && node->symbol->is_vector && node->son[0]->symbol && !node->son[0]->symbol->is_vector)
             {
-                fprintf(stderr, "Semantic error: invalid assignment of vector to scalar at line %d\n", node->line_number);
+                fprintf(stderr, "Semantic error: invalid assignment of scalar/function to vector at line %d\n", node->line_number);
                 ++SemanticErrors;
             }
-
-            if (node->son[0]->symbol->is_function && node->son[0]->type != AST_FUNC_CALL)
+            else
             {
-                fprintf(stderr, "Semantic error: invalid assignment of function to scalar at line %d\n", node->line_number);
-                ++SemanticErrors;
+                if (node->son[0]->symbol->is_vector && !node->symbol->is_vector && !node->symbol->is_function)
+                {
+                    fprintf(stderr, "Semantic error: invalid assignment of vector to scalar at line %d\n", node->line_number);
+                    ++SemanticErrors;
+                } 
+                else if (node->son[0]->symbol->is_function && !node->symbol->is_vector && !node->symbol->is_function)
+                {
+                    fprintf(stderr, "Semantic error: invalid assignment of function %s to scalar %s at line %d\n", 
+                    node->symbol->text, node->son[0]->symbol->text, node->line_number);
+                    ++SemanticErrors;
+                } else if (node->son[0]->symbol->is_function && node->symbol->is_vector) {
+                    fprintf(stderr, "Semantic error: invalid assignment of function %s to vector %s at line %d\n", 
+                    node->symbol->text, node->son[0]->symbol->text, node->line_number);
+                    ++SemanticErrors;
+                }
             }
+        } else if (node->symbol && node->symbol->is_vector) {
+            fprintf(stderr, "Semantic error: invalid assignment of expression to vector %s at line %d\n", node->symbol->text, node->line_number);
+            ++SemanticErrors;
         }
 
-        if (expected_datatype != resulting_datatype && resulting_datatype != 0)
+        if (expected_datatype != resulting_datatype && resulting_datatype != 0 && !compare_datatypes(expected_datatype, resulting_datatype))
         {
             fprintf(stderr, "Semantic error: invalid assignment of %s to %s at line %d\n", datatype_str[resulting_datatype], datatype_str[expected_datatype], node->line_number);
             ++SemanticErrors;
+        } else if (resulting_datatype == 0) {
+            if (node->symbol && node->son[0]->symbol &&
+                !compare_datatypes(node->symbol->datatype, node->son[0]->symbol->datatype)) {
+                fprintf(stderr, "Semantic error: invalid assignment of %s to %s at line %d\n", datatype_str[node->son[0]->symbol->datatype], datatype_str[node->symbol->datatype], node->line_number);
+                ++SemanticErrors;
+            }
         }
     }
 
@@ -638,8 +689,8 @@ int check_assignments(AST *node)
                 int func_datatype = vec_indexer->symbol->datatype;
                 if (func_datatype != DATATYPE_INT && func_datatype != DATATYPE_CHAR)
                 {
-                    fprintf(stderr, "Semantic error: invalid vector indexer type (expected int or char, got %s -> %s) at line %d\n", 
-                    ast_type_str(vec_indexer->type), datatype_str[func_datatype], node->line_number);
+                    fprintf(stderr, "Semantic error: invalid vector indexer type (expected int or char, got %s -> %s) at line %d\n",
+                            ast_type_str(vec_indexer->type), datatype_str[func_datatype], node->line_number);
                     ++SemanticErrors;
                 }
             }
@@ -685,12 +736,12 @@ int check_assignments(AST *node)
     }
 }
 
-
-int check_return(AST *node) {
+void check_return(AST *node)
+{
     int i;
     int required_vec_type = 0;
     if (!node)
-        return 0;
+        return;
 
     switch (node->type)
     {
@@ -701,15 +752,16 @@ int check_return(AST *node) {
     {
         if (node->symbol)
         {
-        
-     
-            if (!check_return_aux(node, node->symbol->datatype)) {
+
+            if (!check_return_aux(node, node->symbol->datatype))
+            {
                 fprintf(stderr, "Semantic error: function %s is missing return statement at line %d\n", node->symbol->text, node->line_number);
                 ++SemanticErrors;
             }
 
             AST *param = node->son[0];
-            if (param->type == AST_EMPTY_PARAM_LIST) {
+            if (param->type == AST_EMPTY_PARAM_LIST)
+            {
                 break;
             }
 
@@ -739,7 +791,8 @@ int check_return_aux(AST *node, int required_datatype)
 {
     int i;
 
-    if (!node) return 0;
+    if (!node)
+        return 0;
 
     int found = 0;
 
@@ -759,15 +812,17 @@ int check_return_aux(AST *node, int required_datatype)
             ++SemanticErrors;
         }
 
-       
         if (return_datatype != required_datatype && !validate_return_type(required_datatype, node->son[0]))
         {
-            if (return_datatype != 0) {
+            if (return_datatype != 0)
+            {
                 fprintf(stderr, "Semantic error: invalid return type (expected %s, got %s) at line %d\n", datatype_str[required_datatype], datatype_str[return_datatype], node->line_number);
-            } else {
+            }
+            else
+            {
                 fprintf(stderr, "Semantic error: invalid return type (expected %s, got incompatible type) at line %d\n", datatype_str[required_datatype], node->line_number);
             }
-            
+
             ++SemanticErrors;
         }
 
@@ -782,19 +837,20 @@ int check_return_aux(AST *node, int required_datatype)
     return found;
 }
 
-int check_function_call(AST *node)
+void check_function_call(AST *node)
 {
     int i;
 
     if (!node)
-        return 0;
+        return;
 
     if (node->type == AST_FUNC_CALL)
     {
-        if (node->symbol->type == SYMBOL_IDENTIFIER) {
-            //fprintf(stderr, "Semantic error: call to undeclared function %s at line %d\n", node->symbol->text, node->line_number);
+        if (node->symbol->type == SYMBOL_IDENTIFIER)
+        {
+            // fprintf(stderr, "Semantic error: call to undeclared function %s at line %d\n", node->symbol->text, node->line_number);
             //++SemanticErrors;
-            return 0;
+            return;
         }
 
         int parameter_count = 0;
@@ -817,31 +873,35 @@ int check_function_call(AST *node)
                 }
                 else
                 {
-                    if (expr->symbol) {
+                    if (expr->symbol)
+                    {
                         actual_datatype = expr->symbol->datatype;
-                    } else {
+                    }
+                    else
+                    {
                         // it is an input(type)
-                        switch (expr->type) {
-                            case AST_INPUT_EXPR_INT:
-                                actual_datatype = DATATYPE_INT;
-                                break;
-                            case AST_INPUT_EXPR_CHAR:
-                                actual_datatype = DATATYPE_CHAR;
-                                break;
-                            case AST_INPUT_EXPR_REAL:
-                                actual_datatype = DATATYPE_REAL;
-                                break;
-                            case AST_INPUT_EXPR_BOOL:
-                                actual_datatype = DATATYPE_BOOL;
-                                break;
+                        switch (expr->type)
+                        {
+                        case AST_INPUT_EXPR_INT:
+                            actual_datatype = DATATYPE_INT;
+                            break;
+                        case AST_INPUT_EXPR_CHAR:
+                            actual_datatype = DATATYPE_CHAR;
+                            break;
+                        case AST_INPUT_EXPR_REAL:
+                            actual_datatype = DATATYPE_REAL;
+                            break;
+                        case AST_INPUT_EXPR_BOOL:
+                            actual_datatype = DATATYPE_BOOL;
+                            break;
                         }
                     }
                 }
 
                 if (!compare_datatypes(expected_datatype, actual_datatype) && expected_datatype != 0)
                 {
-                    fprintf(stderr, "Semantic error: invalid parameter type (expected %s, got %s) at line %d\n", 
-                    datatype_str[expected_datatype], datatype_str[actual_datatype], node->line_number);
+                    fprintf(stderr, "Semantic error: invalid parameter type (expected %s, got %s) at line %d\n",
+                            datatype_str[expected_datatype], datatype_str[actual_datatype], node->line_number);
                     ++SemanticErrors;
                 }
 
@@ -859,7 +919,7 @@ int check_function_call(AST *node)
             }
 
             expr = expr_list_copy->son[0];
-          
+
             while (expr)
             {
                 parameter_count++;
@@ -878,12 +938,15 @@ int check_function_call(AST *node)
 
         if (parameter_count != node->symbol->param_count)
         {
-            if (parameter_count == 0) {
+            if (parameter_count == 0)
+            {
                 fprintf(stderr, "Semantic error: invalid number of parameters (expected %d, got none) at line %d\n", node->symbol->param_count, node->line_number);
-            } else {
+            }
+            else
+            {
                 fprintf(stderr, "Semantic error: invalid number of parameters (expected %d, got %d) at line %d\n", node->symbol->param_count, parameter_count, node->line_number);
             }
-            
+
             ++SemanticErrors;
         }
     }
@@ -894,12 +957,12 @@ int check_function_call(AST *node)
     }
 }
 
-int check_conditional_stmts(AST *node)
+void check_conditional_stmts(AST *node)
 {
     int i;
 
     if (!node)
-        return 0;
+        return;
 
     if (node->type == AST_IF || node->type == AST_IF_ELSE || node->type == AST_LOOP)
     {
