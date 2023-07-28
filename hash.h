@@ -40,6 +40,8 @@ char *get_key(hash_t *hash);
 void hash_print();
 int hash_check_undeclared(void);
 int ast_type_to_datatype(int ast_type);
+hash_t *make_temp(void);
+hash_t *make_label(int type);
 
 hash_t *hash_table[HASH_SIZE];
 
@@ -225,4 +227,31 @@ int ast_type_to_datatype(int ast_type) {
     }
 
     return 0;
+}
+
+hash_t *make_temp(void) {
+    static int serial = 0;
+    char buffer[100];
+    sprintf(buffer, "_VAR_TEMP_3d801aa5_%d", serial++);
+    return hash_insert(buffer, SYMBOL_IDENTIFIER, DATATYPE_INT);
+}
+
+
+#define CONDITIONAL_IF 0
+#define CONDITIONAL_ELSE 1
+#define CONDITIONAL_LOOP 2
+
+hash_t *make_label(int type) {
+    static int serial = 0;
+    char buffer[100];
+   
+    if (type == CONDITIONAL_IF) {
+         sprintf(buffer, "_IF_LABEL_3d801aa5_%d", serial++);
+    } else if (type == CONDITIONAL_ELSE) {
+            sprintf(buffer, "_ELSE_LABEL_3d801aa5_%d", serial++);
+    } else if (type == CONDITIONAL_LOOP) {
+            sprintf(buffer, "_LOOP_LABEL_3d801aa5_%d", serial++);
+    }
+
+    return hash_insert(buffer, SYMBOL_LABEL, DATATYPE_INT);
 }

@@ -5,6 +5,7 @@
 #include "ast_types.h"
 #include "ast.h"    
 #include "semantic.h"
+#include "tac.h"
 %}
 
 %union{
@@ -87,8 +88,11 @@ program: declaration_list   {
                                
                                 check_conditional_stmts($1);
 
+                                if (SemanticErrors == 0) {
+                                    tac_print_backwards(generate_code($1));
+                                }
                                 
-                                // astPrint($1, 0);
+                                 // astPrint($1, 0);
                             }
     ;
 

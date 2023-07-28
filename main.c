@@ -4,6 +4,8 @@
 #include <stdlib.h>
 #include "hash.h"
 #include "y.tab.h"
+#include "tac.h"
+#include  "tac.c"
 
 
 int isRunning();
