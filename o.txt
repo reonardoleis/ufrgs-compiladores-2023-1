@@ -1,3 +1,0 @@
-bool a = 5;
-bool a = 5;
-bool a = 5;

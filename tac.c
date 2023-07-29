@@ -17,13 +17,23 @@ char *tac_type_str[] = {
     "TAC_DIF",
     "TAC_GT",
     "TAC_LT",
-    "TAC_VAR_ATTRIB",
+    "TAC_COPY",
     "TAC_JFALSE",
     "TAC_LABEL",
-    "TAC_JTRUE"};
+    "TAC_JTRUE",
+    "TAC_JUMP",
+    "TAC_RET",
+    "TAC_BEGINFUN",
+    "TAC_ENDFUN",
+    "TAC_CALL",
+    "TAC_ARG",
+    "TAC_VEC_ACCESS",
+    "TAC_PRINT",
+    "TAC_READ",
+    "TAC_PRINT_ARG"};
 
 // TAC methods
-TAC *tac_create(int type, hash_t *res, hash_t *op1, hash_t *op2)
+TAC *tac_create(int type, HASH *res, HASH *op1, HASH *op2)
 {
     TAC *tac = NULL;
     tac = (TAC *)calloc(1, sizeof(TAC));
@@ -78,20 +88,20 @@ TAC *tac_join(TAC *l1, TAC *l2)
 
 TAC *make_binary_operation(int type, TAC *code0, TAC *code1)
 {
-    return tac_join(tac_join(code0, code1), tac_create(TAC_ADD, make_temp(), code0 ? code0->res : NULL, code1 ? code1->res : NULL));
+    return tac_join(tac_join(code0, code1), tac_create(type, make_temp(), code0 ? code0->res : NULL, code1 ? code1->res : NULL));
 }
 
 TAC *make_if(TAC *code0, TAC *code1)
 {
     TAC *jumptac = NULL;
     TAC *labeltac = NULL;
-    hash_t *newlabel = NULL;
+    HASH *if_label = NULL;
 
-    newlabel = make_label(CONDITIONAL_IF);
+    if_label = make_label(CONDITIONAL_IF);
 
-    jumptac = tac_create(TAC_JFALSE, newlabel, code0 ? code0->res : NULL, NULL);
+    jumptac = tac_create(TAC_JFALSE, if_label, code0 ? code0->res : NULL, NULL);
     jumptac->prev = code0;
-    labeltac = tac_create(TAC_LABEL, newlabel, NULL, NULL);
+    labeltac = tac_create(TAC_LABEL, if_label, NULL, NULL);
     labeltac->prev = code1;
 
     return tac_join(jumptac, labeltac);
@@ -101,38 +111,117 @@ TAC *make_if_else(TAC *code0, TAC *code1, TAC *code2)
 {
     TAC *jumptac = NULL;
     TAC *labeltac = NULL;
+    TAC *endtac = NULL;
+    TAC *unconditional_jump_tac = NULL;
+    HASH *else_label = NULL;
+    HASH *if_label = NULL;
+    HASH *end_label = NULL;
 
-    hash_t *newlabel = NULL;
+    else_label = make_label(CONDITIONAL_ELSE);
+    if_label = make_label(CONDITIONAL_IF);
 
-    newlabel = make_label(CONDITIONAL_ELSE);
-
-    jumptac = tac_create(TAC_JFALSE, newlabel, code0 ? code0->res : NULL, NULL);
+    end_label = make_label(CONDITIONAL_ENDIF);
+    
+    jumptac = tac_create(TAC_JFALSE, else_label, code0 ? code0->res : NULL, NULL);
     jumptac->prev = code0;
-    labeltac = tac_create(TAC_LABEL, newlabel, NULL, NULL);
-    labeltac->prev = code1;
+    labeltac = tac_create(TAC_LABEL, else_label, NULL, NULL);
+    unconditional_jump_tac = tac_create(TAC_JUMP, end_label, NULL, NULL);
+    labeltac->prev = unconditional_jump_tac;
+   
+    unconditional_jump_tac->prev = code1;
+  
 
-    return tac_join(tac_join(jumptac, labeltac), code2);
+    endtac = tac_create(TAC_LABEL, end_label, NULL, NULL);
+    endtac->prev = code2;
+
+    return  tac_join(tac_join(jumptac, labeltac), endtac);
 }
 
 TAC *make_loop(TAC *code0, TAC *code1)
 {
-    TAC *jumptac = NULL;
-    TAC *labeltac = NULL;
-    hash_t *newlabel = NULL;
+    TAC *loop_start_tac = NULL;
+    TAC *loop_jump_tac = NULL;
+    TAC *loop_end_tac = NULL;
+    TAC * unconditional_jump_tac = NULL; 
 
-    newlabel = make_label(CONDITIONAL_LOOP);
+    HASH *loop_start_label = NULL;
+    HASH *loop_end_label = NULL;
 
-    jumptac = tac_create(TAC_JFALSE, newlabel, code0 ? code0->res : NULL, NULL);
-    jumptac->prev = code0;
-    labeltac = tac_create(TAC_LABEL, newlabel, NULL, NULL);
-    labeltac->prev = code1;
+    loop_start_label = make_label(LOOP_START);
+    loop_start_tac = tac_create(TAC_LABEL, loop_start_label, NULL, NULL);
 
-    return tac_join(jumptac, labeltac);
+    loop_end_label = make_label(LOOP_END);
+    loop_jump_tac = tac_create(TAC_JFALSE, loop_end_label, code0 ? code0->res : NULL, NULL);
+    loop_jump_tac->prev = code0;
+
+    unconditional_jump_tac = tac_create(TAC_JUMP, loop_start_label, NULL, NULL);
+    loop_end_tac = tac_create(TAC_LABEL, loop_end_label, NULL, NULL);
+
+    return tac_join(tac_join(tac_join(loop_start_tac, loop_jump_tac), tac_join(code1, unconditional_jump_tac)), loop_end_tac);
 }
 
 TAC *make_unary_operation(int type, TAC *code0)
 {
     return tac_join(code0, tac_create(type, make_temp(), code0 ? code0->res : NULL, NULL));
+}
+
+TAC * make_function(AST *node, TAC * code0, TAC * code1) {
+    TAC *jumptac = NULL;
+    TAC *labeltac = NULL;
+
+    HASH *beginfun_label = NULL;    
+    HASH *endfun_label = NULL;
+
+    if (node->symbol->beginfun_label == NULL) {
+        beginfun_label = make_label(BEGINFUN);
+        node->symbol->beginfun_label = beginfun_label;
+    } else {
+        beginfun_label = node->symbol->beginfun_label;
+    }
+    
+    endfun_label = make_label(ENDFUN);
+
+    jumptac = tac_create(TAC_BEGINFUN, beginfun_label, NULL, NULL);
+    jumptac->prev = code0;
+    labeltac = tac_create(TAC_ENDFUN, endfun_label, NULL, NULL);
+    labeltac->prev = code1;
+
+    return tac_join(jumptac, labeltac);
+}
+
+TAC *make_call(AST *node, TAC * code0, TAC * code1) {
+    TAC *call_tac = NULL;
+
+    if (node->symbol->beginfun_label == NULL) {
+        node->symbol->beginfun_label = make_label(BEGINFUN);
+    }
+
+    call_tac = tac_create(TAC_CALL, make_temp(), node->symbol->beginfun_label, NULL);
+
+    return tac_join(tac_join(code0, code1), call_tac);
+}
+
+TAC *make_arg(TAC *code0, TAC *code1) {
+    TAC *arg_tac = NULL;
+
+    arg_tac = tac_create(TAC_ARG, code0 ? code0->res : NULL, NULL, NULL);
+    arg_tac->prev = code0;
+
+    return tac_join(arg_tac, code1);
+}
+
+TAC * make_print_arg(TAC * code0, TAC * code1, HASH* str) {
+    TAC *print_tac = NULL;
+
+    if (str == NULL) {
+        print_tac = tac_create(TAC_PRINT_ARG, code0 ? code0->res : NULL, NULL, NULL);
+    } else {
+        print_tac = tac_create(TAC_PRINT_ARG, str, NULL, NULL);
+    }
+
+    print_tac->prev = code0;
+
+    return tac_join(print_tac, code1);
 }
 
 TAC *generate_code(AST *node)
@@ -184,7 +273,17 @@ TAC *generate_code(AST *node)
     }
     case AST_VAR_ATTRIB:
     {
-        result = tac_join(code[0], tac_create(TAC_VAR_ATTRIB, node->symbol, code[0] ? code[0]->res : NULL, NULL));
+        result = tac_join(code[0], tac_create(TAC_COPY, node->symbol, code[0] ? code[0]->res : NULL, NULL));
+        break;
+    }
+    case AST_VEC_ATTRIB:
+    {
+        result = tac_join(code[0], tac_join(code[1], tac_create(TAC_COPY, node->symbol, code[0] ? code[0]->res : NULL, code[1] ? code[1]->res : NULL)));
+        break;
+    }
+    case AST_VEC_ACCESS:
+    {
+        result = tac_join(code[0], tac_create(TAC_COPY, make_temp(), node->symbol, code[0] ? code[0]->res : NULL));
         break;
     }
     case AST_IF:
@@ -200,6 +299,54 @@ TAC *generate_code(AST *node)
     case AST_LOOP:
     {
         result = make_loop(code[0], code[1]);
+        break;
+    }
+    case AST_RETURN_CMD:
+    {
+        result = tac_join(code[0], tac_create(TAC_RET, code[0] ? code[0]->res : NULL, NULL, NULL));
+        break;
+    }
+    case AST_FUNC_DECL_INT:
+    case AST_FUNC_DECL_REAL:
+    case AST_FUNC_DECL_CHAR:
+    case AST_FUNC_DECL_BOOL:
+    {
+        result = make_function(node, code[0], code[1]);
+        
+        TAC *beginfun_tac = NULL;
+        for (beginfun_tac = result; beginfun_tac->type != TAC_BEGINFUN; beginfun_tac = beginfun_tac->prev);
+        break;
+    }
+    case AST_FUNC_CALL:
+    {
+        result = make_call(node, code[0], code[1]);
+        break;
+    }
+    case AST_EXPR_LIST:
+    {
+        result = make_arg(code[0], code[1]);
+        break;
+    }
+    case AST_OUTPUT_CMD:
+    {
+        result = tac_join(code[0], tac_create(TAC_PRINT, NULL, NULL, NULL));
+        break;
+    }
+    case AST_OUTPUT_PARAM_LIST:
+    {
+        if (node->son[0] && node->son[0]->type == AST_LIT_STRING) {
+            result = make_print_arg(code[0], code[1], node->son[0]->symbol);
+        } else {
+            result = make_print_arg(code[0], code[1], NULL);
+        }
+        break;
+    }
+    case AST_INPUT_EXPR_INT:
+    case AST_INPUT_EXPR_REAL:
+    case AST_INPUT_EXPR_CHAR:
+    case AST_INPUT_EXPR_BOOL:
+    {
+        result = tac_create(TAC_READ, make_temp(), NULL, NULL);
         break;
     }
     default:

@@ -9,7 +9,7 @@
 %}
 
 %union{
-    hash_t* symbol; 
+    HASH* symbol; 
     AST *ast;
 }
 
@@ -92,7 +92,7 @@ program: declaration_list   {
                                     tac_print_backwards(generate_code($1));
                                 }
                                 
-                                 // astPrint($1, 0);
+                                 //astPrint($1, 0);
                             }
     ;
 
@@ -189,7 +189,8 @@ output_cmd: KW_OUTPUT output_param_list { $$ = astCreate(AST_OUTPUT_CMD, 0, $2, 
 output_param_list: LIT_STRING ',' output_param_list     { $$ = astCreate(AST_OUTPUT_PARAM_LIST, NULL, astCreate(AST_LIT_STRING, $1, NULL, NULL, NULL, NULL, getLineNumber()), $3, NULL, NULL, getLineNumber()); }
     |              expr ',' output_param_list           { $$ = astCreate(AST_OUTPUT_PARAM_LIST, 0, $1, $3, NULL, NULL, getLineNumber()); }
     |              LIT_STRING                           { $$ = astCreate(AST_OUTPUT_PARAM_LIST, NULL, astCreate(AST_LIT_STRING, $1, NULL, NULL, NULL, NULL, getLineNumber()), NULL, NULL, NULL, getLineNumber()); }
-    |              expr                                 { $$ = $1; }
+    |              expr                                 { $$ = astCreate(AST_OUTPUT_PARAM_LIST, NULL, $1,  NULL, NULL, NULL, getLineNumber()); }
+    |              { $$ = 0; }
     ;
 
 return_cmd: KW_RETURN expr { $$ = astCreate(AST_RETURN_CMD, 0, $2, NULL, NULL, NULL, getLineNumber()); }

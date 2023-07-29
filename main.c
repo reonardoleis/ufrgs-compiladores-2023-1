@@ -4,8 +4,15 @@
 #include <stdlib.h>
 #include "hash.h"
 #include "y.tab.h"
+
+#include "ast.h"
+#include "ast.c"
+
 #include "tac.h"
 #include  "tac.c"
+
+#include "semantic.h"
+#include "semantic.c"
 
 
 int isRunning();

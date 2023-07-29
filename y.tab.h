@@ -109,7 +109,7 @@ union YYSTYPE
 {
 #line 11 "parser.y"
 
-    hash_t* symbol; 
+    HASH* symbol; 
     AST *ast;
 
 #line 116 "y.tab.h"
