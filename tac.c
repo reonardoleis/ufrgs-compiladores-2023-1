@@ -30,7 +30,9 @@ char *tac_type_str[] = {
     "TAC_VEC_ACCESS",
     "TAC_PRINT",
     "TAC_READ",
-    "TAC_PRINT_ARG"};
+    "TAC_PRINT_ARG",
+    "TAC_VARDEC",
+    "TAC_VECDEC"};
 
 // TAC methods
 TAC *tac_create(int type, HASH *res, HASH *op1, HASH *op2)
@@ -347,6 +349,22 @@ TAC *generate_code(AST *node)
     case AST_INPUT_EXPR_BOOL:
     {
         result = tac_create(TAC_READ, make_temp(), NULL, NULL);
+        break;
+    }
+    case AST_VAR_DECL_INT:
+    case AST_VAR_DECL_REAL:
+    case AST_VAR_DECL_CHAR:
+    case AST_VAR_DECL_BOOL:
+    {
+        result = tac_create(TAC_VARDEC, node->symbol, NULL, NULL);
+        break;
+    }
+    case AST_VEC_DECL_INT:
+    case AST_VEC_DECL_REAL:
+    case AST_VEC_DECL_CHAR:
+    case AST_VEC_DECL_BOOL:
+    {
+        result = tac_join(tac_join(code[0], tac_create(TAC_VECDEC, node->symbol, code[0] ? code[0]->res : NULL, NULL)), code[1]);
         break;
     }
     default:

@@ -32,6 +32,8 @@
 #define TAC_PRINT 27
 #define TAC_READ 28
 #define TAC_PRINT_ARG 29
+#define TAC_VARDEC 30
+#define TAC_VECDEC 31
 
 #define TAC_TYPE_COUNT ((sizeof(tac_type_str)/sizeof(tac_type_str[0])) + 1)
 
