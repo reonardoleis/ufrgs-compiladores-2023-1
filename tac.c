@@ -90,7 +90,8 @@ TAC *tac_join(TAC *l1, TAC *l2)
 
 TAC *make_binary_operation(int type, TAC *code0, TAC *code1)
 {
-    return tac_join(tac_join(code0, code1), tac_create(type, make_temp(), code0 ? code0->res : NULL, code1 ? code1->res : NULL));
+    int datatype = code0 ? code0->res->datatype : 0;
+    return tac_join(tac_join(code0, code1), tac_create(type, make_temp(datatype), code0 ? code0->res : NULL, code1 ? code1->res : NULL));
 }
 
 TAC *make_if(TAC *code0, TAC *code1)
@@ -163,7 +164,8 @@ TAC *make_loop(TAC *code0, TAC *code1)
 
 TAC *make_unary_operation(int type, TAC *code0)
 {
-    return tac_join(code0, tac_create(type, make_temp(), code0 ? code0->res : NULL, NULL));
+    int datatype = code0 ? code0->res->datatype : 0;
+    return tac_join(code0, tac_create(type, make_temp(datatype), code0 ? code0->res : NULL, NULL));
 }
 
 TAC *make_function(AST *node, TAC *code0, TAC *code1)
@@ -182,8 +184,8 @@ TAC *make_function(AST *node, TAC *code0, TAC *code1)
 TAC *make_call(AST *node, TAC *code0, TAC *code1)
 {
     TAC *call_tac = NULL;
-
-    call_tac = tac_create(TAC_CALL, make_temp(), node->symbol, NULL);
+    int datatype = code0 ? code0->res->datatype : 0;
+    call_tac = tac_create(TAC_CALL, make_temp(datatype), node->symbol, NULL);
 
     return tac_join(tac_join(code0, code1), call_tac);
 }
@@ -275,7 +277,8 @@ TAC *generate_code(AST *node)
     }
     case AST_VEC_ACCESS:
     {
-        result = tac_join(code[0], tac_create(TAC_COPY, make_temp(), node->symbol, code[0] ? code[0]->res : NULL));
+        int datatype = code[0] ? code[0]->res->datatype : 0;
+        result = tac_join(code[0], tac_create(TAC_COPY, make_temp(datatype), node->symbol, code[0] ? code[0]->res : NULL));
         break;
     }
     case AST_IF:
@@ -342,7 +345,7 @@ TAC *generate_code(AST *node)
     case AST_INPUT_EXPR_CHAR:
     case AST_INPUT_EXPR_BOOL:
     {
-        result = tac_create(TAC_READ, make_temp(), NULL, NULL);
+        result = tac_create(TAC_READ, make_temp(0), NULL, NULL);
         break;
     }
     case AST_VAR_DECL_INT:

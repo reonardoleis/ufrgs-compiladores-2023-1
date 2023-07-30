@@ -1,15 +1,12 @@
 	.file	"main.c"
 	.text
 	.globl	a
-	.bss
+	.data
 	.align 4
 	.type	a, @object
 	.size	a, 4
 a:
-	.zero	4
-	.section	.rodata
-.LC0:
-	.string	"%d"
+	.long	1106247680
 	.text
 	.globl	main
 	.type	main, @function
@@ -22,20 +19,21 @@ main:
 	.cfi_offset 6, -16
 	movq	%rsp, %rbp
 	.cfi_def_cfa_register 6
-	movl	$777, a(%rip)
-	movl	a(%rip), %eax
-	movl	%eax, %esi
-	leaq	.LC0(%rip), %rax
-	movq	%rax, %rdi
-	movl	$0, %eax
-	call	printf@PLT
-	movl	$66, %eax
+	movss	a(%rip), %xmm1
+	movss	.LC0(%rip), %xmm0
+	addss	%xmm1, %xmm0
+	movss	%xmm0, a(%rip)
+	movl	$12, %eax
 	popq	%rbp
 	.cfi_def_cfa 7, 8
 	ret
 	.cfi_endproc
 .LFE0:
 	.size	main, .-main
+	.section	.rodata
+	.align 4
+.LC0:
+	.long	1075838976
 	.ident	"GCC: (Ubuntu 11.3.0-1ubuntu1~22.04.1) 11.3.0"
 	.section	.note.GNU-stack,"",@progbits
 	.section	.note.gnu.property,"a"

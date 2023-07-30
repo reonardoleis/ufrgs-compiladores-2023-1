@@ -26,8 +26,14 @@ main:
 
 
 # data section
-.A_str:
+.print_str_int:
 	.string	"%d"
+
+.print_str_real:
+	.string	"%f"
+
+.print_str_char:
+	.string	"%c"
 
 .A_var:
 	.long	1002

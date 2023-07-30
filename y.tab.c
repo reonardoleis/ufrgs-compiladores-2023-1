@@ -1377,13 +1377,13 @@ yyreduce:
 
                                 if (SemanticErrors == 0) {
                                     TAC * code = generate_code((yyvsp[0].ast));
-                                    tac_print_backwards(code);
+                                    //tac_print_backwards(code);
                                     generate_asm(code);
                                 }
 
                                 
                                 
-                                 //astPrint($1, 0);
+                                 astPrint((yyvsp[0].ast), 0);
                             }
 #line 1389 "y.tab.c"
     break;

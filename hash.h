@@ -18,6 +18,8 @@
 
 char* datatype_str[] = { "invalid", "int",  "real", "bool", "char" };
 
+int string_id = 1;
+
 typedef struct HASH
 {
     int type; 
@@ -29,6 +31,7 @@ typedef struct HASH
     int param_count;
     int is_vector;
     int is_function;
+    int string_id;
     struct HASH *beginfun_label;    
 } HASH;
 
@@ -41,7 +44,7 @@ char *get_key(HASH *hash);
 void hash_print();
 int hash_check_undeclared(void);
 int ast_type_to_datatype(int ast_type);
-HASH *make_temp(void);
+HASH *make_temp(int datatype);
 HASH *make_label(int type);
 
 HASH *hash_table[HASH_SIZE];
@@ -115,6 +118,11 @@ HASH *hash_insert(char *text, int type, int datatype)
     item->is_function = 0;
     item->beginfun_label = (HASH *)calloc(1, sizeof(HASH));
     item->beginfun_label = NULL;
+    item->string_id = 0;
+
+    if (type == SYMBOL_LIT_STRING) {
+        item->string_id = string_id++;
+    }
 
     
     strcpy(item->text, text);
@@ -229,16 +237,21 @@ int ast_type_to_datatype(int ast_type) {
         case AST_PARAM_REAL: return DATATYPE_REAL;
         case AST_PARAM_BOOL: return DATATYPE_BOOL;
         case AST_PARAM_CHAR: return DATATYPE_CHAR;
+
+        case AST_LIT_INT: return DATATYPE_INT;
+        case AST_LIT_REAL: return DATATYPE_REAL;
+        case AST_LIT_CHAR: return DATATYPE_CHAR;
+       
     }
 
     return 0;
 }
 
-HASH *make_temp(void) {
+HASH *make_temp(int datatype) {
     static int serial = 0;
     char buffer[100];
     sprintf(buffer, "_VAR_TEMP_3d801aa5_%d", serial++);
-    return hash_insert(buffer, SYMBOL_IDENTIFIER, DATATYPE_INT);
+    return hash_insert(buffer, SYMBOL_IDENTIFIER, datatype);
 }
 
 

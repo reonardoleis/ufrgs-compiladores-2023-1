@@ -1,10 +1,7 @@
 #include <stdio.h>
 
-int a = 0;
-
+float a = 30.0;
 int main() {
-    a = 777;
-    printf("%d", a);
-
-    return 66;
+    a  = a + 2.5;
+    return 12;
 }

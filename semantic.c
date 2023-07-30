@@ -173,6 +173,15 @@ void check_operands(AST *node)
         node->result_datatype = datatype;
     }
 
+    if (node->type == AST_LIT_INT || node->type == AST_LIT_CHAR || node->type == AST_LIT_REAL)
+    {   
+        node->result_datatype = ast_type_to_datatype(node->type);
+    }
+
+    if (node->type == AST_IDENTIFIER) {
+        node->result_datatype = find_first_datatype(node);
+    }
+
     switch (node->type)
     {
     case AST_FUNC_CALL:
@@ -270,6 +279,7 @@ void check_operands(AST *node)
                 right_datatype = right_operand->symbol->datatype;
             }
 
+
             if (left_operand->type == AST_NESTED_EXPR || is_input_cmd(left_operand) || left_operand->type == AST_NEG)
             {
                 left_datatype = find_first_datatype(left_operand);
@@ -283,7 +293,8 @@ void check_operands(AST *node)
             if ((left_operand->symbol || is_input_cmd(left_operand) || left_operand->type == AST_NEG) && 
             (right_operand->symbol || is_input_cmd(right_operand) || left_operand->type == AST_NEG) && left_datatype != right_datatype &&
             !compare_datatypes(left_datatype, right_datatype))
-            {
+            {   
+             
                 fprintf(stderr, "Semantic error: operands should have same type at line %d\n", node->line_number);
                 ++SemanticErrors;
             }
@@ -291,7 +302,7 @@ void check_operands(AST *node)
 
         if (!expression_typecheck(node))
         {
-            fprintf(stderr, "Semantic error: invalid resulting expression type for %s at line %d\n", ast_type_str(node->type), node->line_number);
+            fprintf(stderr, "Semanticxxx error: invalid resulting expression type for %s at line %d\n", ast_type_str(node->type), node->line_number);
             ++SemanticErrors;
         }
         else
@@ -510,8 +521,9 @@ int expression_typecheck(AST *node)
 
             if (node->type == AST_LIT_INT)
                 return DATATYPE_INT;
-            if (node->type == AST_LIT_REAL)
+            if (node->type == AST_LIT_REAL) {
                 return DATATYPE_REAL;
+            }
             if (node->type == AST_LIT_CHAR)
                 return DATATYPE_CHAR;
 
