@@ -6,6 +6,8 @@
 #include "ast.h"    
 #include "semantic.h"
 #include "tac.h"
+#include "asmgen.h"
+
 %}
 
 %union{
@@ -89,8 +91,12 @@ program: declaration_list   {
                                 check_conditional_stmts($1);
 
                                 if (SemanticErrors == 0) {
-                                    tac_print_backwards(generate_code($1));
+                                    TAC * code = generate_code($1);
+                                    tac_print_backwards(code);
+                                    generate_asm(code);
                                 }
+
+                                
                                 
                                  //astPrint($1, 0);
                             }

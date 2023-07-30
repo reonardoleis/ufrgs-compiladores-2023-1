@@ -14,6 +14,9 @@
 #include "semantic.h"
 #include "semantic.c"
 
+#include "asmgen.h"
+#include "asmgen.c"
+
 
 int isRunning();
 int getLineNumber();

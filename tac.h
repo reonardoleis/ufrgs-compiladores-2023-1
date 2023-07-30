@@ -52,6 +52,7 @@ TAC * tac_create(int type, HASH * res, HASH * op1, HASH * op2);
 void tac_print(TAC * tac);
 void tac_print_backwards(TAC * tac);
 TAC * tac_join(TAC * l1, TAC * l2);
+TAC * tac_reverse(TAC * tac);
 
 // Code Generation
 TAC * generate_code(AST * node);

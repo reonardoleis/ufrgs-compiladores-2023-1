@@ -123,20 +123,19 @@ TAC *make_if_else(TAC *code0, TAC *code1, TAC *code2)
     if_label = make_label(CONDITIONAL_IF);
 
     end_label = make_label(CONDITIONAL_ENDIF);
-    
+
     jumptac = tac_create(TAC_JFALSE, else_label, code0 ? code0->res : NULL, NULL);
     jumptac->prev = code0;
     labeltac = tac_create(TAC_LABEL, else_label, NULL, NULL);
     unconditional_jump_tac = tac_create(TAC_JUMP, end_label, NULL, NULL);
     labeltac->prev = unconditional_jump_tac;
-   
+
     unconditional_jump_tac->prev = code1;
-  
 
     endtac = tac_create(TAC_LABEL, end_label, NULL, NULL);
     endtac->prev = code2;
 
-    return  tac_join(tac_join(jumptac, labeltac), endtac);
+    return tac_join(tac_join(jumptac, labeltac), endtac);
 }
 
 TAC *make_loop(TAC *code0, TAC *code1)
@@ -144,7 +143,7 @@ TAC *make_loop(TAC *code0, TAC *code1)
     TAC *loop_start_tac = NULL;
     TAC *loop_jump_tac = NULL;
     TAC *loop_end_tac = NULL;
-    TAC * unconditional_jump_tac = NULL; 
+    TAC *unconditional_jump_tac = NULL;
 
     HASH *loop_start_label = NULL;
     HASH *loop_end_label = NULL;
@@ -167,10 +166,10 @@ TAC *make_unary_operation(int type, TAC *code0)
     return tac_join(code0, tac_create(type, make_temp(), code0 ? code0->res : NULL, NULL));
 }
 
-TAC * make_function(AST *node, TAC * code0, TAC * code1) {
+TAC *make_function(AST *node, TAC *code0, TAC *code1)
+{
     TAC *jumptac = NULL;
     TAC *labeltac = NULL;
-
 
     jumptac = tac_create(TAC_BEGINFUN, node->symbol, NULL, NULL);
     jumptac->prev = code0;
@@ -180,17 +179,17 @@ TAC * make_function(AST *node, TAC * code0, TAC * code1) {
     return tac_join(jumptac, labeltac);
 }
 
-TAC *make_call(AST *node, TAC * code0, TAC * code1) {
+TAC *make_call(AST *node, TAC *code0, TAC *code1)
+{
     TAC *call_tac = NULL;
-
- 
 
     call_tac = tac_create(TAC_CALL, make_temp(), node->symbol, NULL);
 
     return tac_join(tac_join(code0, code1), call_tac);
 }
 
-TAC *make_arg(TAC *code0, TAC *code1) {
+TAC *make_arg(TAC *code0, TAC *code1)
+{
     TAC *arg_tac = NULL;
 
     arg_tac = tac_create(TAC_ARG, code0 ? code0->res : NULL, NULL, NULL);
@@ -199,12 +198,16 @@ TAC *make_arg(TAC *code0, TAC *code1) {
     return tac_join(arg_tac, code1);
 }
 
-TAC * make_print_arg(TAC * code0, TAC * code1, HASH* str) {
+TAC *make_print_arg(TAC *code0, TAC *code1, HASH *str)
+{
     TAC *print_tac = NULL;
 
-    if (str == NULL) {
+    if (str == NULL)
+    {
         print_tac = tac_create(TAC_PRINT_ARG, code0 ? code0->res : NULL, NULL, NULL);
-    } else {
+    }
+    else
+    {
         print_tac = tac_create(TAC_PRINT_ARG, str, NULL, NULL);
     }
 
@@ -301,9 +304,10 @@ TAC *generate_code(AST *node)
     case AST_FUNC_DECL_BOOL:
     {
         result = make_function(node, code[0], code[1]);
-        
+
         TAC *beginfun_tac = NULL;
-        for (beginfun_tac = result; beginfun_tac->type != TAC_BEGINFUN; beginfun_tac = beginfun_tac->prev);
+        for (beginfun_tac = result; beginfun_tac->type != TAC_BEGINFUN; beginfun_tac = beginfun_tac->prev)
+            ;
         break;
     }
     case AST_FUNC_CALL:
@@ -323,9 +327,12 @@ TAC *generate_code(AST *node)
     }
     case AST_OUTPUT_PARAM_LIST:
     {
-        if (node->son[0] && node->son[0]->type == AST_LIT_STRING) {
+        if (node->son[0] && node->son[0]->type == AST_LIT_STRING)
+        {
             result = make_print_arg(code[0], code[1], node->son[0]->symbol);
-        } else {
+        }
+        else
+        {
             result = make_print_arg(code[0], code[1], NULL);
         }
         break;
@@ -343,7 +350,7 @@ TAC *generate_code(AST *node)
     case AST_VAR_DECL_CHAR:
     case AST_VAR_DECL_BOOL:
     {
-        result = tac_create(TAC_VARDEC, node->symbol, NULL, NULL);
+        result = tac_create(TAC_VARDEC, node->symbol, node->son[0]->symbol, NULL);
         break;
     }
     case AST_VEC_DECL_INT:
@@ -399,4 +406,17 @@ int get_tac_type_from_ast(int type)
     default:
         return -1;
     }
+}
+
+TAC *tac_reverse(TAC *tac)
+{
+    if (!tac)
+        return NULL;
+    TAC *aux = tac;
+    for (aux = tac; aux->prev; aux = aux->prev)
+    {
+        aux->prev->next = aux;
+    }
+
+    return aux;
 }
