@@ -683,10 +683,12 @@ int check_assignments(AST *node)
             }
             else
             {
+                int resulting_type = expression_typecheck(vec_indexer);
+                vec_indexer->result_datatype = resulting_type;
                 int vec_indexer_result_type = vec_indexer->result_datatype;
                 if (vec_indexer_result_type != DATATYPE_INT && vec_indexer_result_type != DATATYPE_CHAR)
                 {
-                    fprintf(stderr, "Semantic error: invalid vector indexer type (expected int or char, got %s) at line %d\n", ast_type_str(node->type), node->line_number);
+                    fprintf(stderr, "Semantic error: invalid vector indexer type (expected int or char, got %s) at line %d\n", datatype_str[vec_indexer_result_type], node->line_number);
                     ++SemanticErrors;
                 }
             }

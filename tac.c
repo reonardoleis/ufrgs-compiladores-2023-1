@@ -171,21 +171,10 @@ TAC * make_function(AST *node, TAC * code0, TAC * code1) {
     TAC *jumptac = NULL;
     TAC *labeltac = NULL;
 
-    HASH *beginfun_label = NULL;    
-    HASH *endfun_label = NULL;
 
-    if (node->symbol->beginfun_label == NULL) {
-        beginfun_label = make_label(BEGINFUN);
-        node->symbol->beginfun_label = beginfun_label;
-    } else {
-        beginfun_label = node->symbol->beginfun_label;
-    }
-    
-    endfun_label = make_label(ENDFUN);
-
-    jumptac = tac_create(TAC_BEGINFUN, beginfun_label, NULL, NULL);
+    jumptac = tac_create(TAC_BEGINFUN, node->symbol, NULL, NULL);
     jumptac->prev = code0;
-    labeltac = tac_create(TAC_ENDFUN, endfun_label, NULL, NULL);
+    labeltac = tac_create(TAC_ENDFUN, node->symbol, NULL, NULL);
     labeltac->prev = code1;
 
     return tac_join(jumptac, labeltac);
@@ -194,11 +183,9 @@ TAC * make_function(AST *node, TAC * code0, TAC * code1) {
 TAC *make_call(AST *node, TAC * code0, TAC * code1) {
     TAC *call_tac = NULL;
 
-    if (node->symbol->beginfun_label == NULL) {
-        node->symbol->beginfun_label = make_label(BEGINFUN);
-    }
+ 
 
-    call_tac = tac_create(TAC_CALL, make_temp(), node->symbol->beginfun_label, NULL);
+    call_tac = tac_create(TAC_CALL, make_temp(), node->symbol, NULL);
 
     return tac_join(tac_join(code0, code1), call_tac);
 }
