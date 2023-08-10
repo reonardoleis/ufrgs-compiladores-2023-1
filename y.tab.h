@@ -107,9 +107,9 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 10 "parser.y"
+#line 13 "parser.y"
 
-    hash_t* symbol; 
+    HASH* symbol; 
     AST *ast;
 
 #line 116 "y.tab.h"

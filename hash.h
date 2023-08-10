@@ -18,30 +18,38 @@
 
 char* datatype_str[] = { "invalid", "int",  "real", "bool", "char" };
 
-typedef struct hash_t
+int string_id = 1;
+int function_id = 1;
+typedef struct HASH
 {
     int type; 
     int datatype;
     char *text;
     int line_number;
-    struct hash_t *next;
+    struct HASH *next;
     int* params;
     int param_count;
     int is_vector;
     int is_function;
-} hash_t;
+    int string_id;
+    int function_id;
+    int is_label;
+    struct HASH *beginfun_label;    
+} HASH;
 
 
 
 int hash(char *key);
-hash_t *hash_find(char *key);
-hash_t *hash_insert(char *text, int type, int line_number);
-char *get_key(hash_t *hash);
+HASH *hash_find(char *key);
+HASH *hash_insert(char *text, int type, int line_number);
+char *get_key(HASH *hash);
 void hash_print();
 int hash_check_undeclared(void);
 int ast_type_to_datatype(int ast_type);
+HASH *make_temp(int datatype);
+HASH *make_label(int type);
 
-hash_t *hash_table[HASH_SIZE];
+HASH *hash_table[HASH_SIZE];
 
 void initMe(void)
 {
@@ -64,16 +72,16 @@ int hash(char *text)
     return hash_val - 1;
 }
 
-char *get_key(hash_t *hash)
+char *get_key(HASH *hash)
 {
     return hash->text;
 }
 
-hash_t *hash_find(char *key)
+HASH *hash_find(char *key)
 {
     int pos = hash(key);
 
-    hash_t *item = hash_table[pos];
+    HASH *item = hash_table[pos];
     if (item == NULL)
     {
         return NULL;
@@ -99,9 +107,16 @@ hash_t *hash_find(char *key)
     return NULL;
 }
 
-hash_t *hash_insert(char *text, int type, int datatype)
+HASH *set_function_id(HASH *hash);
+HASH *set_function_id(HASH *hash) {
+    hash->function_id = function_id;
+    function_id++;
+    return hash;
+}
+
+HASH *hash_insert(char *text, int type, int datatype)
 {
-    hash_t *item = (hash_t *)calloc(1, sizeof(hash_t));
+    HASH *item = (HASH *)calloc(1, sizeof(HASH));
     item->type = type;
     item->text = (char *)calloc(strlen(text) + 1, sizeof(char));
     item->line_number = line_number;
@@ -110,6 +125,21 @@ hash_t *hash_insert(char *text, int type, int datatype)
     item->param_count = 0;
     item->is_vector = 0;
     item->is_function = 0;
+    item->beginfun_label = (HASH *)calloc(1, sizeof(HASH));
+    item->beginfun_label = NULL;
+    item->string_id = 0;
+
+    if (strstr(text, "label") != NULL) {
+        item->is_label = 1;
+    } else {
+        item->is_label = 0;
+    }
+
+    if (type == SYMBOL_LIT_STRING) {
+        item->string_id = string_id++;
+    }
+
+    
     strcpy(item->text, text);
 
     char *key = get_key(item);
@@ -120,8 +150,8 @@ hash_t *hash_insert(char *text, int type, int datatype)
     if (hash_table[pos])
     {
         debug_printf("hash.h: COLLISION ON POS %d", pos);
-        hash_t *current_item = hash_table[pos];
-        hash_t *prev_item = NULL;
+        HASH *current_item = hash_table[pos];
+        HASH *prev_item = NULL;
         while (current_item != NULL)
         {
             if (strcmp(get_key(current_item), key) == 0 /* current_item_key != key */)
@@ -134,13 +164,13 @@ hash_t *hash_insert(char *text, int type, int datatype)
         }
 
         debug_printf("hash.h: DIFFERENT KEY ON POS %d", pos);
-        prev_item->next = (hash_t *)calloc(1, sizeof(hash_t));
+        prev_item->next = (HASH *)calloc(1, sizeof(HASH));
         debug_printf("hash.h: LINKED LIST %d", pos);
         prev_item->next = item;
         return prev_item->next;
     }
 
-    hash_table[pos] = (hash_t *)calloc(1, sizeof(hash_t));
+    hash_table[pos] = (HASH *)calloc(1, sizeof(HASH));
     hash_table[pos] = item;
 
     return hash_table[pos];
@@ -148,12 +178,12 @@ hash_t *hash_insert(char *text, int type, int datatype)
 
 void hash_print()
 {
-    if (hash == NULL)
+    if (hash_table == NULL)
     {
         return;
     }
 
-    hash_t* node;
+    HASH* node;
 
     int i;
     for (i = 0; i < HASH_SIZE; i++) {
@@ -185,7 +215,7 @@ int hash_check_undeclared(void)
 
     int undeclared = 0;
 
-    hash_t* node;
+    HASH* node;
 
     int i;
     for (i = 0; i < HASH_SIZE; i++) {
@@ -222,7 +252,51 @@ int ast_type_to_datatype(int ast_type) {
         case AST_PARAM_REAL: return DATATYPE_REAL;
         case AST_PARAM_BOOL: return DATATYPE_BOOL;
         case AST_PARAM_CHAR: return DATATYPE_CHAR;
+
+        case AST_LIT_INT: return DATATYPE_INT;
+        case AST_LIT_REAL: return DATATYPE_REAL;
+        case AST_LIT_CHAR: return DATATYPE_CHAR;
+       
     }
 
     return 0;
+}
+
+HASH *make_temp(int datatype) {
+    static int serial = 0;
+    char buffer[100];
+    sprintf(buffer, "%s_temp_%d", datatype_str[datatype], serial++);
+    return hash_insert(buffer, SYMBOL_IDENTIFIER, datatype);
+}
+
+
+#define CONDITIONAL_IF 0
+#define CONDITIONAL_ELSE 1
+#define LOOP_START 2
+#define LOOP_END 3
+#define CONDITIONAL_ENDIF 4
+#define BEGINFUN 5
+#define ENDFUN 6
+
+HASH *make_label(int type) {
+    static int serial = 0;
+    char buffer[100];
+   
+    if (type == CONDITIONAL_IF) {
+         sprintf(buffer, "if_label_%d", serial++);
+    } else if (type == CONDITIONAL_ELSE) {
+            sprintf(buffer, "else_label_%d", serial++);
+    } else if (type == LOOP_START) {
+            sprintf(buffer, "loop_start_label_%d", serial++);
+    } else if (type == CONDITIONAL_ENDIF) {
+            sprintf(buffer, "endif_label_%d", serial++);
+    } else if (type == BEGINFUN) {
+            sprintf(buffer, "beginfun_label_%d", serial++);
+    } else if (type == ENDFUN) {
+            sprintf(buffer, "endfun_label_%d", serial++);
+    } else if (type == LOOP_END) {
+            sprintf(buffer, "loop_end_label'_%d", serial++);
+    }
+
+    return hash_insert(buffer, SYMBOL_LABEL, DATATYPE_INT);
 }

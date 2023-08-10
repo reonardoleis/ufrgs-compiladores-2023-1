@@ -5,6 +5,18 @@
 #include "hash.h"
 #include "y.tab.h"
 
+#include "ast.h"
+#include "ast.c"
+
+#include "tac.h"
+#include  "tac.c"
+
+#include "semantic.h"
+#include "semantic.c"
+
+#include "asmgen.h"
+#include "asmgen.c"
+
 
 int isRunning();
 int getLineNumber();
@@ -43,7 +55,6 @@ int main(int argc, char **argv)
     int token = 0;
     yyparse();
 
-   // hash_print();
 
     if (SemanticErrors == 0) {
         fprintf(stderr, "\n\nSuccessful compilation. Program had %d lines.\n\n", getLineNumber());
@@ -53,8 +64,6 @@ int main(int argc, char **argv)
     }
      
 
-
- 
     fprintf(output_file, "%s", astToCode(root));
     exit(0);
 }

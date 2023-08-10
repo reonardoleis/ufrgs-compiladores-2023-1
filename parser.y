@@ -5,10 +5,13 @@
 #include "ast_types.h"
 #include "ast.h"    
 #include "semantic.h"
+#include "tac.h"
+#include "asmgen.h"
+
 %}
 
 %union{
-    hash_t* symbol; 
+    HASH* symbol; 
     AST *ast;
 }
 
@@ -65,8 +68,8 @@
 %type<ast> program
 %type<ast> vec_attrib
 
-
-%left '~' '&' '|' OPERATOR_LE OPERATOR_GE OPERATOR_EQ OPERATOR_DIF '>' '<'
+%left '&' '|'
+%left '~' OPERATOR_LE OPERATOR_GE OPERATOR_EQ OPERATOR_DIF '>' '<'
 %left '+' '-'
 %left '*' '/'
 
@@ -79,16 +82,28 @@ program: declaration_list   {
                                 
                                 check_operands($1);
                                 
-                                check_assignments($1);	
+                               check_assignments($1);	
                                 
-                                check_return($1);
+                               check_return($1);
                                 
-                                check_function_call($1);
+                               check_function_call($1);
                                
-                                check_conditional_stmts($1);
+                               check_conditional_stmts($1);
 
-                                // astPrint($1, 0);
+                                if (SemanticErrors == 0) {
+                                    TAC * code = generate_code($1);
+                                     tac_print_backwards(code);
+                                    generate_asm(code);
+                                }
+
                                 
+                                
+                                /*AST * test = $1;
+                                test = test->son[0]->son[1]->son[0]->son[1]->son[0]->son[0]->son[0];
+                                int typecheck_result = expression_typecheck(test);
+                                fprintf(stderr, "typecheck result: %d\n", typecheck_result);*/
+
+                               astPrint($1, 0);
                             }
     ;
 
@@ -136,7 +151,7 @@ parameter: KW_INT TK_IDENTIFIER     { $$ = astCreate(AST_PARAM_INT, $2, NULL, NU
     ;
 
 parameter_list: parameter parameter_list_aux { $$ = astCreate(AST_PARAM_LIST, NULL, $1, $2, NULL, NULL, getLineNumber()); }
-    | { $$ = 0;} 
+    | { $$ = astCreate(AST_EMPTY_PARAM_LIST, NULL, NULL, NULL, NULL, NULL, getLineNumber());} 
     ;
 
 parameter_list_aux: ',' parameter parameter_list_aux { $$ = astCreate(AST_PARAM_LIST, NULL, $2, $3, NULL, NULL, getLineNumber()); }
@@ -185,7 +200,8 @@ output_cmd: KW_OUTPUT output_param_list { $$ = astCreate(AST_OUTPUT_CMD, 0, $2, 
 output_param_list: LIT_STRING ',' output_param_list     { $$ = astCreate(AST_OUTPUT_PARAM_LIST, NULL, astCreate(AST_LIT_STRING, $1, NULL, NULL, NULL, NULL, getLineNumber()), $3, NULL, NULL, getLineNumber()); }
     |              expr ',' output_param_list           { $$ = astCreate(AST_OUTPUT_PARAM_LIST, 0, $1, $3, NULL, NULL, getLineNumber()); }
     |              LIT_STRING                           { $$ = astCreate(AST_OUTPUT_PARAM_LIST, NULL, astCreate(AST_LIT_STRING, $1, NULL, NULL, NULL, NULL, getLineNumber()), NULL, NULL, NULL, getLineNumber()); }
-    |              expr                                 { $$ = $1; }
+    |              expr                                 { $$ = astCreate(AST_OUTPUT_PARAM_LIST, NULL, $1,  NULL, NULL, NULL, getLineNumber()); }
+    |              { $$ = 0; }
     ;
 
 return_cmd: KW_RETURN expr { $$ = astCreate(AST_RETURN_CMD, 0, $2, NULL, NULL, NULL, getLineNumber()); }

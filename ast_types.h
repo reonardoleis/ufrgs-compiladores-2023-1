@@ -75,6 +75,7 @@
 #define AST_INPUT_EXPR 74
 #define AST_VEC_ACCESS 75
 #define AST_CONDITIONAL_STATEMENT 76
+#define AST_EMPTY_PARAM_LIST 77
 
 char *ast_type_str(int type);
 char *ast_func_param_type_str(int type);
@@ -218,6 +219,8 @@ char* ast_type_str(int type) {
             return strdup("AST_INPUT_EXPR");
         case AST_CONDITIONAL_STATEMENT:
             return strdup("AST_CONDITIONAL_STATEMENT");
+        case AST_EMPTY_PARAM_LIST:
+            return strdup("AST_EMPTY_PARAM_LIST");
         default: {
             char* unknown = (char*) calloc(1, sizeof(char) * 100);
             sprintf(unknown, "AST_TYPE_UNKNOWN(%d)", type);

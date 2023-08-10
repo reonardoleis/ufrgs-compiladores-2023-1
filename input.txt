@@ -1,27 +1,16 @@
-bool y = 0;
-int x = 2;
-int v[2] 1 2;
-real r = 5.2;
-real vr[2] 10.5 123.23;
-int main(int ggg) {
-    \\ a
-    \\ b
-    \\ c
-    y = (x > 2) | y | (y & (x < 0));
-
-    if (y) {
-        x = -(x * 2.5) + 4/(5 - v[0]);
+int x = 0;
+int y =  0;
+bool r = 0;
+int main() {
+    r = x != y;
+    if (x < 10) loop {
+        y = plusten(x);
+        output y, "\n";
+        x = x + 1;
     }
+    return 1;
+}
 
-    r = r * 2.0;
-
-    if (r > 2.2) {
-        if (r > vr) loop {}
-    } else {
-        x = -(-(-(-(x * 1 + (5 / v[0] + v[1])))));
-        return 2;
-    }
-
-
-    return main(1);
+int plusten(int z) {
+    return z + 10;
 }
