@@ -301,7 +301,7 @@ HASH *make_temp(int datatype) {
     static int serial = 0;
     char buffer[100];
     sprintf(buffer, "temp_%d", serial++);
-    fprintf(stderr, "Creating temp %s with datatype %d\n", buffer, datatype);
+    
     return hash_insert(buffer, SYMBOL_IDENTIFIER, datatype);
 }
 

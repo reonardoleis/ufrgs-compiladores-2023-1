@@ -1379,7 +1379,7 @@ yyreduce:
                              
                                 if (SemanticErrors == 0) {
                                     TAC * code = generate_code((yyvsp[0].ast));
-                                     tac_print_backwards(code);
+                                    //tac_print_backwards(code);
                                     generate_asm(code);
                                 }
 

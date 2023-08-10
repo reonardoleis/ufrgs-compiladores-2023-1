@@ -94,7 +94,7 @@ program: declaration_list   {
                              
                                 if (SemanticErrors == 0) {
                                     TAC * code = generate_code($1);
-                                     tac_print_backwards(code);
+                                    //tac_print_backwards(code);
                                     generate_asm(code);
                                 }
 
