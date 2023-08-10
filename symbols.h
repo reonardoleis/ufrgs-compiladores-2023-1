@@ -1,6 +1,6 @@
 #pragma once
 
-#define SYMBOL_IDENTIFIER 0
+#define SYMBOL_IDENTIFIER 10
 #define SYMBOL_LIT_INTEGER 1
 #define SYMBOL_LIT_REAL 2
 #define SYMBOL_LIT_CHAR 3

@@ -39,18 +39,21 @@ void astPrint(AST *ast, int level)
         fprintf(stderr, "  ");
     }
 
-
-    if (ast->result_datatype) {
+    if (ast->result_datatype)
+    {
         fprintf(stderr, "AST[%s](", datatype_str[ast->result_datatype]);
-    } else {
+    }
+    else
+    {
         fprintf(stderr, "AST(");
     }
 
-    char * debug = getenv("DEBUG");
-    if (debug != NULL && strcmp(debug, "1") == 0) {
+    char *debug = getenv("DEBUG");
+    if (debug != NULL && strcmp(debug, "1") == 0)
+    {
         fprintf(stderr, "<%d>,", ast->id);
     }
-    
+
     fprintf(stderr, "%s", ast_type_str(ast->type));
 
     if (ast->symbol != 0)
@@ -81,123 +84,327 @@ inline char *astToCode(AST *node)
         return strdup("");
     }
 
-    switch (node->type) {
-        case AST_PROGRAM:       {  return astToCode(node->son[0]); }
-        case AST_DECL_LIST:     { sprintf(code, "%s%s", astToCode(node->son[0]), astToCode(node->son[1])); return strdup(code); }
-        // variable declarations
-        case AST_VAR_DECL_INT:  { sprintf(code, "int %s = %s;\n", node->symbol->text, node->son[0]->symbol->text); return strdup(code); }
-        case AST_VAR_DECL_CHAR: { sprintf(code, "char %s = %s;\n", node->symbol->text, node->son[0]->symbol->text); return strdup(code); }
-        case AST_VAR_DECL_REAL: { sprintf(code, "real %s = %s;\n", node->symbol->text, node->son[0]->symbol->text); return strdup(code); }
-        case AST_VAR_DECL_BOOL: { sprintf(code, "bool %s = %s;\n", node->symbol->text, node->son[0]->symbol->text); return strdup(code); }
+    switch (node->type)
+    {
+    case AST_PROGRAM:
+    {
+        return astToCode(node->son[0]);
+    }
+    case AST_DECL_LIST:
+    {
+        sprintf(code, "%s%s", astToCode(node->son[0]), astToCode(node->son[1]));
+        return strdup(code);
+    }
+    // variable declarations
+    case AST_VAR_DECL_INT:
+    {
+        sprintf(code, "int %s = %s;\n", node->symbol->text, node->son[0]->symbol->text);
+        return strdup(code);
+    }
+    case AST_VAR_DECL_CHAR:
+    {
+        sprintf(code, "char %s = %s;\n", node->symbol->text, node->son[0]->symbol->text);
+        return strdup(code);
+    }
+    case AST_VAR_DECL_REAL:
+    {
+        sprintf(code, "real %s = %s;\n", node->symbol->text, node->son[0]->symbol->text);
+        return strdup(code);
+    }
+    case AST_VAR_DECL_BOOL:
+    {
+        sprintf(code, "bool %s = %s;\n", node->symbol->text, node->son[0]->symbol->text);
+        return strdup(code);
+    }
 
-        // vector declarations
-        case AST_VEC_DECL_INT:  { sprintf(code, "int %s[%s]%s;\n", node->symbol->text, node->son[0]->symbol->text, astToCode(node->son[1])); return strdup(code); }
-        case AST_VEC_DECL_CHAR:  { sprintf(code, "char %s[%s]%s;\n", node->symbol->text, node->son[0]->symbol->text, astToCode(node->son[1])); return strdup(code); }
-        case AST_VEC_DECL_REAL:  { sprintf(code, "real %s[%s]%s;\n", node->symbol->text, node->son[0]->symbol->text, astToCode(node->son[1])); return strdup(code); }
-        case AST_VEC_DECL_BOOL:  { sprintf(code, "bool %s[%s]%s;\n", node->symbol->text, node->son[0]->symbol->text, astToCode(node->son[1])); return strdup(code); }
+    // vector declarations
+    case AST_VEC_DECL_INT:
+    {
+        sprintf(code, "int %s[%s]%s;\n", node->symbol->text, node->son[0]->symbol->text, astToCode(node->son[1]));
+        return strdup(code);
+    }
+    case AST_VEC_DECL_CHAR:
+    {
+        sprintf(code, "char %s[%s]%s;\n", node->symbol->text, node->son[0]->symbol->text, astToCode(node->son[1]));
+        return strdup(code);
+    }
+    case AST_VEC_DECL_REAL:
+    {
+        sprintf(code, "real %s[%s]%s;\n", node->symbol->text, node->son[0]->symbol->text, astToCode(node->son[1]));
+        return strdup(code);
+    }
+    case AST_VEC_DECL_BOOL:
+    {
+        sprintf(code, "bool %s[%s]%s;\n", node->symbol->text, node->son[0]->symbol->text, astToCode(node->son[1]));
+        return strdup(code);
+    }
 
+    // vector opt init
+    case AST_VEC_INIT_OPT_INT:
+    case AST_VEC_INIT_OPT_CHAR:
+    case AST_VEC_INIT_OPT_REAL:
+    {
+        sprintf(code, " %s%s", node->son[0]->symbol->text, astToCode(node->son[1]));
+        return strdup(code);
+    }
 
-        // vector opt init
-        case AST_VEC_INIT_OPT_INT:
-        case AST_VEC_INIT_OPT_CHAR: 
-        case AST_VEC_INIT_OPT_REAL: { sprintf(code, " %s%s", node->son[0]->symbol->text, astToCode(node->son[1])); return strdup(code); }
+    // func declarations
+    case AST_FUNC_DECL_INT:
+    {
+        sprintf(code, "int %s(%s)%s\n\n", node->symbol->text, astToCode(node->son[0]), astToCode(node->son[1]));
+        return strdup(code);
+    }
+    case AST_FUNC_DECL_CHAR:
+    {
+        sprintf(code, "char %s(%s)%s\n\n", node->symbol->text, astToCode(node->son[0]), astToCode(node->son[1]));
+        return strdup(code);
+    }
+    case AST_FUNC_DECL_REAL:
+    {
+        sprintf(code, "real %s(%s)%s\n\n", node->symbol->text, astToCode(node->son[0]), astToCode(node->son[1]));
+        return strdup(code);
+    }
+    case AST_FUNC_DECL_BOOL:
+    {
+        sprintf(code, "bool %s(%s)%s\n\n", node->symbol->text, astToCode(node->son[0]), astToCode(node->son[1]));
+        return strdup(code);
+    }
 
-        // func declarations
-        case AST_FUNC_DECL_INT: { sprintf(code, "int %s(%s)%s\n\n", node->symbol->text, astToCode(node->son[0]), astToCode(node->son[1])); return strdup(code); }
-        case AST_FUNC_DECL_CHAR: { sprintf(code, "char %s(%s)%s\n\n", node->symbol->text, astToCode(node->son[0]), astToCode(node->son[1])); return strdup(code); }
-        case AST_FUNC_DECL_REAL: { sprintf(code, "real %s(%s)%s\n\n", node->symbol->text, astToCode(node->son[0]), astToCode(node->son[1])); return strdup(code); }
-        case AST_FUNC_DECL_BOOL: { sprintf(code, "bool %s(%s)%s\n\n", node->symbol->text, astToCode(node->son[0]), astToCode(node->son[1])); return strdup(code); }
-
-        // func decl parameters
-        case AST_PARAM_LIST: 
-        { 
-            if (node->son[1] != NULL) {
-                sprintf(code, "%s %s, %s", ast_func_param_type_str(node->son[0]->type), node->son[0]->symbol->text, astToCode(node->son[1]));
-            } else {
-                sprintf(code, "%s %s", ast_func_param_type_str(node->son[0]->type), node->son[0]->symbol->text);
-            }
-
-            return strdup(code);
+    // func decl parameters
+    case AST_PARAM_LIST:
+    {
+        if (node->son[1] != NULL)
+        {
+            sprintf(code, "%s %s, %s", ast_func_param_type_str(node->son[0]->type), node->son[0]->symbol->text, astToCode(node->son[1]));
+        }
+        else
+        {
+            sprintf(code, "%s %s", ast_func_param_type_str(node->son[0]->type), node->son[0]->symbol->text);
         }
 
-        case AST_BODY: { sprintf(code, "{%s\n}%s", astToCode(node->son[0]), astToCode(node->son[1])); return strdup(code); }
+        return strdup(code);
+    }
 
-        case AST_CMD_LIST: { sprintf(code, "%s%s", astToCode(node->son[0]), astToCode(node->son[1])); return strdup(code); }
+    case AST_BODY:
+    {
+        sprintf(code, "{%s\n}%s", astToCode(node->son[0]), astToCode(node->son[1]));
+        return strdup(code);
+    }
 
-        case AST_VAR_ATTRIB: { sprintf(code, "\n\t%s = %s;", node->symbol->text, astToCode(node->son[0])); return strdup(code); }
+    case AST_CMD_LIST:
+    {
+        sprintf(code, "%s%s", astToCode(node->son[0]), astToCode(node->son[1]));
+        return strdup(code);
+    }
 
-        case AST_VEC_ATTRIB: { sprintf(code, "\n\t%s[%s] = %s;", node->symbol->text, astToCode(node->son[0]), astToCode(node->son[1])); return strdup(code); }
+    case AST_VAR_ATTRIB:
+    {
+        sprintf(code, "\n\t%s = %s;", node->symbol->text, astToCode(node->son[0]));
+        return strdup(code);
+    }
 
-        case AST_OUTPUT_CMD: { sprintf(code, "\n\toutput %s;", astToCode(node->son[0])); return strdup(code); }
+    case AST_VEC_ATTRIB:
+    {
+        sprintf(code, "\n\t%s[%s] = %s;", node->symbol->text, astToCode(node->son[0]), astToCode(node->son[1]));
+        return strdup(code);
+    }
 
-        case AST_OUTPUT_PARAM_LIST: { 
-            if (node->son[1] != NULL) {
-                sprintf(code, "%s,%s", astToCode(node->son[0]), astToCode(node->son[1]));
-            } else {
-                sprintf(code, "%s", astToCode(node->son[0]));
-            }
+    case AST_OUTPUT_CMD:
+    {
+        sprintf(code, "\n\toutput %s;", astToCode(node->son[0]));
+        return strdup(code);
+    }
 
-            return strdup(code);
+    case AST_OUTPUT_PARAM_LIST:
+    {
+        if (node->son[1] != NULL)
+        {
+            sprintf(code, "%s,%s", astToCode(node->son[0]), astToCode(node->son[1]));
+        }
+        else
+        {
+            sprintf(code, "%s", astToCode(node->son[0]));
         }
 
-        // literals (covers expr literals)
-        case AST_LIT_INT:
-        case AST_LIT_REAL: 
-        case AST_LIT_CHAR: 
-        case AST_LIT_STRING: { sprintf(code, "%s", node->symbol->text); return strdup(code); }
+        return strdup(code);
+    }
 
-        // expr
-        case AST_IDENTIFIER: { sprintf(code, "%s", node->symbol->text); return strdup(code); }
-        
-        case AST_MUL: { sprintf(code, "%s * %s", astToCode(node->son[0]), astToCode(node->son[1])); return strdup(code); }
-        case AST_DIV: { sprintf(code, "%s / %s", astToCode(node->son[0]), astToCode(node->son[1])); return strdup(code); }
-        case AST_ADD: { sprintf(code, "%s + %s", astToCode(node->son[0]), astToCode(node->son[1])); return strdup(code); }
-        case AST_SUB: { sprintf(code, "%s - %s", astToCode(node->son[0]), astToCode(node->son[1])); return strdup(code); }
-        case AST_NEG: { sprintf(code, "-%s", astToCode(node->son[0])); return strdup(code); }
-        case AST_NOT: { sprintf(code, "~%s", astToCode(node->son[0])); return strdup(code); }
-        case AST_AND: { sprintf(code, "%s & %s", astToCode(node->son[0]), astToCode(node->son[1])); return strdup(code); }
-        case AST_OR: { sprintf(code, "%s | %s", astToCode(node->son[0]), astToCode(node->son[1])); return strdup(code); }
-        case AST_LE: { sprintf(code, "%s <= %s", astToCode(node->son[0]), astToCode(node->son[1])); return strdup(code); }
-        case AST_GE: { sprintf(code, "%s >= %s", astToCode(node->son[0]), astToCode(node->son[1])); return strdup(code); }
-        case AST_EQ: { sprintf(code, "%s == %s", astToCode(node->son[0]), astToCode(node->son[1])); return strdup(code); }
-        case AST_DIF: { sprintf(code, "%s != %s", astToCode(node->son[0]), astToCode(node->son[1])); return strdup(code); }
-        case AST_GT: { sprintf(code, "%s > %s", astToCode(node->son[0]), astToCode(node->son[1])); return strdup(code); }
-        case AST_LT: { sprintf(code, "%s < %s", astToCode(node->son[0]), astToCode(node->son[1])); return strdup(code); }
-        
-        case AST_NESTED_EXPR: { sprintf(code, "(%s)", astToCode(node->son[0])); return strdup(code); }
+    // literals (covers expr literals)
+    case AST_LIT_INT:
+    case AST_LIT_REAL:
+    case AST_LIT_CHAR:
+    case AST_LIT_STRING:
+    {
+        sprintf(code, "%s", node->symbol->text);
+        return strdup(code);
+    }
 
-        case AST_VEC_ACCESS:  { sprintf(code, "%s[%s]", node->symbol->text, astToCode(node->son[0])); return strdup(code); }
+    // expr
+    case AST_IDENTIFIER:
+    {
+        sprintf(code, "%s", node->symbol->text);
+        return strdup(code);
+    }
 
-        case AST_INPUT_EXPR_INT: { sprintf(code, "input(int)"); return strdup(code); }
-        case AST_INPUT_EXPR_CHAR: { sprintf(code, "input(char)"); return strdup(code); }
-        case AST_INPUT_EXPR_REAL: { sprintf(code, "tinput(real)"); return strdup(code); }
-        case AST_INPUT_EXPR_BOOL: { sprintf(code, "input(bool)"); return strdup(code); }
+    case AST_MUL:
+    {
+        sprintf(code, "%s * %s", astToCode(node->son[0]), astToCode(node->son[1]));
+        return strdup(code);
+    }
+    case AST_DIV:
+    {
+        sprintf(code, "%s / %s", astToCode(node->son[0]), astToCode(node->son[1]));
+        return strdup(code);
+    }
+    case AST_ADD:
+    {
+        sprintf(code, "%s + %s", astToCode(node->son[0]), astToCode(node->son[1]));
+        return strdup(code);
+    }
+    case AST_SUB:
+    {
+        sprintf(code, "%s - %s", astToCode(node->son[0]), astToCode(node->son[1]));
+        return strdup(code);
+    }
+    case AST_NEG:
+    {
+        sprintf(code, "-%s", astToCode(node->son[0]));
+        return strdup(code);
+    }
+    case AST_NOT:
+    {
+        sprintf(code, "~%s", astToCode(node->son[0]));
+        return strdup(code);
+    }
+    case AST_AND:
+    {
+        sprintf(code, "%s & %s", astToCode(node->son[0]), astToCode(node->son[1]));
+        return strdup(code);
+    }
+    case AST_OR:
+    {
+        sprintf(code, "%s | %s", astToCode(node->son[0]), astToCode(node->son[1]));
+        return strdup(code);
+    }
+    case AST_LE:
+    {
+        sprintf(code, "%s <= %s", astToCode(node->son[0]), astToCode(node->son[1]));
+        return strdup(code);
+    }
+    case AST_GE:
+    {
+        sprintf(code, "%s >= %s", astToCode(node->son[0]), astToCode(node->son[1]));
+        return strdup(code);
+    }
+    case AST_EQ:
+    {
+        sprintf(code, "%s == %s", astToCode(node->son[0]), astToCode(node->son[1]));
+        return strdup(code);
+    }
+    case AST_DIF:
+    {
+        sprintf(code, "%s != %s", astToCode(node->son[0]), astToCode(node->son[1]));
+        return strdup(code);
+    }
+    case AST_GT:
+    {
+        sprintf(code, "%s > %s", astToCode(node->son[0]), astToCode(node->son[1]));
+        return strdup(code);
+    }
+    case AST_LT:
+    {
+        sprintf(code, "%s < %s", astToCode(node->son[0]), astToCode(node->son[1]));
+        return strdup(code);
+    }
 
-        case AST_FUNC_CALL: { sprintf(code, "%s(%s)", node->symbol->text, astToCode(node->son[0])); return strdup(code); }
+    case AST_NESTED_EXPR:
+    {
+        sprintf(code, "(%s)", astToCode(node->son[0]));
+        return strdup(code);
+    }
 
-        case AST_EXPR_LIST: { 
-            if (node->son[1] != NULL) {
-                sprintf(code, "%s, %s", astToCode(node->son[0]), astToCode(node->son[1]));
-            } else {
-                sprintf(code, "%s", astToCode(node->son[0]));
-            }
+    case AST_VEC_ACCESS:
+    {
+        sprintf(code, "%s[%s]", node->symbol->text, astToCode(node->son[0]));
+        return strdup(code);
+    }
 
-            return strdup(code);
+    case AST_INPUT_EXPR_INT:
+    {
+        sprintf(code, "input(int)");
+        return strdup(code);
+    }
+    case AST_INPUT_EXPR_CHAR:
+    {
+        sprintf(code, "input(char)");
+        return strdup(code);
+    }
+    case AST_INPUT_EXPR_REAL:
+    {
+        sprintf(code, "tinput(real)");
+        return strdup(code);
+    }
+    case AST_INPUT_EXPR_BOOL:
+    {
+        sprintf(code, "input(bool)");
+        return strdup(code);
+    }
+
+    case AST_FUNC_CALL:
+    {
+
+        sprintf(code, "%s(%s)", node->symbol->text, astToCode(node->son[0]));
+        return strdup(code);
+    }
+
+    case AST_EXPR_LIST:
+    {
+        if (node->son[1] != NULL)
+        {
+            sprintf(code, "%s, %s", astToCode(node->son[0]), astToCode(node->son[1]));
+        }
+        else
+        {
+            sprintf(code, "%s", astToCode(node->son[0]));
         }
 
-        case AST_RETURN_CMD: { sprintf(code, "\n\treturn %s;", astToCode(node->son[0])); return strdup(code); }
+        return strdup(code);
+    }
 
+    case AST_RETURN_CMD:
+    {
+        sprintf(code, "\n\treturn %s;", astToCode(node->son[0]));
+        return strdup(code);
+    }
 
         // ifs
 
-        case AST_IF: { sprintf(code, "\n\tif (%s) %s", astToCode(node->son[0]), astToCode(node->son[1])); return strdup(code); }
-        case AST_IF_ELSE: { sprintf(code, "\n\tif (%s) %s else %s", astToCode(node->son[0]), astToCode(node->son[1]), astToCode(node->son[2])); return strdup(code);}
-        case AST_LOOP: { sprintf(code, "\n\tif (%s) loop %s", astToCode(node->son[0]), astToCode(node->son[1])); return strdup(code); }
-        case AST_CONDITIONAL_STATEMENT: { sprintf(code, "%s%s", astToCode(node->son[0]), astToCode(node->son[1])); return strdup(code); }
-
-        default: { return strdup(""); }
+    case AST_IF:
+    {
+        sprintf(code, "\n\tif (%s) %s", astToCode(node->son[0]), astToCode(node->son[1]));
+        return strdup(code);
     }
-    
+    case AST_IF_ELSE:
+    {
+        sprintf(code, "\n\tif (%s) %s else %s", astToCode(node->son[0]), astToCode(node->son[1]), astToCode(node->son[2]));
+        return strdup(code);
+    }
+    case AST_LOOP:
+    {
+        sprintf(code, "\n\tif (%s) loop %s", astToCode(node->son[0]), astToCode(node->son[1]));
+        return strdup(code);
+    }
+    case AST_CONDITIONAL_STATEMENT:
+    {
+        sprintf(code, "%s%s", astToCode(node->son[0]), astToCode(node->son[1]));
+        return strdup(code);
+    }
+
+    default:
+    {
+        return strdup("");
+    }
+    }
 
     return strdup(code);
 }
@@ -245,7 +452,7 @@ char *handleFunctinDeclarationParams(AST *func_decl_params_root_node)
     char *param_type;
     while (current_opt->son[1] != NULL)
     {
-        
+
         param_type = ast_func_param_type_str(current_opt->son[0]->type);
 
         char *temp = (char *)calloc(strlen(out), sizeof(char));
@@ -256,7 +463,6 @@ char *handleFunctinDeclarationParams(AST *func_decl_params_root_node)
         strcat(out, " ");
         strcat(out, current_opt->son[0]->symbol->text);
         strcat(out, ", ");
-
 
         current_opt = current_opt->son[1];
     }
@@ -278,16 +484,72 @@ int is_input_cmd(AST *node)
     return node->type == AST_INPUT_EXPR_INT || node->type == AST_INPUT_EXPR_REAL || node->type == AST_INPUT_EXPR_CHAR || node->type == AST_INPUT_EXPR_BOOL;
 }
 
-int get_input_cmd_type(AST *node) {
-    if (node->type == AST_INPUT_EXPR_INT) {
+int get_input_cmd_type(AST *node)
+{
+    if (node->type == AST_INPUT_EXPR_INT)
+    {
         return DATATYPE_INT;
-    } else if (node->type == AST_INPUT_EXPR_REAL) {
+    }
+    else if (node->type == AST_INPUT_EXPR_REAL)
+    {
         return DATATYPE_REAL;
-    } else if (node->type == AST_INPUT_EXPR_CHAR) {
+    }
+    else if (node->type == AST_INPUT_EXPR_CHAR)
+    {
         return DATATYPE_CHAR;
-    } else if (node->type == AST_INPUT_EXPR_BOOL) {
+    }
+    else if (node->type == AST_INPUT_EXPR_BOOL)
+    {
         return DATATYPE_BOOL;
-    } else {
+    }
+    else
+    {
         return -1;
+    }
+}
+
+void set_expr_list_item_function(AST *node)
+{
+    int i;
+    if (!node)
+        return;
+
+    if (node->type == AST_FUNC_CALL)
+    {
+        AST *expr_list = node->son[0];
+        STRING_LIST *param = node->symbol->param_list;
+        while (expr_list != NULL)
+        {
+            expr_list->func_param = param->text;
+            expr_list = expr_list->son[1];
+            param = param->next;
+        }
+    }
+
+    for (i = 0; i < MAX_SONS; i++)
+    {
+        set_expr_list_item_function(node->son[i]);
+    }
+}
+
+void set_param_list_item_function(AST *node)
+{
+    int i;
+    if (!node)
+        return;
+
+    if (node->type == AST_FUNC_DECL_INT || node->type == AST_FUNC_DECL_REAL || node->type == AST_FUNC_DECL_BOOL)
+    {
+        AST *param_list = node->son[0];
+        while (param_list != NULL)
+        {
+            hash_append_param_list(node->symbol, param_list->son[0] ? param_list->son[0]->symbol : NULL);
+            param_list = param_list->son[1];
+        }
+    }
+
+    for (i = 0; i < MAX_SONS; i++)
+    {
+        set_param_list_item_function(node->son[i]);
     }
 }

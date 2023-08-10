@@ -16,6 +16,7 @@ typedef struct ast_node
     int result_datatype;
     int line_number;
     struct ast_node *son[MAX_SONS];
+    char* func_param;
 } AST;
 
 AST *root;
@@ -28,3 +29,5 @@ char *handleFunctinDeclarationParams(AST *func_decl_params_root_node);
 int isLeaf(AST *node);
 int is_input_cmd(AST *node);
 int get_input_cmd_type(AST *node);
+void set_expr_list_item_function(AST *node);
+void set_param_list_item_function(AST *node);

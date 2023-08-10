@@ -63,7 +63,7 @@ int main(int argc, char **argv)
         exit(4);
     }
      
-
+   // hash_print();
     fprintf(output_file, "%s", astToCode(root));
     exit(0);
 }

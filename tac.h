@@ -56,13 +56,13 @@ TAC * tac_reverse(TAC * tac);
 
 // Code Generation
 TAC * generate_code(AST * node);
-TAC * make_binary_operation(int type, TAC * code0, TAC * code1);
+TAC * make_binary_operation(AST * node, int type, TAC * code0, TAC * code1);
 TAC * make_if(TAC * code0, TAC * code1);
 TAC * make_if_else(TAC * code0, TAC * code1, TAC * code2);
 TAC * make_loop(TAC * code0, TAC * code1);
 TAC * make_unary_operation(int type, TAC * code0);
 TAC * make_function(AST *node, TAC * code0, TAC * code1);
 TAC * make_call(AST *node, TAC * code0, TAC * code1);
-TAC * make_arg(TAC * code0, TAC * code1);
+TAC * make_arg(AST *node, TAC * code0, TAC * code1);
 TAC * make_print_arg(TAC * code0, TAC * code1, HASH* str);
 int get_tac_type_from_ast(int type);

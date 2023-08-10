@@ -20,6 +20,13 @@ char* datatype_str[] = { "invalid", "int",  "real", "bool", "char" };
 
 int string_id = 1;
 int function_id = 1;
+
+typedef struct STRING_LIST
+{
+    char *text;
+    struct STRING_LIST *next;
+} STRING_LIST;
+
 typedef struct HASH
 {
     int type; 
@@ -34,6 +41,7 @@ typedef struct HASH
     int string_id;
     int function_id;
     int is_label;
+    STRING_LIST *param_list;
     struct HASH *beginfun_label;    
 } HASH;
 
@@ -114,6 +122,32 @@ HASH *set_function_id(HASH *hash) {
     return hash;
 }
 
+void hash_append_param_list(HASH *hash, HASH *param);
+void hash_append_param_list(HASH *hash, HASH *param) {
+    if (!param || !param->text) {
+        return;
+    }
+    // param list is on hash->param_list of type STRING_LIST
+    // param is of type HASH
+    STRING_LIST *new_param = (STRING_LIST *)calloc(1, sizeof(STRING_LIST));
+    new_param->text = (char *)calloc(strlen(param->text) + 1, sizeof(char));
+    strcpy(new_param->text, param->text);
+
+    if (!hash->param_list) {
+        hash->param_list = new_param;
+        return;
+    }
+
+    STRING_LIST *current_param = hash->param_list;
+    while (current_param->next != NULL) {
+        current_param = current_param->next;
+    }
+
+    current_param->next = new_param;
+
+   
+}
+
 HASH *hash_insert(char *text, int type, int datatype)
 {
     HASH *item = (HASH *)calloc(1, sizeof(HASH));
@@ -128,6 +162,7 @@ HASH *hash_insert(char *text, int type, int datatype)
     item->beginfun_label = (HASH *)calloc(1, sizeof(HASH));
     item->beginfun_label = NULL;
     item->string_id = 0;
+    item->param_list = NULL;
 
     if (strstr(text, "label") != NULL) {
         item->is_label = 1;
@@ -265,7 +300,8 @@ int ast_type_to_datatype(int ast_type) {
 HASH *make_temp(int datatype) {
     static int serial = 0;
     char buffer[100];
-    sprintf(buffer, "%s_temp_%d", datatype_str[datatype], serial++);
+    sprintf(buffer, "temp_%d", serial++);
+    fprintf(stderr, "Creating temp %s with datatype %d\n", buffer, datatype);
     return hash_insert(buffer, SYMBOL_IDENTIFIER, datatype);
 }
 
@@ -295,7 +331,7 @@ HASH *make_label(int type) {
     } else if (type == ENDFUN) {
             sprintf(buffer, "endfun_label_%d", serial++);
     } else if (type == LOOP_END) {
-            sprintf(buffer, "loop_end_label'_%d", serial++);
+            sprintf(buffer, "loop_end_label_%d", serial++);
     }
 
     return hash_insert(buffer, SYMBOL_LABEL, DATATYPE_INT);

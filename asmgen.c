@@ -33,6 +33,11 @@ void generate_asm(TAC *first)
             HASH *node = hash_table[i];
             while (node)
             {
+                if (node->is_vector)
+                {
+                    node = node->next;
+                    continue;
+                }
                 switch (node->type)
                 {
                 case SYMBOL_LIT_INTEGER:
@@ -194,6 +199,8 @@ void generate_asm(TAC *first)
             }
             else
             {
+                fprintf(stderr, "IDENTIFIER ERRADO: %s\n", datatype_str[tac->op1->datatype]);
+                fprintf(stderr, "TEXT OF: %s\n", tac->op1->text);
                 fprintf(fout, "\tmovss	_%s(%%rip), %%xmm0\n", remove_decimal_point(tac->op1->text));
                 fprintf(fout, "\tmovss	_%s(%%rip), %%xmm1\n", remove_decimal_point(tac->op2->text));
                 fprintf(fout, "\t%sss	%%xmm1, %%xmm0\n", arithmetic_tac_to_asm(tac));
@@ -323,9 +330,57 @@ void generate_asm(TAC *first)
             break;
         }
         case TAC_COPY:
+        case TAC_ARG:
         {
-            fprintf(fout, "\tmovl _%s(%%rip), %%eax\n", tac->op1->text);
-            fprintf(fout, "\tmovl %%eax, _%s(%%rip)\n", tac->res->text);
+            if (tac->res->is_vector)
+            {
+                if (tac->op1->type == SYMBOL_VARIABLE || 
+                    tac->op1->type == SYMBOL_IDENTIFIER ||
+                    tac->op1->type == SYMBOL_PARAMETER)
+                {
+
+
+                    fprintf(fout, "\tmovl _%s(%%rip), %%eax\n", tac->op1->text);
+                    fprintf(fout, "\tcltq\n");
+                    fprintf(fout, "\tleaq	0(,%%rax,4), %%rdx\n");
+                    fprintf(fout, "\tleaq _%s(%%rip), %%rax\n", tac->res->text);
+                    fprintf(fout, "\tmovl _%s(%%rip), %%ecx\n", tac->op2->text);
+                    fprintf(fout, "\tmovl %%ecx, (%%rdx,%%rax)\n");
+
+                }
+                else
+                {
+                    int index = 4 * atoi(tac->op1->text);
+                    fprintf(fout, "\tmovl _%s(%%rip), %%eax\n", remove_decimal_point(tac->op2->text));
+                    fprintf(fout, "\tmovl %%eax, %d+_%s(%%rip)\n", index, tac->res->text);
+                }
+            }
+            else if (tac->op1->is_vector)
+            {
+                if (tac->op2->type == SYMBOL_VARIABLE || 
+                    tac->op2->type == SYMBOL_IDENTIFIER ||
+                    tac->op2->type == SYMBOL_PARAMETER)
+                {
+                    fprintf(fout, "\tmovl _%s(%%rip), %%eax\n", tac->op2->text);
+                    fprintf(fout, "\tcltq\n");
+                    fprintf(fout, "\tleaq 0(,%%rax,4), %%rdx\n");
+                    fprintf(fout, "\tleaq _%s(%%rip), %%rax\n", tac->op1->text);
+                    fprintf(fout, "\tmovl (%%rdx,%%rax), %%eax\n");
+                    fprintf(fout, "\tmovl %%eax, _%s(%%rip)\n", tac->res->text);
+                }
+                else
+                {
+                    int index = 4 * atoi(tac->op2->text);
+                    fprintf(fout, "\tmovl %d+_%s(%%rip), %%eax\n", index, tac->op1->text);
+                    fprintf(fout, "\tmovl %%eax, _%s(%%rip)\n", tac->res->text);
+                }
+            }
+            else
+            {
+                fprintf(fout, "\tmovl _%s(%%rip), %%eax\n", tac->op1->text);
+                fprintf(fout, "\tmovl %%eax, _%s(%%rip)\n", tac->res->text);
+            }
+
             break;
         }
         case TAC_LABEL:
@@ -343,6 +398,49 @@ void generate_asm(TAC *first)
         case TAC_JUMP:
         {
             fprintf(fout, "\tjmp _%s\n", tac->res->text);
+            break;
+        }
+        case TAC_CALL:
+        {
+            fprintf(fout, "\tcall %s\n", tac->op1->text);
+            fprintf(fout, "\tmovl %%eax, _%s(%%rip)\n", tac->res->text);
+            break;
+        }
+        case TAC_READ:
+        {
+            fprintf(fout, "\tleaq _%s(%%rip), %%rax\n", tac->res->text);
+            fprintf(fout, "\tmovq %%rax, %%rsi\n");
+            fprintf(fout, "\tleaq print_str_int(%%rip), %%rax\n");
+            fprintf(fout, "\tmovq %%rax, %%rdi\n");
+            fprintf(fout, "\tmovl $0, %%eax\n");
+            fprintf(fout, "\tcall __isoc99_scanf@PLT\n");
+
+            break;
+        }
+        case TAC_VECDEC:
+        {
+
+            /*.globl	vec
+    .data
+    .align 8
+    .type	vec, @object
+    .size	vec, 12*/
+
+            fprintf(fout, "\t.globl\t_%s\n", tac->res->text);
+            fprintf(fout, "\t.data\n");
+            fprintf(fout, "\t.align 8\n");
+            fprintf(fout, "\t.type\t_%s, @object\n", tac->res->text);
+            fprintf(fout, "\t.size\t_%s, %d\n", tac->res->text, 4 * atoi(tac->op1->text));
+
+            fprintf(fout, "_%s:\n", tac->res->text);
+
+            TAC *first_vec_item = tac->next;
+            while (first_vec_item && first_vec_item->type == TAC_SYMBOL)
+            {
+                fprintf(fout, "\t.long %s\n", first_vec_item->res->text);
+                first_vec_item = first_vec_item->next;
+            }
+
             break;
         }
         }

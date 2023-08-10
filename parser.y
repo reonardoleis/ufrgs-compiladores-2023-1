@@ -77,6 +77,8 @@
 
 program: declaration_list   { 
                                 root = astCreate(AST_PROGRAM, NULL, $1, NULL, NULL, NULL, getLineNumber()); $1 = root; $$ = $1; 
+                                set_param_list_item_function(root);
+                                set_expr_list_item_function(root);
                                 check_and_set_declarations($1);
                                 check_undeclared();
                                 
@@ -89,7 +91,7 @@ program: declaration_list   {
                                check_function_call($1);
                                
                                check_conditional_stmts($1);
-
+                             
                                 if (SemanticErrors == 0) {
                                     TAC * code = generate_code($1);
                                      tac_print_backwards(code);
@@ -97,13 +99,13 @@ program: declaration_list   {
                                 }
 
                                 
-                                
+                                //astPrint($1, 0);
                                 /*AST * test = $1;
                                 test = test->son[0]->son[1]->son[0]->son[1]->son[0]->son[0]->son[0];
                                 int typecheck_result = expression_typecheck(test);
                                 fprintf(stderr, "typecheck result: %d\n", typecheck_result);*/
 
-                               astPrint($1, 0);
+                               
                             }
     ;
 

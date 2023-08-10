@@ -1,17 +1,44 @@
-int x = 0;
-int y = 0;
-bool r = 0;
+int vec_size = 10;
+int vec[10] 6 9 5 2 7 8 1 10 3 4;
+int void = 0;
 int main(){
-	r = x != y;
-	if (x < 10) loop {
-	y = plusten(x);
-	output y,"\n";
-	x = x + 1;
-}
-	return 1;
+	void = print_vec(0);
+	output "--\n\n";
+	void = sort(0, 0, 0, 0);
+	void = print_vec(0);
+	return 0;
 }
 
-int plusten(int z){
-	return z + 10;
+int print_vec(int startPos){
+	startPos = 0;
+	if (startPos < vec_size) loop {
+	output vec[startPos],"\n";
+	startPos = startPos + 1;
+}
+	return 0;
+}
+
+bool aux = 0;
+int sort(int i, int j, int temp, int dir){
+	i = 0;
+	j = 0;
+	if (i < vec_size) loop {
+	j = 0;
+	if (j < vec_size) loop {
+	if (dir == 0) {
+	aux = vec[i] > vec[j];
+} else {
+	aux = vec[i] < vec[j];
+}
+	if (aux) {
+	temp = vec[i];
+	vec[i] = vec[j];
+	vec[j] = temp;
+}
+	j = j + 1;
+}
+	i = i + 1;
+}
+	return 0;
 }
 

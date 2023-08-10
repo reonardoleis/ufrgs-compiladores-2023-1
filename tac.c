@@ -88,9 +88,13 @@ TAC *tac_join(TAC *l1, TAC *l2)
 
 // Code Generation
 
-TAC *make_binary_operation(int type, TAC *code0, TAC *code1)
+TAC *make_binary_operation(AST * node, int type, TAC *code0, TAC *code1)
 {
     int datatype = code0 ? code0->res->datatype : 0;
+    if (datatype == 0) {
+        datatype = node->result_datatype;
+    }
+   
     return tac_join(tac_join(code0, code1), tac_create(type, make_temp(datatype), code0 ? code0->res : NULL, code1 ? code1->res : NULL));
 }
 
@@ -190,12 +194,17 @@ TAC *make_call(AST *node, TAC *code0, TAC *code1)
     return tac_join(tac_join(code0, code1), call_tac);
 }
 
-TAC *make_arg( TAC *code0, TAC *code1)
+TAC *make_arg(AST *node, TAC *code0, TAC *code1)
 {
     TAC *arg_tac = NULL;
 
+    // how can I improve that?
+    HASH *temp = (HASH*) calloc(1, sizeof(HASH));
+    temp->text = (char*) calloc(1, sizeof(char));
+    temp->text = node->func_param;
 
-    arg_tac = tac_create(TAC_ARG, code0 ? code0->res : NULL, NULL, NULL);
+
+    arg_tac = tac_create(TAC_ARG, temp,  code0 ? code0->res : NULL, NULL);
     arg_tac->prev = code0;
 
     return tac_join(arg_tac, code1);
@@ -218,7 +227,6 @@ TAC *make_print_arg(TAC *code0, TAC *code1, HASH *str)
 
     return tac_join(print_tac, code1);
 }
-
 
 TAC *generate_code(AST *node)
 {
@@ -257,7 +265,7 @@ TAC *generate_code(AST *node)
     case AST_LT:
     {
         int tac_type = get_tac_type_from_ast(node->type);
-        result = make_binary_operation(tac_type, code[0], code[1]);
+        result = make_binary_operation(node, tac_type, code[0], code[1]);
         break;
     }
     case AST_NEG:
@@ -322,7 +330,8 @@ TAC *generate_code(AST *node)
     }
     case AST_EXPR_LIST:
     {
-        result = make_arg(code[0], code[1]);
+        
+        result = make_arg(node, code[0], code[1]);
         break;
     }
     case AST_OUTPUT_CMD:
@@ -342,14 +351,20 @@ TAC *generate_code(AST *node)
         }
         break;
     }
-    case AST_INPUT_EXPR_INT:
-    case AST_INPUT_EXPR_REAL:
-    case AST_INPUT_EXPR_CHAR:
-    case AST_INPUT_EXPR_BOOL:
-    {
-        result = tac_create(TAC_READ, make_temp(0), NULL, NULL);
+    case AST_INPUT_EXPR_INT: {
+        result = tac_create(TAC_READ, make_temp(DATATYPE_INT), NULL, NULL);
         break;
     }
+    case AST_INPUT_EXPR_REAL:
+    {
+        result = tac_create(TAC_READ, make_temp(DATATYPE_REAL), NULL, NULL);
+        break;
+    }
+    case AST_INPUT_EXPR_CHAR: {
+        result = tac_create(TAC_READ, make_temp(DATATYPE_INT), NULL, NULL);
+        break;
+    }
+  
     case AST_VAR_DECL_INT:
     case AST_VAR_DECL_REAL:
     case AST_VAR_DECL_CHAR:

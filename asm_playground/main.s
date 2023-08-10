@@ -13,20 +13,29 @@ foo:
 	.size	bar, 4
 bar:
 	.zero	4
-	.globl	a
+	.globl	vec
 	.data
+	.align 8
+	.type	vec, @object
+	.size	vec, 12
+vec:
+	.long	1
+	.long	2
+	.long	3
+	.globl	a
+	.bss
 	.align 4
 	.type	a, @object
 	.size	a, 4
 a:
-	.long	1
-	.globl	x
-	.bss
-	.align 4
-	.type	x, @object
-	.size	x, 4
-x:
 	.zero	4
+	.globl	b
+	.data
+	.align 4
+	.type	b, @object
+	.size	b, 4
+b:
+	.long	2
 	.text
 	.globl	main
 	.type	main, @function
@@ -41,13 +50,10 @@ main:
 	.cfi_def_cfa_register 6
 	movl	$125, foo(%rip)
 	movl	a(%rip), %eax
-	testl	%eax, %eax
-	je	.L2
-	movl	$111, x(%rip)
-	jmp	.L3
-.L2:
-	movl	$222, x(%rip)
-.L3:
+	cltq
+	leaq	0(,%rax,4), %rdx
+	leaq	vec(%rip), %rax
+	movl	$10, (%rdx,%rax)
 	movl	$250, bar(%rip)
 	movl	$12, %eax
 	popq	%rbp
