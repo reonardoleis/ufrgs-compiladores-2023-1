@@ -82,23 +82,28 @@ program: declaration_list   {
                                 
                                 check_operands($1);
                                 
-                                check_assignments($1);	
+                               check_assignments($1);	
                                 
-                                check_return($1);
+                               check_return($1);
                                 
-                                check_function_call($1);
+                               check_function_call($1);
                                
-                                check_conditional_stmts($1);
+                               check_conditional_stmts($1);
 
                                 if (SemanticErrors == 0) {
-                                    TAC * code = generate_code($1);
-                                    //tac_print_backwards(code);
-                                    generate_asm(code);
+                                    //TAC * code = generate_code($1);
+                                    // tac_print_backwards(code);
+                                    //generate_asm(code);
                                 }
 
                                 
                                 
-                                 astPrint($1, 0);
+                                /*AST * test = $1;
+                                test = test->son[0]->son[1]->son[0]->son[1]->son[0]->son[0]->son[0];
+                                int typecheck_result = expression_typecheck(test);
+                                fprintf(stderr, "typecheck result: %d\n", typecheck_result);*/
+
+                                astPrint($1, 0);
                             }
     ;
 

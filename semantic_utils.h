@@ -19,12 +19,6 @@ int is_arithmetic(AST *node) {
         case AST_DIV:
         case AST_ADD:
         case AST_SUB:
-        case AST_LE:
-        case AST_GE:
-        case AST_EQ:
-        case AST_DIF:
-        case AST_GT:
-        case AST_LT:
             return 1;
         default:
             return 0;

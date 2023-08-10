@@ -5,8 +5,11 @@
 
 extern int SemanticErrors;
 
+extern int ast_node_id;
+
 typedef struct ast_node
 {
+    int id;
     int type;
     HASH *symbol;
     int typechecked;

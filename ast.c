@@ -3,9 +3,10 @@
 #include "ast.h"
 #include <string.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 AST *root;
-
+int ast_node_id = 0;
 
 AST *astCreate(int type, HASH *symbol, AST *s0, AST *s1, AST *s2, AST *s3, int line_number)
 {
@@ -19,6 +20,8 @@ AST *astCreate(int type, HASH *symbol, AST *s0, AST *s1, AST *s2, AST *s3, int l
     ast->son[1] = s1;
     ast->son[2] = s2;
     ast->son[3] = s3;
+
+    ast->id = ast_node_id++;
 
     return ast;
 }
@@ -41,6 +44,11 @@ void astPrint(AST *ast, int level)
         fprintf(stderr, "AST[%s](", datatype_str[ast->result_datatype]);
     } else {
         fprintf(stderr, "AST(");
+    }
+
+    char * debug = getenv("DEBUG");
+    if (debug != NULL && strcmp(debug, "1") == 0) {
+        fprintf(stderr, "<%d>,", ast->id);
     }
     
     fprintf(stderr, "%s", ast_type_str(ast->type));

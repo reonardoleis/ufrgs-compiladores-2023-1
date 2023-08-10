@@ -1,0 +1,6 @@
+int y[2] 1 2;
+int main(bool a, int x, real r){
+	a = (a | (a & (x + 1 < y[x * 2] + 1 + y[x + x + x])));
+	return 0;
+}
+
