@@ -1,0 +1,18 @@
+int counter = 0;
+int result = 0;
+
+int loopTest(int until) {
+    if (until > 0) loop {
+        counter = counter + 1;
+        until = until - 1;
+    }
+
+    return counter;
+}
+
+int main() {
+    result = loopTest(1000);
+    output result;
+    return 0;
+}
+

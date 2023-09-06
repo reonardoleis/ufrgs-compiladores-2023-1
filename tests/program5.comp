@@ -1,0 +1,12 @@
+real first() {
+    return 540.0;
+}
+
+real second(real in) {
+    return in + 0.25;
+} 
+
+int main() {
+    output first() + second(2.0);
+    return 0;
+}

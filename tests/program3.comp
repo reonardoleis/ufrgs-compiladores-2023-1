@@ -1,0 +1,18 @@
+char a = ' ';
+char b = 's';
+int x = 96;
+int y = 96;
+int z = 100;
+
+int main(char c) {
+    a = 'a';
+    b = 'b';
+    c = 'c';
+    x = (x + y) - y;
+    y = b - 1;
+    z = (z - ((((((((2)))))))));
+
+    output a, " ", b, " ", c, " ", x, " ", y, " ", z;
+
+    return 0;
+}
